@@ -4,919 +4,1754 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OFS Training Delivery Command Board</title>
-  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
   <style>
-*{box-sizing:border-box;margin:0;padding:0;}
-html,body{width:100vw;height:100vh;overflow:hidden;background:#003d3e;font-family:'Segoe UI',Arial,sans-serif;}
-#sc{width:100vw;height:100vh;position:relative;}
-.slide{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;opacity:0;pointer-events:none;transform:scale(0.985);transition:opacity 0.5s ease,transform 0.5s ease;}
-.slide.active{opacity:1;pointer-events:auto;transform:scale(1.0);}
-#pt{position:fixed;bottom:0;left:0;width:100%;height:5px;background:rgba(255,255,255,0.1);z-index:9999;}
-#pf{height:100%;width:0%;background:#c8ff08;transition:none;}
-#sn{position:fixed;bottom:8px;right:14px;font-size:11px;color:rgba(255,255,255,0.4);z-index:9999;}
-.title-bar{flex:0 0 8%;min-height:50px;background:#005e60;border-bottom:3px solid #c8ff08;display:flex;align-items:center;justify-content:space-between;padding:0 16px;gap:10px;}
-.title-bar-left{color:#fff;font-weight:800;font-size:clamp(13px,1.55vw,22px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.title-bar-pill{background:#c8ff08;color:#003d3e;font-weight:800;border-radius:999px;padding:5px 16px;font-size:clamp(10px,1.1vw,14px);white-space:nowrap;flex-shrink:0;}
-.metric-strip{flex:0 0 22%;background:#004a4c;display:flex;flex-direction:row;gap:10px;padding:0 14px;align-items:center;}
-.mc{background:#003d3e;border-radius:10px;height:78%;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;box-shadow:0 2px 7px rgba(0,0,0,0.18);padding:4px 6px;}
-.mc.mc-wide{flex:1.45;}
-.mc-num{font-size:clamp(26px,3.3vw,52px);font-weight:900;line-height:1;color:#c8ff08;}
-.mc-num-white{color:#fff;}
-.mc-num-muted{color:rgba(255,255,255,0.3);}
-.mc-lbl{color:#59c3c9;font-size:clamp(8px,0.82vw,11px);font-weight:700;text-transform:uppercase;letter-spacing:0.8px;}
-.mc-sub{color:rgba(255,255,255,0.5);font-size:clamp(7px,0.7vw,10px);}
-.mc-chip{background:rgba(89,195,201,0.18);color:#59c3c9;border-radius:999px;padding:2px 8px;font-size:clamp(7px,0.68vw,9px);font-weight:700;margin-top:2px;}
-.main-body{flex:1;background:#f0f4f5;display:flex;flex-direction:row;gap:10px;padding:10px;overflow:hidden;min-height:0;}
-.pill-ev{background:#005e60;color:#c8ff08;border-radius:999px;padding:4px 14px;font-size:clamp(8px,0.88vw,11px);font-weight:800;text-transform:uppercase;letter-spacing:0.9px;display:inline-block;margin-bottom:6px;flex-shrink:0;}
-.pill-sky{background:#59c3c9;color:#003d3e;border-radius:999px;padding:4px 14px;font-size:clamp(8px,0.88vw,11px);font-weight:800;text-transform:uppercase;letter-spacing:0.9px;display:inline-block;margin-bottom:6px;flex-shrink:0;}
-.left-col{flex:0 0 55%;display:flex;flex-direction:column;min-height:0;overflow:hidden;}
-.pll-list{display:flex;flex-direction:column;gap:5px;flex:1;min-height:0;overflow:hidden;}
-.pll-row{background:#fff;border-radius:8px;box-shadow:0 2px 7px rgba(0,0,0,0.08);display:flex;flex-direction:row;padding:0 10px;gap:8px;align-items:center;flex:1;min-height:0;overflow:hidden;}
-.pll-row.muted{opacity:0.45;}
-.pll-identity{flex:0 0 25%;display:flex;flex-direction:column;justify-content:center;overflow:hidden;}
-.pll-name{font-size:clamp(9px,0.98vw,13px);font-weight:800;color:#212121;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.pll-tech{font-size:clamp(8px,0.78vw,11px);color:#6a8a8b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.pll-chips{display:flex;flex-direction:row;gap:5px;flex-shrink:0;}
-.chip-block{background:#1a2e2e;border-radius:7px;min-width:42px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3px 7px;}
-.chip-n{font-size:clamp(11px,1.15vw,16px);font-weight:900;color:#c8ff08;line-height:1.1;}
-.chip-n-muted{color:rgba(255,255,255,0.35);}
-.chip-l{font-size:clamp(7px,0.68vw,9px);color:rgba(255,255,255,0.55);text-transform:uppercase;letter-spacing:0.5px;}
-.pll-bar-area{flex:1;display:flex;flex-direction:column;justify-content:center;gap:3px;min-width:0;}
-.bar-track{width:100%;height:13px;background:#ddeaeb;border-radius:7px;overflow:hidden;position:relative;}
-.bar-fill{height:100%;border-radius:7px;transition:width 0.4s ease;}
-.bar-fill-green{background:#75ca64;}
-.bar-fill-lime{background:#c8ff08;}
-.bar-fill-amber{background:#f5a623;}
-.bar-fill-red{background:#e63946;}
-.bar-meta{display:flex;align-items:center;gap:5px;}
-.bar-label{font-size:clamp(7px,0.72vw,10px);color:#6a8a8b;font-weight:600;}
-.over-badge{background:#c8ff08;color:#003d3e;font-size:clamp(6px,0.62vw,8px);font-weight:800;text-transform:uppercase;border-radius:999px;padding:1px 6px;letter-spacing:0.5px;}
-.bar-dash{font-size:clamp(9px,0.9vw,13px);color:#aac5c6;font-weight:700;}
-.right-col{flex:1;display:flex;flex-direction:column;min-height:0;overflow:hidden;}
-.oc-row{display:flex;flex-direction:row;gap:10px;margin-bottom:8px;flex-shrink:0;}
-.oc-card{background:#fff;border-radius:8px;box-shadow:0 2px 7px rgba(0,0,0,0.08);flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 10px;}
-.oc-num{font-size:clamp(18px,2.1vw,32px);font-weight:900;color:#59c3c9;line-height:1.1;}
-.oc-lbl{font-size:clamp(7px,0.72vw,10px);color:#6a8a8b;text-transform:uppercase;letter-spacing:0.7px;font-weight:700;}
-.outlook-table-wrap{flex:1;background:#fff;border-radius:8px;box-shadow:0 2px 7px rgba(0,0,0,0.08);overflow:hidden;display:flex;flex-direction:column;min-height:0;}
-.ot-header{display:grid;grid-template-columns:1fr 1fr 56px 66px;background:#003d3e;padding:5px 10px;flex-shrink:0;}
-.ot-header span{color:#fff;font-size:clamp(7px,0.72vw,10px);font-weight:700;text-transform:uppercase;letter-spacing:0.6px;}
-.ot-body{flex:1;display:flex;flex-direction:column;overflow:hidden;}
-.ot-row{display:grid;grid-template-columns:1fr 1fr 56px 66px;padding:0 10px;flex:1;align-items:center;border-bottom:1px solid #f0f4f5;}
-.ot-row:nth-child(even){background:#f7fafa;}
-.ot-cell{font-size:clamp(8px,0.82vw,11px);color:#212121;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.ot-cell-num{font-size:clamp(9px,0.92vw,13px);font-weight:900;color:#59c3c9;text-align:center;}
-.status-bar{flex:0 0 16%;background:#004a4c;display:flex;flex-direction:row;gap:10px;padding:0 14px;align-items:center;}
-.sbc{background:#003d3e;border-radius:10px;height:78%;flex:1;display:flex;flex-direction:row;padding:0 14px;gap:12px;align-items:center;box-shadow:0 2px 7px rgba(0,0,0,0.18);}
-.rag-dot{width:clamp(24px,2.8vw,42px);height:clamp(24px,2.8vw,42px);border-radius:50%;flex-shrink:0;}
-.rag-green{background:#75ca64;box-shadow:0 0 10px 3px rgba(117,202,100,0.65);}
-.rag-red{background:#e63946;box-shadow:0 0 10px 3px rgba(230,57,70,0.65);}
-.rag-amber{background:#f5a623;box-shadow:0 0 10px 3px rgba(245,166,35,0.65);}
-.sc-text{display:flex;flex-direction:column;gap:2px;}
-.sc-lbl{font-size:clamp(10px,1.08vw,15px);font-weight:800;color:#fff;}
-.sc-sub{font-size:clamp(8px,0.82vw,11px);color:rgba(255,255,255,0.58);}
-.grid-body{flex:1;background:#f0f4f5;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:10px;padding:10px;overflow:hidden;min-height:0;}
-.zone{background:#fff;border-radius:10px;box-shadow:0 2px 7px rgba(0,0,0,0.08);display:flex;flex-direction:column;padding:8px 10px;overflow:hidden;min-height:0;}
-.kpi-list{display:flex;flex-direction:column;gap:5px;flex:1;min-height:0;overflow:hidden;}
-.kc{background:#f6fafa;border-radius:8px;display:flex;flex-direction:row;flex:1;padding:6px 9px;gap:8px;align-items:center;min-height:0;overflow:hidden;}
-.kc-bar{width:5px;border-radius:3px;align-self:stretch;flex-shrink:0;}
-.kc-name{flex:1;font-size:clamp(8px,0.85vw,12px);font-weight:700;color:#212121;line-height:1.3;overflow:hidden;}
-.kc-vals{display:flex;flex-direction:column;align-items:flex-end;flex-shrink:0;}
-.ka{font-size:clamp(13px,1.5vw,22px);font-weight:900;color:#004745;line-height:1;}
-.kp{font-size:clamp(7px,0.7vw,9px);color:#6a8a8b;}
-.kc-chip{font-size:clamp(7px,0.7vw,9px);font-weight:700;border-radius:6px;padding:3px 7px;white-space:nowrap;flex-shrink:0;}
-.chip-green{background:#e6f9e6;color:#1a7a1a;}
-.chip-red{background:#fce8e8;color:#b02020;}
-.chip-amber{background:#fff3cd;color:#856404;}
-.chip-teal{background:#e0f4f5;color:#005e60;}
-.bowler-note{font-size:clamp(7px,0.7vw,9px);color:#6a8a8b;font-style:italic;text-align:right;margin-top:3px;flex-shrink:0;}
-.ap-badges{display:flex;flex-direction:row;gap:8px;margin-bottom:8px;flex-shrink:0;}
-.ap-badge{flex:1;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:5px 6px;}
-.ap-badge-num{font-size:clamp(14px,1.7vw,26px);font-weight:900;line-height:1;}
-.ap-badge-lbl{font-size:clamp(7px,0.68vw,9px);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-top:1px;}
-.ap-cols{display:grid;grid-template-columns:1fr 1fr;gap:8px;flex:1;min-height:0;overflow:hidden;}
-.ap-col{display:flex;flex-direction:column;gap:4px;overflow:hidden;}
-.ap-col-hdr{font-size:clamp(7px,0.72vw,10px);font-weight:800;text-transform:uppercase;letter-spacing:0.7px;margin-bottom:2px;flex-shrink:0;}
-.ap-col-hdr-green{color:#1a7a1a;}
-.ap-col-hdr-sky{color:#005e60;}
-.ap-chip{border-radius:999px;padding:3px 8px;font-size:clamp(7px,0.7vw,9px);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0;}
-.ap-chip-green{background:#e6f9e6;color:#1a7a1a;}
-.ap-chip-sky{background:#e0f4f5;color:#005e60;}
-.safety-zone{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;flex:1;overflow:hidden;}
-.safety-circle{width:clamp(48px,5.5vw,78px);height:clamp(48px,5.5vw,78px);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:clamp(20px,2.6vw,36px);color:#fff;font-weight:900;flex-shrink:0;}
-.safety-circle-green{background:#75ca64;box-shadow:0 0 18px 6px rgba(117,202,100,0.5);}
-.safety-circle-amber{background:#f5a623;box-shadow:0 0 18px 6px rgba(245,166,35,0.5);}
-.safety-circle-red{background:#e63946;box-shadow:0 0 18px 6px rgba(230,57,70,0.5);}
-.safety-label{font-size:clamp(13px,1.5vw,21px);font-weight:900;color:#004745;}
-.safety-label-amber{color:#856404;}
-.safety-label-red{color:#b02020;}
-.safety-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:5px;}
-.safety-chip{background:#e6f9e6;color:#1a7a1a;font-weight:700;border-radius:999px;padding:3px 10px;font-size:clamp(7px,0.72vw,10px);}
-.safety-chip-red{background:#fce8e8;color:#b02020;}
-.safety-note{font-size:clamp(6px,0.65vw,9px);color:#6a8a8b;text-align:center;font-style:italic;}
-.capex-budget-label{font-size:clamp(8px,0.85vw,12px);font-weight:700;color:#212121;margin-bottom:4px;flex-shrink:0;}
-.capex-track{width:100%;height:21px;background:#ddeaeb;border-radius:11px;overflow:hidden;flex-shrink:0;margin-bottom:3px;}
-.capex-fill{height:100%;border-radius:11px;background:#005e60;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;}
-.capex-fill-pct{color:#c8ff08;font-size:clamp(9px,0.9vw,12px);font-weight:900;}
-.capex-sub{font-size:clamp(7px,0.7vw,9px);color:#6a8a8b;margin-bottom:6px;flex-shrink:0;}
-.capex-rows{display:flex;flex-direction:column;gap:4px;flex:1;overflow:hidden;min-height:0;}
-.capex-row{display:flex;flex-direction:row;align-items:center;gap:6px;flex:1;min-height:0;overflow:hidden;}
-.capex-proj{flex:1;font-size:clamp(8px,0.82vw,11px);color:#212121;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.capex-amt{font-size:clamp(8px,0.82vw,11px);font-weight:700;color:#004745;flex-shrink:0;min-width:38px;text-align:right;}
-.capex-chip{font-size:clamp(6px,0.65vw,9px);font-weight:700;border-radius:6px;padding:2px 7px;white-space:nowrap;flex-shrink:0;}
-.capex-note{font-size:clamp(6px,0.65vw,9px);color:#6a8a8b;font-style:italic;text-align:right;margin-top:3px;flex-shrink:0;}
-.map-body{flex:1;display:flex;flex-direction:column;background:#f0f4f5;overflow:hidden;}
-.map-container{flex:1;background:#005e5d;position:relative;overflow:hidden;}
-.map-stat-bar{flex:0 0 42px;background:#004a4c;border-top:2px solid rgba(200,255,8,0.25);position:relative;display:flex;align-items:center;justify-content:center;gap:32px;}
-.map-stat{display:flex;flex-direction:column;align-items:center;gap:2px;}
-.map-stat-number{font-size:clamp(15px,1.5vw,22px);font-weight:900;color:#c8ff08;}
-.map-stat-label{font-size:10px;color:rgba(255,255,255,0.85);}
-.map-stat-sep{color:rgba(200,255,8,0.3);}
-.map-stat-meta{position:absolute;right:14px;color:rgba(255,255,255,0.3);font-size:9px;}
-svg{width:100%;height:100%;}
-@keyframes pulse-ring{0%{transform:scale(1);opacity:0.65;}100%{transform:scale(1.9);opacity:0;}}
-#tooltip4{position:fixed;background:#003d3e;color:#fff;padding:7px 13px;border-radius:6px;font-size:12px;z-index:999;pointer-events:none;display:none;}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      background: #212121;
+    }
+
+    :root {
+      --color-evergreen: #005e60;
+      --color-dark-evergreen: #004a4c;
+      --color-darker: #003d3e;
+      --color-lime: #c8ff08;
+      --color-white: #ffffff;
+      --color-night: #212121;
+      --color-sky: #59c3c9;
+      --color-forest: #75ca64;
+      --color-amber: #f5a623;
+      --color-red: #e63946;
+      --color-light-bg: #f0f4f5;
+      --color-map-teal: #005e5d;
+      --color-map-land: #007a76;
+    }
+
+    #sc {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      transform: scale(0.985);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none;
+      background: var(--color-light-bg);
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
+      z-index: 100;
+    }
+
+    .slide-title-bar {
+      flex: 0 0 8%;
+      min-height: 50px;
+      background: var(--color-evergreen);
+      border-bottom: 3px solid var(--color-lime);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      gap: 20px;
+    }
+
+    .slide-title-left {
+      color: var(--color-white);
+      font-weight: 800;
+      font-size: clamp(13px, 1.55vw, 22px);
+      flex: 1;
+    }
+
+    .slide-title-pill {
+      background: var(--color-lime);
+      color: var(--color-darker);
+      font-weight: 800;
+      border-radius: 999px;
+      padding: 5px 16px;
+      font-size: clamp(10px, 1.1vw, 14px);
+      white-space: nowrap;
+    }
+
+    /* ===== SLIDE 1 ===== */
+    .metric-strip {
+      flex: 0 0 22%;
+      background: var(--color-dark-evergreen);
+      display: flex;
+      gap: 10px;
+      padding: 10px;
+      align-items: center;
+      justify-content: space-around;
+    }
+
+    .metric-card {
+      background: var(--color-darker);
+      border-radius: 10px;
+      height: 78%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      text-align: center;
+      gap: 4px;
+    }
+
+    .metric-global {
+      flex: 1.2;
+    }
+
+    .metric-number-global {
+      color: var(--color-lime);
+      font-size: clamp(26px, 3.3vw, 52px);
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .metric-chip-sky {
+      background: rgba(89, 195, 201, 0.2);
+      color: var(--color-sky);
+      border-radius: 999px;
+      padding: 3px 8px;
+      font-size: clamp(7px, 0.75vw, 10px);
+      font-weight: 700;
+    }
+
+    .metric-label {
+      color: var(--color-sky);
+      font-size: clamp(8px, 0.88vw, 11px);
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .metric-number {
+      color: var(--color-white);
+      font-size: clamp(20px, 2.2vw, 36px);
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .metric-sub {
+      color: rgba(255, 255, 255, 0.65);
+      font-size: clamp(7px, 0.7vw, 9px);
+    }
+
+    .slide1-body {
+      flex: 1;
+      background: var(--color-light-bg);
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+      padding: 10px;
+      overflow: hidden;
+    }
+
+    .slide1-left {
+      flex: 0 0 55%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .pill-label {
+      background: var(--color-evergreen);
+      color: var(--color-lime);
+      border-radius: 999px;
+      padding: 4px 14px;
+      font-size: clamp(8px, 0.88vw, 11px);
+      font-weight: 800;
+      text-transform: uppercase;
+      width: fit-content;
+    }
+
+    .pill-label-sky {
+      background: var(--color-sky);
+      color: var(--color-darker);
+    }
+
+    .pll-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      overflow-y: auto;
+    }
+
+    .pll-row {
+      background: var(--color-white);
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      display: flex;
+      flex-direction: column;
+      padding: 8px 10px;
+      gap: 6px;
+    }
+
+    .pll-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pll-identity {
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .pll-name {
+      color: var(--color-night);
+      font-size: clamp(9px, 1vw, 12px);
+      font-weight: 700;
+    }
+
+    .pll-tech {
+      color: rgba(33, 33, 33, 0.65);
+      font-size: clamp(7px, 0.75vw, 9px);
+    }
+
+    .pll-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .pll-chip {
+      background: #1a2e2e;
+      color: var(--color-lime);
+      border-radius: 4px;
+      padding: 3px 6px;
+      font-size: clamp(7px, 0.75vw, 9px);
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .pll-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+    }
+
+    .pll-bar-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pll-bar-label {
+      flex: 0 0 auto;
+      color: var(--color-night);
+      font-size: clamp(7px, 0.75vw, 9px);
+      font-weight: 700;
+      min-width: 50px;
+    }
+
+    .pll-bar-track {
+      flex: 1;
+      background: #ddeaeb;
+      height: 13px;
+      border-radius: 7px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .pll-bar-fill {
+      height: 100%;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-darker);
+      font-size: clamp(7px, 0.7vw, 9px);
+      font-weight: 700;
+      color: var(--color-darker);
+    }
+
+    .pll-bar-over {
+      position: absolute;
+      right: 4px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.15);
+      color: var(--color-darker);
+      border-radius: 3px;
+      padding: 1px 4px;
+      font-size: clamp(6px, 0.65vw, 8px);
+      font-weight: 700;
+    }
+
+    .pll-sub-label {
+      color: rgba(33, 33, 33, 0.5);
+      font-size: clamp(7px, 0.68vw, 9px);
+      margin-left: 50px;
+    }
+
+    .slide1-right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .outlook-summary {
+      display: flex;
+      gap: 8px;
+    }
+
+    .outlook-card {
+      flex: 1;
+      background: var(--color-white);
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      padding: 12px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .outlook-number {
+      color: var(--color-sky);
+      font-size: clamp(18px, 2vw, 32px);
+      font-weight: 900;
+    }
+
+    .outlook-label {
+      color: rgba(33, 33, 33, 0.7);
+      font-size: clamp(8px, 0.85vw, 11px);
+      font-weight: 700;
+    }
+
+    .outlook-table {
+      flex: 1;
+      background: var(--color-white);
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .outlook-table-header {
+      background: var(--color-darker);
+      display: grid;
+      grid-template-columns: 2fr 2fr 1fr 1fr;
+      gap: 8px;
+      padding: 8px 10px;
+      font-weight: 700;
+      font-size: clamp(8px, 0.85vw, 10px);
+      color: var(--color-sky);
+    }
+
+    .outlook-table-body {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .outlook-table-row {
+      display: grid;
+      grid-template-columns: 2fr 2fr 1fr 1fr;
+      gap: 8px;
+      padding: 8px 10px;
+      font-size: clamp(8px, 0.85vw, 10px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      align-items: center;
+    }
+
+    .outlook-table-row:nth-child(even) {
+      background: #f7fafa;
+    }
+
+    .outlook-table-row:last-child {
+      border-bottom: none;
+    }
+
+    .outlook-table-cell-name {
+      color: var(--color-night);
+      font-weight: 600;
+    }
+
+    .outlook-table-cell-num {
+      color: var(--color-sky);
+      font-weight: 700;
+      text-align: right;
+    }
+
+    /* ===== SLIDE 2 ===== */
+    .status-bar {
+      flex: 0 0 16%;
+      background: var(--color-dark-evergreen);
+      display: flex;
+      gap: 10px;
+      padding: 10px;
+      align-items: center;
+      justify-content: space-around;
+    }
+
+    .status-card {
+      background: var(--color-darker);
+      border-radius: 10px;
+      height: 78%;
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 0 14px;
+      gap: 12px;
+    }
+
+    .rag-dot {
+      flex: 0 0 auto;
+      border-radius: 50%;
+      width: clamp(24px, 2.8vw, 42px);
+      height: clamp(24px, 2.8vw, 42px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .rag-dot.green {
+      background: var(--color-forest);
+      box-shadow: 0 0 12px rgba(117, 202, 100, 0.6);
+    }
+
+    .rag-dot.amber {
+      background: var(--color-amber);
+      box-shadow: 0 0 12px rgba(245, 166, 35, 0.6);
+    }
+
+    .rag-dot.red {
+      background: var(--color-red);
+      box-shadow: 0 0 12px rgba(230, 57, 70, 0.6);
+    }
+
+    .status-text {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .status-label {
+      color: var(--color-white);
+      font-size: clamp(9px, 1vw, 12px);
+      font-weight: 700;
+    }
+
+    .status-sub {
+      color: rgba(255, 255, 255, 0.65);
+      font-size: clamp(7px, 0.8vw, 10px);
+    }
+
+    .slide2-grid {
+      flex: 1;
+      background: var(--color-light-bg);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 10px;
+      padding: 10px;
+      overflow: hidden;
+    }
+
+    .grid-zone {
+      background: var(--color-white);
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      padding: 8px 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .zone-title {
+      font-size: clamp(8px, 0.88vw, 11px);
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .kpi-cards {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      overflow-y: auto;
+    }
+
+    .kpi-card {
+      background: #f6fafa;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+      align-items: center;
+      padding: 6px 8px;
+    }
+
+    .kpi-bar {
+      flex: 0 0 5px;
+      height: 32px;
+      border-radius: 3px;
+    }
+
+    .kpi-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .kpi-name {
+      color: var(--color-night);
+      font-size: clamp(8px, 0.9vw, 11px);
+      font-weight: 600;
+    }
+
+    .kpi-value {
+      color: var(--color-darker);
+      font-size: clamp(13px, 1.5vw, 22px);
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .kpi-plan {
+      color: rgba(33, 33, 33, 0.5);
+      font-size: clamp(7px, 0.75vw, 9px);
+    }
+
+    .kpi-chip {
+      flex: 0 0 auto;
+      border-radius: 999px;
+      padding: 3px 8px;
+      font-size: clamp(7px, 0.75vw, 9px);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .kpi-chip.green {
+      background: rgba(117, 202, 100, 0.2);
+      color: #1a7a1a;
+    }
+
+    .kpi-chip.amber {
+      background: rgba(245, 166, 35, 0.2);
+      color: #856404;
+    }
+
+    .kpi-chip.red {
+      background: rgba(230, 57, 70, 0.2);
+      color: #721c24;
+    }
+
+    .kpi-note {
+      color: rgba(33, 33, 33, 0.5);
+      font-size: clamp(7px, 0.75vw, 9px);
+      text-align: right;
+      font-style: italic;
+      margin-top: 4px;
+    }
+
+    .action-badges {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .action-badge {
+      flex: 1;
+      background: var(--color-evergreen);
+      border-radius: 8px;
+      padding: 8px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .action-badge-num {
+      color: var(--color-lime);
+      font-size: clamp(18px, 2vw, 28px);
+      font-weight: 900;
+    }
+
+    .action-badge-label {
+      color: rgba(255, 255, 255, 0.75);
+      font-size: clamp(7px, 0.75vw, 9px);
+      font-weight: 700;
+    }
+
+    .action-badge.sky {
+      background: var(--color-sky);
+    }
+
+    .action-badge.sky .action-badge-num {
+      color: var(--color-darker);
+    }
+
+    .action-badge.sky .action-badge-label {
+      color: var(--color-darker);
+    }
+
+    .action-badge.green {
+      background: var(--color-forest);
+    }
+
+    .action-badge.green .action-badge-num {
+      color: var(--color-white);
+    }
+
+    .action-badge.green .action-badge-label {
+      color: var(--color-white);
+    }
+
+    .action-items {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .action-column {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .action-column-header {
+      font-size: clamp(8px, 0.85vw, 10px);
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--color-darker);
+      margin-bottom: 2px;
+    }
+
+    .action-column.green .action-column-header {
+      color: #1a7a1a;
+    }
+
+    .action-column.sky .action-column-header {
+      color: var(--color-evergreen);
+    }
+
+    .action-chip {
+      background: #e6f9e6;
+      color: #1a7a1a;
+      border-radius: 999px;
+      padding: 3px 8px;
+      font-size: clamp(7px, 0.7vw, 9px);
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .action-chip.sky {
+      background: #e0f4f5;
+      color: var(--color-evergreen);
+    }
+
+    .safety-center {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      overflow-y: auto;
+    }
+
+    .safety-circle {
+      width: clamp(48px, 5.5vw, 78px);
+      height: clamp(48px, 5.5vw, 78px);
+      border-radius: 50%;
+      background: var(--color-forest);
+      box-shadow: 0 0 16px rgba(117, 202, 100, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-white);
+      font-size: clamp(28px, 3vw, 48px);
+      font-weight: 900;
+    }
+
+    .safety-status {
+      color: var(--color-darker);
+      font-size: clamp(13px, 1.5vw, 21px);
+      font-weight: 900;
+    }
+
+    .safety-sub {
+      color: var(--color-forest);
+      font-size: clamp(10px, 1.1vw, 14px);
+      font-weight: 700;
+    }
+
+    .safety-bubbles {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .safety-bubble {
+      background: #e6f9e6;
+      color: #1a7a1a;
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: clamp(7px, 0.72vw, 10px);
+      font-weight: 700;
+    }
+
+    .safety-incidents {
+      background: rgba(117, 202, 100, 0.08);
+      border-radius: 6px;
+      padding: 8px;
+      font-size: clamp(7px, 0.75vw, 9px);
+      color: rgba(33, 33, 33, 0.7);
+      max-width: 100%;
+    }
+
+    .safety-incidents-header {
+      font-weight: 700;
+      color: var(--color-darker);
+      margin-bottom: 4px;
+      font-style: italic;
+    }
+
+    .safety-incidents-line {
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+
+    .capex-label {
+      color: var(--color-night);
+      font-size: clamp(10px, 1.1vw, 13px);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .capex-bar-track {
+      background: #ddeaeb;
+      height: 21px;
+      border-radius: 11px;
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 4px;
+    }
+
+    .capex-bar-fill {
+      background: var(--color-evergreen);
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-lime);
+      font-weight: 700;
+      font-size: clamp(10px, 1.1vw, 13px);
+    }
+
+    .capex-sub {
+      color: rgba(33, 33, 33, 0.6);
+      font-size: clamp(8px, 0.85vw, 10px);
+      margin-bottom: 8px;
+    }
+
+    .capex-projects {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .capex-project {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 8px;
+      background: #f6fafa;
+      border-radius: 6px;
+      font-size: clamp(8px, 0.85vw, 10px);
+    }
+
+    .capex-project-name {
+      color: var(--color-night);
+      font-weight: 600;
+      flex: 1;
+    }
+
+    .capex-project-amount {
+      color: var(--color-sky);
+      font-weight: 700;
+      flex: 0 0 auto;
+      margin-right: 8px;
+    }
+
+    .capex-project-chip {
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: clamp(7px, 0.7vw, 9px);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .capex-project-chip.teal {
+      background: #e0f4f5;
+      color: var(--color-evergreen);
+    }
+
+    .capex-project-chip.green {
+      background: #e6f9e6;
+      color: #1a7a1a;
+    }
+
+    .capex-project-chip.amber {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .capex-note {
+      color: rgba(33, 33, 33, 0.5);
+      font-size: clamp(7px, 0.75vw, 9px);
+      text-align: right;
+      font-style: italic;
+      margin-top: 4px;
+    }
+
+    /* ===== SLIDE 3 & 4 ===== */
+    .map-container {
+      flex: 1;
+      background: var(--color-light-bg);
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .map-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .map-stat-bar {
+      flex: 0 0 42px;
+      background: var(--color-dark-evergreen);
+      border-top: 2px solid rgba(200, 255, 8, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      padding: 0 20px;
+      font-size: clamp(10px, 1.1vw, 13px);
+    }
+
+    .map-stat-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .map-stat-num {
+      color: var(--color-lime);
+      font-weight: 900;
+      font-size: clamp(15px, 1.5vw, 22px);
+    }
+
+    .map-stat-label {
+      color: rgba(255, 255, 255, 0.85);
+      font-weight: 700;
+      font-size: clamp(9px, 0.95vw, 12px);
+    }
+
+    .map-stat-sep {
+      color: rgba(200, 255, 8, 0.3);
+    }
+
+    .map-stat-right {
+      margin-left: auto;
+      color: rgba(255, 255, 255, 0.35);
+      font-size: clamp(8px, 0.85vw, 10px);
+      font-style: italic;
+    }
+
+    #tooltip4 {
+      position: fixed;
+      background: var(--color-darker);
+      color: var(--color-white);
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 10px;
+      pointer-events: none;
+      z-index: 9998;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      white-space: nowrap;
+    }
+
+    #tooltip4.show {
+      opacity: 1;
+    }
+
+    /* ===== PROGRESS BAR & COUNTER ===== */
+    #pt {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: rgba(200, 255, 8, 0.15);
+      z-index: 9999;
+    }
+
+    #pf {
+      height: 100%;
+      background: var(--color-lime);
+      width: 0%;
+      transition: none;
+    }
+
+    #sn {
+      position: fixed;
+      bottom: 8px;
+      right: 16px;
+      color: var(--color-white);
+      font-size: 11px;
+      opacity: 0.4;
+      z-index: 9999;
+      font-weight: 700;
+    }
+
+    @keyframes pulse-ring {
+      0% {
+        transform: scale(1);
+        opacity: 0.65;
+      }
+      100% {
+        transform: scale(1.9);
+        opacity: 0;
+      }
+    }
+
+    .bubble-pulse {
+      animation: pulse-ring 2s ease-out infinite;
+    }
   </style>
 </head>
 <body>
-<div id="sc">
-  <!-- SLIDE 1: Delivery Operations -->
-  <div class="slide active" id="slide-0">
-    <div class="title-bar">
-      <div class="title-bar-left">OFS Training Delivery &mdash; Delivery Operations</div>
-      <div class="title-bar-pill" id="week-badge-1"></div>
-    </div>
-    <div class="metric-strip">
-      <div class="mc mc-wide">
-        <div class="mc-num" id="ms-global-stu"></div>
-        <div class="mc-lbl">Global Students</div>
-        <div class="mc-chip" id="ms-global-cls"></div>
+  <div id="sc">
+    <!-- SLIDE 1: DELIVERY OPERATIONS -->
+    <div class="slide active" id="slide-0">
+      <div class="slide-title-bar">
+        <div class="slide-title-left">OFS Training Delivery — Delivery Operations</div>
+        <div class="slide-title-pill">Week of May 25–29, 2026</div>
       </div>
-      <div class="mc">
-        <div class="mc-num mc-num-white" id="ms-hlc"></div>
-        <div class="mc-lbl">HLC</div>
-        <div class="mc-sub">Houston, TX</div>
-      </div>
-      <div class="mc">
-        <div class="mc-num mc-num-white" id="ms-blc"></div>
-        <div class="mc-lbl">BLC</div>
-        <div class="mc-sub">Birr, Switzerland</div>
-      </div>
-      <div class="mc">
-        <div class="mc-num mc-num-white" id="ms-klc"></div>
-        <div class="mc-lbl">KLC</div>
-        <div class="mc-sub">Kuwait</div>
-      </div>
-      <div class="mc">
-        <div class="mc-num mc-num-white" id="ms-other"></div>
-        <div class="mc-lbl" style="color:#59c3c9;">Other</div>
-        <div class="mc-sub">Dist. Learning</div>
-      </div>
-    </div>
-    <div class="main-body">
-      <div class="left-col">
-        <div class="pill-ev" id="s1-classes-pill"></div>
-        <div class="pll-list" id="pll-list"></div>
-      </div>
-      <div class="right-col">
-        <div class="pill-sky" id="s1-outlook-pill"></div>
-        <div class="oc-row">
-          <div class="oc-card">
-            <div class="oc-num" id="oc-classes"></div>
-            <div class="oc-lbl">Classes Starting</div>
-          </div>
-          <div class="oc-card">
-            <div class="oc-num" id="oc-students"></div>
-            <div class="oc-lbl">Students Enrolled</div>
-          </div>
+      <div class="metric-strip">
+        <div class="metric-card metric-global">
+          <div class="metric-number-global">219</div>
+          <div class="metric-chip-sky">15 Active Classes</div>
+          <div class="metric-label">Global Students</div>
         </div>
-        <div class="outlook-table-wrap">
-          <div class="ot-header">
-            <span>Instructor</span><span>Subject</span><span>Classes</span><span>Students</span>
-          </div>
-          <div class="ot-body" id="outlook-table-body"></div>
+        <div class="metric-card">
+          <div class="metric-number">138</div>
+          <div class="metric-label">HLC</div>
+          <div class="metric-sub">Houston, TX</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-number">5</div>
+          <div class="metric-label">BLC</div>
+          <div class="metric-sub">Birr, Switzerland</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-number">12</div>
+          <div class="metric-label">KLC</div>
+          <div class="metric-sub">Kuwait</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-number">40</div>
+          <div class="metric-label">Other</div>
+          <div class="metric-sub">Dist. Learning</div>
         </div>
       </div>
+      <div class="slide1-body">
+        <div class="slide1-left">
+          <div class="pill-label">15 Active Classes</div>
+          <div class="pll-container" id="pll-list"></div>
+        </div>
+        <div class="slide1-right">
+          <div class="pill-label pill-label-sky">Outlook: May 30 – Jun 28</div>
+          <div class="outlook-summary">
+            <div class="outlook-card">
+              <div class="outlook-number">69</div>
+              <div class="outlook-label">Classes Starting</div>
+            </div>
+            <div class="outlook-card">
+              <div class="outlook-number">642</div>
+              <div class="outlook-label">Students Enrolled</div>
+            </div>
+          </div>
+          <div class="outlook-table">
+            <div class="outlook-table-header">
+              <div>Instructor</div>
+              <div>Subject</div>
+              <div>Classes</div>
+              <div>Students</div>
+            </div>
+            <div class="outlook-table-body" id="outlook-body"></div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <!-- SLIDE 2: Performance & Improvement -->
-  <div class="slide" id="slide-1">
-    <div class="title-bar">
-      <div class="title-bar-left">OFS Training Delivery &mdash; Performance &amp; Improvement</div>
-      <div class="title-bar-pill" id="week-badge-2"></div>
-    </div>
-    <div class="status-bar">
-      <div class="sbc">
-        <div class="rag-dot" id="rag-safety"></div>
-        <div class="sc-text">
-          <div class="sc-lbl">SAFETY</div>
-          <div class="sc-sub" id="rag-safety-sub"></div>
-        </div>
+    <!-- SLIDE 2: PERFORMANCE & IMPROVEMENT -->
+    <div class="slide" id="slide-1">
+      <div class="slide-title-bar">
+        <div class="slide-title-left">OFS Training Delivery — Performance & Improvement</div>
+        <div class="slide-title-pill">Week of May 25–29, 2026</div>
       </div>
-      <div class="sbc">
-        <div class="rag-dot" id="rag-bowler"></div>
-        <div class="sc-text">
-          <div class="sc-lbl">BOWLER KPIs</div>
-          <div class="sc-sub" id="rag-bowler-sub"></div>
-        </div>
-      </div>
-      <div class="sbc">
-        <div class="rag-dot" id="rag-ap"></div>
-        <div class="sc-text">
-          <div class="sc-lbl">ACTION PLAN</div>
-          <div class="sc-sub" id="rag-ap-sub"></div>
-        </div>
-      </div>
-      <div class="sbc">
-        <div class="rag-dot" id="rag-capex"></div>
-        <div class="sc-text">
-          <div class="sc-lbl">CAPEX 2026</div>
-          <div class="sc-sub" id="rag-capex-sub"></div>
-        </div>
-      </div>
-    </div>
-    <div class="grid-body">
-      <div class="zone">
-        <div class="pill-ev">Bowler KPIs</div>
-        <div class="kpi-list" id="kpi-list"></div>
-        <div class="bowler-note" id="bowler-note"></div>
-      </div>
-      <div class="zone">
-        <div class="pill-sky">Action Plan Health</div>
-        <div class="ap-badges" id="ap-badges"></div>
-        <div class="ap-cols">
-          <div class="ap-col">
-            <div class="ap-col-hdr ap-col-hdr-green">✓ Recently Completed</div>
-            <div id="ap-completed"></div>
+      <div class="status-bar">
+        <div class="status-card">
+          <div class="rag-dot green">✓</div>
+          <div class="status-text">
+            <div class="status-label">Safety</div>
+            <div class="status-sub">All Clear — 0 Incidents</div>
           </div>
-          <div class="ap-col">
-            <div class="ap-col-hdr ap-col-hdr-sky">▶ On Deck</div>
-            <div id="ap-ondeck"></div>
+        </div>
+        <div class="status-card">
+          <div class="rag-dot amber">!</div>
+          <div class="status-text">
+            <div class="status-label">Bowler KPIs</div>
+            <div class="status-sub">1 At Risk, 1 Amber</div>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="rag-dot green">✓</div>
+          <div class="status-text">
+            <div class="status-label">Action Plan</div>
+            <div class="status-sub">0 Overdue</div>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="rag-dot amber">!</div>
+          <div class="status-text">
+            <div class="status-label">Capex 2026</div>
+            <div class="status-sub">80% Spent</div>
           </div>
         </div>
       </div>
-      <div class="zone">
-        <div class="pill-ev">Safety Status</div>
-        <div class="safety-zone" id="safety-zone"></div>
-      </div>
-      <div class="zone">
-        <div class="pill-sky">2026 CapEx</div>
-        <div class="capex-budget-label" id="capex-budget-label"></div>
-        <div class="capex-track"><div class="capex-fill" id="capex-fill"><span class="capex-fill-pct" id="capex-fill-pct"></span></div></div>
-        <div class="capex-sub" id="capex-sub"></div>
-        <div class="capex-rows" id="capex-rows"></div>
-        <div class="capex-note">CapEx updated quarterly</div>
-      </div>
-    </div>
-  </div>
+      <div class="slide2-grid">
+        <!-- Zone 1: BOWLER KPIs -->
+        <div class="grid-zone">
+          <div class="pill-label">Bowler KPIs</div>
+          <div class="kpi-cards">
+            <div class="kpi-card">
+              <div class="kpi-bar" style="background: var(--color-forest);"></div>
+              <div class="kpi-content">
+                <div class="kpi-name">Post-Training Skill Improvement</div>
+                <div class="kpi-value">83%</div>
+                <div class="kpi-plan">Plan: 70%</div>
+              </div>
+              <div class="kpi-chip green">On Track</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-bar" style="background: var(--color-amber);"></div>
+              <div class="kpi-content">
+                <div class="kpi-name">Timecard OTD</div>
+                <div class="kpi-value">85%</div>
+                <div class="kpi-plan">Plan: 92%</div>
+              </div>
+              <div class="kpi-chip amber">Below Target</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-bar" style="background: var(--color-red);"></div>
+              <div class="kpi-content">
+                <div class="kpi-name">Instructor Util >75% for 3mo</div>
+                <div class="kpi-value">19%</div>
+                <div class="kpi-plan">Target: <15%</div>
+              </div>
+              <div class="kpi-chip red">Over Threshold</div>
+            </div>
+          </div>
+          <div class="kpi-note">April data — Owner: Jim Rosen</div>
+        </div>
 
-  <!-- SLIDE 3: Student Geography -->
-  <div class="slide" id="slide-2">
-    <div class="title-bar">
-      <div class="title-bar-left">OFS Training Delivery &mdash; Where in the World are Our Students From?</div>
-      <div class="title-bar-pill" id="week-badge-3"></div>
+        <!-- Zone 2: ACTION PLAN HEALTH -->
+        <div class="grid-zone">
+          <div class="pill-label pill-label-sky">Action Plan Health</div>
+          <div class="action-badges">
+            <div class="action-badge">
+              <div class="action-badge-num">116</div>
+              <div class="action-badge-label">In Progress</div>
+            </div>
+            <div class="action-badge sky">
+              <div class="action-badge-num">0</div>
+              <div class="action-badge-label">On Deck</div>
+            </div>
+            <div class="action-badge green">
+              <div class="action-badge-num">38</div>
+              <div class="action-badge-label">Complete (60D)</div>
+            </div>
+          </div>
+          <div class="action-items">
+            <div class="action-column green">
+              <div class="action-column-header">✓ Recently Completed</div>
+              <div class="action-chip">May 29 — Create Kahuna roles per OFS Lifting Workshop</div>
+              <div class="action-chip">Apr 30 — Standard process for communicating to instructors</div>
+              <div class="action-chip">Apr 30 — Finalize testing & functionality of request workflows</div>
+              <div class="action-chip">Apr 30 — Includes simulator readiness</div>
+              <div class="action-chip">Apr 30 — AP-0744 completion item</div>
+            </div>
+            <div class="action-column sky">
+              <div class="action-column-header">▶ On Deck</div>
+              <div class="action-chip sky">May 29 — Identify best way to connect with Staff</div>
+              <div class="action-chip sky">Jun 29 — Design online resource for OFS Programs</div>
+              <div class="action-chip sky">Jun 30 — MM & Xyleme integration</div>
+              <div class="action-chip sky">Jun 30 — Complete LO Application Management training</div>
+              <div class="action-chip sky">Jun 30 — AP-0388-3</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Zone 3: SAFETY STATUS -->
+        <div class="grid-zone">
+          <div class="pill-label">Safety Status</div>
+          <div class="safety-center">
+            <div class="safety-circle">✓</div>
+            <div class="safety-status">All Clear</div>
+            <div class="safety-sub">No Incidents</div>
+            <div class="safety-bubbles">
+              <div class="safety-bubble">I&I: 0</div>
+              <div class="safety-bubble">I&I Rate: 0</div>
+              <div class="safety-bubble">Severe: 0</div>
+              <div class="safety-bubble">Live Save ✓</div>
+              <div class="safety-bubble">Read Across ✓</div>
+            </div>
+            <div class="safety-incidents">
+              <div class="safety-incidents-header">Prior Incidents (Reference Only)</div>
+              <div class="safety-incidents-line">May 13 · HLC — 7FA Bearing 2 lube oil spill. Sorbent pad left in drain. Flow stopped, permit issued, cleaned. System normal.</div>
+              <div class="safety-incidents-line">May 8, 10:30 AM · Trailer 101 — Student slipped on wet stairs. First aid: tailbone, heel & toe. Caution & reporting reinforced.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Zone 4: 2026 CAPEX -->
+        <div class="grid-zone">
+          <div class="pill-label pill-label-sky">2026 Capex</div>
+          <div class="capex-label">$4.37M of $5.49M Spent (80%)</div>
+          <div class="capex-bar-track">
+            <div class="capex-bar-fill" style="width: 80%;">80%</div>
+          </div>
+          <div class="capex-sub">$1.11M projected remaining</div>
+          <div class="capex-projects">
+            <div class="capex-project">
+              <div class="capex-project-name">HA Mock-up (Intl Location)</div>
+              <div class="capex-project-amount">$1.31M</div>
+              <div class="capex-project-chip teal">Active</div>
+            </div>
+            <div class="capex-project">
+              <div class="capex-project-name">New Crane for Bay 1</div>
+              <div class="capex-project-amount">$1.00M</div>
+              <div class="capex-project-chip teal">Active</div>
+            </div>
+            <div class="capex-project">
+              <div class="capex-project-name">HA Tooling</div>
+              <div class="capex-project-amount">$700K</div>
+              <div class="capex-project-chip green">PO Opened</div>
+            </div>
+            <div class="capex-project">
+              <div class="capex-project-name">HA Improvements</div>
+              <div class="capex-project-amount">$600K</div>
+              <div class="capex-project-chip teal">Active</div>
+            </div>
+            <div class="capex-project">
+              <div class="capex-project-name">ITS Mockup</div>
+              <div class="capex-project-amount">$579K</div>
+              <div class="capex-project-chip teal">Active</div>
+            </div>
+            <div class="capex-project">
+              <div class="capex-project-name">Building 2 New Roof</div>
+              <div class="capex-project-amount">$575K</div>
+              <div class="capex-project-chip amber">AR Created</div>
+            </div>
+          </div>
+          <div class="capex-note">CapEx updated quarterly</div>
+        </div>
+      </div>
     </div>
-    <div class="map-body">
-      <div class="map-container" id="map3-container"></div>
+
+    <!-- SLIDE 3: INTERNAL STUDENT GLOBAL MAP -->
+    <div class="slide" id="slide-2">
+      <div class="slide-title-bar">
+        <div class="slide-title-left">OFS Training Delivery — Where in the World are Our Students From?</div>
+        <div class="slide-title-pill">Week of May 25–29, 2026</div>
+      </div>
+      <div class="map-container" id="map3-container">
+        <svg class="map-svg" id="map3-svg"></svg>
+      </div>
       <div class="map-stat-bar">
-        <div class="map-stat"><div class="map-stat-number" id="s3-students"></div><div class="map-stat-label">Active Students</div></div>
-        <div class="map-stat-sep">|</div>
-        <div class="map-stat"><div class="map-stat-number" id="s3-countries"></div><div class="map-stat-label">Countries</div></div>
-        <div class="map-stat-sep">|</div>
-        <div class="map-stat"><div class="map-stat-number" id="s3-classes"></div><div class="map-stat-label">Active Classes</div></div>
-        <div class="map-stat-meta">Internal Only | In-Progress</div>
+        <div class="map-stat-item">
+          <span class="map-stat-num">195</span>
+          <span class="map-stat-label">Active Students</span>
+        </div>
+        <span class="map-stat-sep">|</span>
+        <div class="map-stat-item">
+          <span class="map-stat-num">28</span>
+          <span class="map-stat-label">Countries</span>
+        </div>
+        <span class="map-stat-sep">|</span>
+        <div class="map-stat-item">
+          <span class="map-stat-num">13</span>
+          <span class="map-stat-label">Active Classes</span>
+        </div>
+        <div class="map-stat-right">Internal Only | In-Progress</div>
       </div>
     </div>
-  </div>
 
-  <!-- SLIDE 4: Customer Training Geography -->
-  <div class="slide" id="slide-3">
-    <div class="title-bar">
-      <div class="title-bar-left">OFS Training Delivery &mdash; Where in the World Are We Training Our Customers?</div>
-      <div class="title-bar-pill" id="week-badge-4"></div>
-    </div>
-    <div class="map-body">
-      <div class="map-container" id="map4-container"></div>
+    <!-- SLIDE 4: CUSTOMER TRAINING GLOBAL MAP -->
+    <div class="slide" id="slide-3">
+      <div class="slide-title-bar">
+        <div class="slide-title-left">OFS Training Delivery — Where in the World Are We Training Our Customers?</div>
+        <div class="slide-title-pill">Week of May 25–29, 2026</div>
+      </div>
+      <div class="map-container" id="map4-container">
+        <svg class="map-svg" id="map4-svg"></svg>
+      </div>
       <div class="map-stat-bar">
-        <div class="map-stat"><div class="map-stat-number" id="s4-students"></div><div class="map-stat-label">Active Students</div></div>
-        <div class="map-stat-sep">|</div>
-        <div class="map-stat"><div class="map-stat-number" id="s4-classes"></div><div class="map-stat-label">Active Classes</div></div>
-        <div class="map-stat-sep">|</div>
-        <div class="map-stat"><div class="map-stat-number" id="s4-countries"></div><div class="map-stat-label">Countries</div></div>
-        <div class="map-stat-meta">OE + Site Specific | In-Progress Only</div>
+        <div class="map-stat-item">
+          <span class="map-stat-num">24</span>
+          <span class="map-stat-label">Active Students</span>
+        </div>
+        <span class="map-stat-sep">|</span>
+        <div class="map-stat-item">
+          <span class="map-stat-num">2</span>
+          <span class="map-stat-label">Active Classes</span>
+        </div>
+        <span class="map-stat-sep">|</span>
+        <div class="map-stat-item">
+          <span class="map-stat-num">2</span>
+          <span class="map-stat-label">Countries</span>
+        </div>
+        <div class="map-stat-right">OE + Site Specific | In-Progress Only</div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Progress bar -->
-<div id="pt"><div id="pf"></div></div>
-<div id="sn">1 / 4</div>
-<div id="tooltip4"></div>
+  <div id="pt"><div id="pf"></div></div>
+  <div id="sn">1 / 4</div>
+  <div id="tooltip4"></div>
 
-<script>
-// ============================================================================
-// POPULATE BOARD FROM DATA
-// ============================================================================
-function populateBoard(data) {
-  // Week badges — all 4 slides
-  ['week-badge-1','week-badge-2','week-badge-3','week-badge-4'].forEach(id => {
-    document.getElementById(id).textContent = data.week_label;
-  });
+  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
 
-  // SLIDE 1 — Metric Strip
-  const ms = data.slide1.metric_strip;
-  document.getElementById('ms-global-stu').textContent = (typeof ms.global_students === 'object' && ms.global_students !== null) ? (ms.global_students.students !== undefined ? ms.global_students.students : ms.global_students.total || JSON.stringify(ms.global_students)) : ms.global_students;
-  document.getElementById('ms-global-cls').textContent = ((typeof ms.global_classes === 'object' && ms.global_classes !== null) ? (ms.global_classes.count !== undefined ? ms.global_classes.count : ms.global_classes.total || JSON.stringify(ms.global_classes)) : ms.global_classes) + ' Active Classes';
-  document.getElementById('ms-hlc').textContent = (typeof ms.hlc === 'object' && ms.hlc !== null) ? (ms.hlc.students !== undefined ? ms.hlc.students : JSON.stringify(ms.hlc)) : ms.hlc;
-  document.getElementById('ms-blc').textContent = (typeof ms.blc === 'object' && ms.blc !== null) ? (ms.blc.students !== undefined ? ms.blc.students : JSON.stringify(ms.blc)) : ms.blc;
-  document.getElementById('ms-klc').textContent = (typeof ms.klc === 'object' && ms.klc !== null) ? (ms.klc.students !== undefined ? ms.klc.students : JSON.stringify(ms.klc)) : ms.klc;
-  document.getElementById('ms-other').textContent = (typeof ms.other === 'object' && ms.other !== null) ? (ms.other.students !== undefined ? ms.other.students : JSON.stringify(ms.other)) : ms.other;
-  document.getElementById('s1-classes-pill').textContent = data.slide1.classes_pill;
-  document.getElementById('s1-outlook-pill').textContent = data.slide1.outlook_pill;
-  document.getElementById('oc-classes').textContent = data.slide1.outlook_total_classes;
-  document.getElementById('oc-students').textContent = data.slide1.outlook_total_students;
-
-  // SLIDE 1 — PLL Rows
-  const pllList = document.getElementById('pll-list');
-  pllList.innerHTML = '';
-  data.slide1.plls.forEach(pll => {
-    const hasCustomer = (pll.name !== 'Harry Hanson' && pll.name !== 'Linda');
-    const int = pll.internal;
-    const barPct = int.capacity > 0 ? Math.min((int.enrolled / int.capacity) * 100, 100) : 0;
-    const overEnrolled = int.capacity > 0 && int.enrolled > int.capacity;
-    let barClass = 'bar-fill-red';
-    if (overEnrolled) barClass = 'bar-fill-lime';
-    else if (barPct >= 80) barClass = 'bar-fill-green';
-    else if (barPct >= 50) barClass = 'bar-fill-amber';
-
-    // Sub-label lines for OE and CT (customer training)
-    let subLines = '';
-    if (hasCustomer) {
-      if (pll.site_specific && pll.site_specific.classes > 0) {
-        subLines += `<div style="font-size:clamp(7px,0.68vw,9px);color:#6a8a8b;margin-top:2px;">CT: ${pll.site_specific.classes} cls / ${pll.site_specific.students} stu</div>`;
+  <script>
+    // ===== SLIDE 1 DATA =====
+    const pllData = [
+      {
+        name: 'Sherif Khalifa',
+        tech: 'Gas Turbine',
+        classes: 2,
+        students: 44,
+        internal: { enrolled: 44, total: 48, pct: 92 },
+        siteSpecific: { classes: 0, students: 0 },
+        oe: { classes: 0, students: 0 }
+      },
+      {
+        name: 'Pablo Schibli',
+        tech: 'Steam Turbine',
+        classes: 3,
+        students: 36,
+        internal: { enrolled: 24, total: 24, pct: 100 },
+        siteSpecific: { classes: 0, students: 0 },
+        oe: { classes: 1, students: 12 }
+      },
+      {
+        name: 'Michele Alcantar',
+        tech: 'Generator + Excitation',
+        classes: 2,
+        students: 21,
+        internal: { enrolled: 21, total: 28, pct: 75 },
+        siteSpecific: { classes: 0, students: 0 },
+        oe: { classes: 0, students: 0 }
+      },
+      {
+        name: 'Mohammed Nizami',
+        tech: 'Controls',
+        classes: 1,
+        students: 6,
+        internal: { enrolled: 6, total: 17, pct: 35 },
+        siteSpecific: { classes: 0, students: 0 },
+        oe: { classes: 0, students: 0 }
+      },
+      {
+        name: 'Harry Hanson',
+        tech: 'Craft / Repairs / ILES',
+        classes: 5,
+        students: 60,
+        internal: { enrolled: 60, total: 62, pct: 97 },
+        siteSpecific: null,
+        oe: null
+      },
+      {
+        name: 'Greg Walker',
+        tech: 'Aeroderivative',
+        classes: 1,
+        students: 12,
+        internal: { enrolled: 0, total: 0, pct: 0, dash: true },
+        siteSpecific: { classes: 0, students: 0 },
+        oe: { classes: 1, students: 12 }
+      },
+      {
+        name: 'Linda',
+        tech: 'CTE / Workforce Dev',
+        classes: 2,
+        students: 40,
+        internal: { enrolled: 40, total: 36, pct: 111, over: true },
+        siteSpecific: null,
+        oe: null
       }
-      if (pll.open_enrollment && pll.open_enrollment.classes > 0) {
-        subLines += `<div style="font-size:clamp(7px,0.68vw,9px);color:#6a8a8b;margin-top:2px;">OE: ${pll.open_enrollment.classes} cls / ${pll.open_enrollment.students} stu</div>`;
-      }
-    }
+    ];
 
-    // Enrollment bar — only for internal rows with capacity
-    let barHTML = '';
-    if (int.capacity > 0) {
-      barHTML = `<div class="bar-track"><div class="bar-fill ${barClass}" style="width:${barPct}%;"></div></div>
-        <div class="bar-meta">
-          <span class="bar-label">INT ${int.enrolled}/${int.capacity}</span>
-          ${overEnrolled ? '<span class="over-badge">OVER</span>' : ''}
+    const outlookData = [
+      { name: 'Sherif Khalifa', tech: 'Gas Turbine', classes: 9, students: 85 },
+      { name: 'Pablo Schibli', tech: 'Steam Turbine', classes: 5, students: 54 },
+      { name: 'Michele Alcantar', tech: 'Generator + Excitation', classes: 8, students: 95 },
+      { name: 'Mohammed Nizami', tech: 'Controls', classes: 14, students: 144 },
+      { name: 'Harry Hanson', tech: 'Craft / Repairs / ILES', classes: 18, students: 159 },
+      { name: 'Greg Walker', tech: 'Aeroderivative', classes: 13, students: 93 },
+      { name: 'Linda', tech: 'CTE / Workforce Dev', classes: 2, students: 12 }
+    ];
+
+    // Render Slide 1 PLL rows
+    const pllList = document.getElementById('pll-list');
+    pllData.forEach(pll => {
+      const row = document.createElement('div');
+      row.className = 'pll-row';
+
+      let barColor = '#75ca64'; // green
+      if (pll.internal.pct >= 100) barColor = '#c8ff08'; // lime
+      else if (pll.internal.pct >= 75) barColor = '#75ca64'; // green
+      else if (pll.internal.pct >= 50) barColor = '#f5a623'; // amber
+      else barColor = '#e63946'; // red
+
+      let barHtml = '';
+      if (pll.internal.dash) {
+        barHtml = '<div class="pll-bar-row"><div class="pll-bar-label">INT</div><div style="flex:1; color: rgba(33,33,33,0.4); font-size: clamp(7px,0.75vw,9px);">—</div></div>';
+      } else {
+        const barWidth = Math.min((pll.internal.enrolled / pll.internal.total) * 100, 100);
+        barHtml = `<div class="pll-bar-row">
+          <div class="pll-bar-label">INT ${pll.internal.enrolled}/${pll.internal.total}</div>
+          <div class="pll-bar-track">
+            <div class="pll-bar-fill" style="background: ${barColor}; width: ${barWidth}%;">${pll.internal.pct}%</div>
+            ${pll.internal.over ? '<div class="pll-bar-over">OVER</div>' : ''}
+          </div>
         </div>`;
-    } else {
-      barHTML = `<div class="bar-meta"><span class="bar-dash">—</span></div>`;
-    }
+      }
 
-    pllList.innerHTML += `
-      <div class="pll-row">
-        <div class="pll-identity">
-          <div class="pll-name">${pll.name}</div>
-          <div class="pll-tech">${pll.tech}</div>
+      let subLabels = '';
+      if (pll.siteSpecific !== null && (pll.siteSpecific.classes > 0 || pll.siteSpecific.students > 0)) {
+        subLabels += `<div class="pll-sub-label">Site Specific: ${pll.siteSpecific.classes} cls / ${pll.siteSpecific.students} stu</div>`;
+      }
+      if (pll.oe !== null && (pll.oe.classes > 0 || pll.oe.students > 0)) {
+        subLabels += `<div class="pll-sub-label">OE: ${pll.oe.classes} cls / ${pll.oe.students} stu</div>`;
+      }
+
+      row.innerHTML = `
+        <div class="pll-header">
+          <div class="pll-identity">
+            <div class="pll-name">${pll.name}</div>
+            <div class="pll-tech">${pll.tech}</div>
+          </div>
+          <div class="pll-chips">
+            <div class="pll-chip">${pll.classes} CLS</div>
+            <div class="pll-chip">${pll.students} STU</div>
+          </div>
         </div>
-        <div class="pll-chips">
-          <div class="chip-block"><div class="chip-n">${pll.total_classes}</div><div class="chip-l">CLS</div></div>
-          <div class="chip-block"><div class="chip-n">${pll.total_students}</div><div class="chip-l">STU</div></div>
+        <div class="pll-bars">
+          ${barHtml}
+          ${subLabels}
         </div>
-        <div class="pll-bar-area">
-          ${barHTML}
-          ${subLines}
-        </div>
-      </div>`;
-  });
+      `;
+      pllList.appendChild(row);
+    });
 
-  // SLIDE 1 — Outlook Table
-  const otBody = document.getElementById('outlook-table-body');
-  otBody.innerHTML = '';
-  data.slide1.outlook_rows.forEach(row => {
-    otBody.innerHTML += `
-      <div class="ot-row">
-        <div class="ot-cell">${row.name}</div>
-        <div class="ot-cell">${row.tech}</div>
-        <div class="ot-cell-num">${row.classes}</div>
-        <div class="ot-cell-num">${row.students}</div>
-      </div>`;
-  });
+    // Render Slide 1 Outlook table
+    const outlookBody = document.getElementById('outlook-body');
+    outlookData.forEach((row, idx) => {
+      const tr = document.createElement('div');
+      tr.className = 'outlook-table-row';
+      tr.innerHTML = `
+        <div class="outlook-table-cell-name">${row.name}</div>
+        <div class="outlook-table-cell-name">${row.tech}</div>
+        <div class="outlook-table-cell-num">${row.classes}</div>
+        <div class="outlook-table-cell-num">${row.students}</div>
+      `;
+      outlookBody.appendChild(tr);
+    });
 
-  // SLIDE 2 — Status Bar RAG
-  const sb = data.slide2.status_bar;
-  function setRag(dotId, subId, ragState, subText) {
-    const dot = document.getElementById(dotId);
-    dot.className = 'rag-dot rag-' + ragState;
-    document.getElementById(subId).textContent = subText;
-  }
-  setRag('rag-safety', 'rag-safety-sub', sb.safety.rag, sb.safety.sub);
-  setRag('rag-bowler', 'rag-bowler-sub', sb.bowler.rag, sb.bowler.sub);
-  setRag('rag-ap', 'rag-ap-sub', sb.action_plan.rag, sb.action_plan.sub);
-  setRag('rag-capex', 'rag-capex-sub', sb.capex.rag, sb.capex.sub);
+    // ===== CAROUSEL LOGIC =====
+    (function() {
+      const DURATIONS = [30000, 30000, 35000, 35000];
+      let cur = 0, tot = 4, timer = null, raf = null, t0 = null;
 
-  // SLIDE 2 — Bowler KPIs
-  const kpiList = document.getElementById('kpi-list');
-  kpiList.innerHTML = '';
-  const RAG_COLORS = { green: '#75ca64', amber: '#f5a623', red: '#e63946' };
-  data.slide2.bowler_kpis.forEach(kpi => {
-    const barColor = RAG_COLORS[kpi.rag] || '#75ca64';
-    const chipClass = kpi.rag === 'green' ? 'chip-green' : kpi.rag === 'amber' ? 'chip-amber' : 'chip-red';
-    kpiList.innerHTML += `
-      <div class="kc">
-        <div class="kc-bar" style="background:${barColor};"></div>
-        <div class="kc-name">${kpi.name}</div>
-        <div class="kc-vals">
-          <div class="ka">${kpi.actual}</div>
-          <div class="kp">${kpi.plan}</div>
-          <div class="kc-chip ${chipClass}">${kpi.chip}</div>
-        </div>
-      </div>`;
-  });
-  document.getElementById('bowler-note').textContent = data.slide2.bowler_note;
+      function show(n) {
+        cur = (n + tot) % tot;
+        for (let i = 0; i < tot; i++) {
+          const el = document.getElementById('slide-' + i);
+          if (i === cur) {
+            el.classList.add('active');
+          } else {
+            el.classList.remove('active');
+          }
+        }
+        document.getElementById('sn').textContent = (cur + 1) + ' / ' + tot;
+        startBar();
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(function() { show(cur + 1); }, DURATIONS[cur]);
+      }
 
-  // SLIDE 2 — Action Plan
-  const ap = data.slide2.action_plan;
-  document.getElementById('ap-badges').innerHTML = `
-    <div class="ap-badge" style="background:#005e60;">
-      <div class="ap-badge-num" style="color:#c8ff08;">${ap.in_progress}</div>
-      <div class="ap-badge-lbl" style="color:rgba(255,255,255,0.75);">In Progress</div>
-    </div>
-    <div class="ap-badge" style="background:#59c3c9;">
-      <div class="ap-badge-num" style="color:#003d3e;">${ap.on_deck}</div>
-      <div class="ap-badge-lbl" style="color:#003d3e;">On Deck</div>
-    </div>
-    <div class="ap-badge" style="background:#75ca64;">
-      <div class="ap-badge-num" style="color:#003d3e;">${ap.complete_60d}</div>
-      <div class="ap-badge-lbl" style="color:#003d3e;">Complete (60d)</div>
-    </div>`;
-  document.getElementById('ap-completed').innerHTML = ap.completed.map(t => `<div class="ap-chip ap-chip-green">${t}</div>`).join('');
-  document.getElementById('ap-ondeck').innerHTML = ap.upcoming.map(t => `<div class="ap-chip ap-chip-sky">${t}</div>`).join('');
+      function startBar() {
+        if (raf) cancelAnimationFrame(raf);
+        raf = null;
+        t0 = null;
+        const pf = document.getElementById('pf');
+        pf.style.width = '0%';
+        const dur = DURATIONS[cur];
+        function tick(ts) {
+          if (!t0) t0 = ts;
+          const pct = Math.min(((ts - t0) / dur) * 100, 100);
+          pf.style.width = pct + '%';
+          if (pct < 100) {
+            raf = requestAnimationFrame(tick);
+          }
+        }
+        raf = requestAnimationFrame(tick);
+      }
 
-  // SLIDE 2 — Safety Block (v4.1 RAG logic)
-  const safety = data.slide2.safety;
-  const sz = document.getElementById('safety-zone');
-  let circleClass = 'safety-circle-green';
-  let circleSymbol = '✓';
-  let labelClass = 'safety-label';
-  let labelText = 'All Clear';
-  if (safety.rag === 'amber') {
-    circleClass = 'safety-circle-amber';
-    circleSymbol = '!';
-    labelClass = 'safety-label safety-label-amber';
-    labelText = safety.minor_incidents === 1 ? 'Minor Incident' : 'Minor Incidents';
-  } else if (safety.rag === 'red') {
-    circleClass = 'safety-circle-red';
-    circleSymbol = '!';
-    labelClass = 'safety-label safety-label-red';
-    labelText = safety.minor_incidents >= 3 ? 'Multiple Incidents' : 'Active Incident';
-  }
+      show(0);
+    })();
 
-  const chipColors = { green: 'safety-chip', red: 'safety-chip safety-chip-red' };
-  const chipsHTML = safety.kpi_chips.map(c => `<div class="${chipColors[c.rag] || 'safety-chip'}">${c.label}</div>`).join('');
+    // ===== MAP INITIALIZATION =====
+    const slide3Data = [
+      { country: 'United States', students: 97, lon: -98.58, lat: 39.83 },
+      { country: 'Malaysia', students: 27, lon: 109.7, lat: 4.21 },
+      { country: 'Mexico', students: 12, lon: -102.55, lat: 23.63 },
+      { country: 'Saudi Arabia', students: 7, lon: 45.08, lat: 23.89 },
+      { country: 'Indonesia', students: 7, lon: 117.0, lat: -2.0 },
+      { country: 'Oman', students: 6, lon: 57.55, lat: 21.47 },
+      { country: 'Spain', students: 6, lon: -3.71, lat: 40.42 },
+      { country: 'Taiwan', students: 4, lon: 121.0, lat: 24.0 },
+      { country: 'Croatia', students: 3, lon: 15.97, lat: 45.81 },
+      { country: 'Egypt', students: 2, lon: 30.8, lat: 26.82 },
+      { country: 'China', students: 2, lon: 104.2, lat: 35.86 },
+      { country: 'India', students: 2, lon: 78.96, lat: 20.59 },
+      { country: 'Italy', students: 2, lon: 12.57, lat: 41.87 },
+      { country: 'Australia', students: 2, lon: 133.78, lat: -25.27 },
+      { country: 'Canada', students: 2, lon: -96.8, lat: 56.13 },
+      { country: 'Brazil', students: 2, lon: -51.93, lat: -14.24 },
+      { country: 'United Kingdom', students: 1, lon: -2.0, lat: 54.0 },
+      { country: 'South Korea', students: 1, lon: 128.0, lat: 36.0 },
+      { country: 'UAE', students: 1, lon: 53.85, lat: 23.42 },
+      { country: 'Thailand', students: 1, lon: 101.0, lat: 15.0 },
+      { country: 'Algeria', students: 1, lon: 1.66, lat: 28.03 },
+      { country: 'Singapore', students: 1, lon: 103.82, lat: 1.35 },
+      { country: 'Peru', students: 1, lon: -75.02, lat: -9.19 },
+      { country: 'Kuwait', students: 1, lon: 47.48, lat: 29.31 },
+      { country: 'Jordan', students: 1, lon: 36.24, lat: 30.59 },
+      { country: 'Ghana', students: 1, lon: -1.02, lat: 7.95 },
+      { country: 'Germany', students: 1, lon: 10.45, lat: 51.17 },
+      { country: 'Vietnam', students: 1, lon: 108.28, lat: 14.06 }
+    ];
 
-  let incidentBlockHTML = '';
-  if (safety.incident_lines && safety.incident_lines.length > 0) {
-    const borderColor = safety.rag === 'amber' ? '#f5a623' : '#e63946';
-    const bgColor = safety.rag === 'amber' ? 'rgba(245,166,35,0.12)' : 'rgba(230,57,70,0.12)';
-    incidentBlockHTML = `<div style="background:${bgColor};border-left:3px solid ${borderColor};border-radius:0 4px 4px 0;padding:5px 8px;margin-top:4px;font-size:clamp(6px,0.68vw,9px);color:#444;line-height:1.55;width:100%;">
-      ${safety.incident_lines.map((l,i) => `<div style="${i===0?'font-weight:700;':''}margin-bottom:2px;">${l}</div>`).join('')}
-    </div>`;
-  }
+    const slide4Data = [
+      { loc: 'Cancun', country: 'Mexico', students: 12, classes: 1, lon: -86.85, lat: 21.16 },
+      { loc: 'Taiwan', country: 'Taiwan', students: 12, classes: 1, lon: 121.0, lat: 24.0 }
+    ];
 
-  // Prior reference block (shown in green state for historical incidents)
-  let priorHTML = '';
-  if (safety.rag === 'green' && safety.prior_reference && safety.prior_reference.length > 0) {
-    priorHTML = `<div style="background:rgba(106,138,139,0.08);border-left:3px solid rgba(106,138,139,0.4);border-radius:0 4px 4px 0;padding:5px 8px;margin-top:4px;font-size:clamp(6px,0.68vw,9px);color:#6a8a8b;line-height:1.55;width:100%;">
-      <div style="font-style:italic;font-weight:700;margin-bottom:3px;color:#888;">Prior Incidents (Reference Only)</div>
-      ${safety.prior_reference.map(l => `<div style="margin-bottom:3px;">${l}</div>`).join('')}
-    </div>`;
-  }
-
-  sz.innerHTML = `
-    <div class="safety-circle ${circleClass}">${circleSymbol}</div>
-    <div class="${labelClass}">${labelText}</div>
-    <div class="safety-chips">${chipsHTML}</div>
-    ${incidentBlockHTML}
-    ${priorHTML}`;
-
-  // SLIDE 2 — CapEx
-  const cx = data.slide2.capex;
-  document.getElementById('capex-budget-label').textContent = `$${cx.spent.toFixed(2)}M of $${cx.budget.toFixed(2)}M Spent (${cx.pct}%)`;
-  document.getElementById('capex-fill').style.width = cx.pct + '%';
-  document.getElementById('capex-fill-pct').textContent = cx.pct + '%';
-  document.getElementById('capex-sub').textContent = `$${cx.projected_remaining.toFixed(2)}M projected remaining`;
-  const capexRows = document.getElementById('capex-rows');
-  capexRows.innerHTML = '';
-  cx.projects.forEach(p => {
-    capexRows.innerHTML += `
-      <div class="capex-row">
-        <div class="capex-proj">${p.name}</div>
-        <div class="capex-amt">${p.amount}</div>
-        <div class="capex-chip ${p.chip_class}">${p.status}</div>
-      </div>`;
-  });
-
-  // SLIDE 3 — Stat bar
-  document.getElementById('s3-students').textContent = data.slide3.total_students;
-  document.getElementById('s3-countries').textContent = data.slide3.total_countries;
-  document.getElementById('s3-classes').textContent = data.slide3.total_classes;
-
-  // SLIDE 4 — Stat bar
-  document.getElementById('s4-students').textContent = data.slide4.total_students;
-  document.getElementById('s4-classes').textContent = data.slide4.total_classes;
-  document.getElementById('s4-countries').textContent = data.slide4.total_countries;
-
-  // Store map data globally for D3 map functions
-  window._boardData = data;
-}
-
-// ============================================================================
-// D3 MAP FUNCTIONS
-// ============================================================================
-
-function getBubbleSizeInternal(stu) {
-  if (stu >= 96) return {d:72,f:19};
-  if (stu >= 15) return {d:50,f:16};
-  if (stu >= 8)  return {d:42,f:14};
-  if (stu >= 7)  return {d:38,f:13};
-  if (stu >= 6)  return {d:34,f:13};
-  if (stu >= 3)  return {d:29,f:12};
-  if (stu === 2) return {d:25,f:11};
-  return {d:21,f:10};
-}
-
-function initMap3() {
-   try {
-  const container = document.getElementById('map3-container');
-  if (!container || !window._boardData) return;
-  container.innerHTML = '';
-  const w = container.clientWidth;
-  const h = container.clientHeight;
-  const projection = d3.geoMercator().fitSize([w, h], {type:'Sphere'});
-  const path = d3.geoPath(projection);
-  const svg = d3.select(container).append('svg').attr('width', w).attr('height', h);
-  const g = svg.append('g');
-
-  // Ocean
-  g.append('rect').attr('width', w).attr('height', h).attr('fill', '#005e5d');
-
-  // Graticule
-  const graticule = d3.geoGraticule();
-  g.append('path').datum(graticule).attr('d', path).attr('fill', 'none').attr('stroke', 'rgba(200,255,8,0.07)').attr('stroke-width', 0.5);
-
-  // Load world topology
-  d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(world => {
-    const land = topojson.feature(world, world.objects.land);
-    const countries = topojson.feature(world, world.objects.countries);
-
-    // Land
-    g.append('path').datum(land).attr('d', path).attr('fill', '#007a76').attr('stroke', 'rgba(200,255,8,0.12)').attr('stroke-width', 0.5);
-
-    // Ireland highlight
-    const ireland = countries.features.find(f => f.id === 372);
-    if (ireland) {
-      g.append('path').datum(ireland).attr('d', path).attr('fill', 'rgba(200,255,8,0.20)').attr('stroke', 'rgba(200,255,8,0.95)').attr('stroke-width', 1.8);
-      const irelandCenter = d3.geoCentroid(ireland);
-      const [px, py] = projection(irelandCenter);
-      g.append('circle').attr('cx', px).attr('cy', py).attr('r', 8).attr('fill', 'none').attr('stroke', 'rgba(200,255,8,0.5)').attr('stroke-width', 1.5).style('animation', 'pulse-ring 2s infinite');
+    function getBubbleSize(students) {
+      if (students >= 96) return { d: 72, f: 19 };
+      if (students >= 15) return { d: 50, f: 16 };
+      if (students >= 8) return { d: 42, f: 14 };
+      if (students === 7) return { d: 38, f: 13 };
+      if (students === 6) return { d: 34, f: 13 };
+      if (students >= 3) return { d: 29, f: 12 };
+      if (students === 2) return { d: 25, f: 11 };
+      return { d: 21, f: 10 };
     }
 
-    // Data nodes
-    const nodes = window._boardData.slide3.countries.map(c => ({
-      x: projection([c.lon, c.lat])[0],
-      y: projection([c.lon, c.lat])[1],
-      ...c
-    }));
+    let map3Init = false, map4Init = false;
 
-    // Force simulation
-    const simulation = d3.forceSimulation(nodes)
-      .force('collide', d3.forceCollide(d => getBubbleSizeInternal(d.students).d / 2 + 5))
-      .on('tick', () => {
-        bubbles.attr('cx', d => d.x).attr('cy', d => d.y);
-        labels.attr('x', d => d.x).attr('y', d => d.y + getBubbleSizeInternal(d.students).d / 2 + 14);
-        rings.attr('cx', d => d.x).attr('cy', d => d.y);
+    function initMap3() {
+      if (map3Init) return;
+      map3Init = true;
+
+      const container = document.getElementById('map3-container');
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+
+      const svg = d3.select('#map3-svg')
+        .attr('width', width)
+        .attr('height', height);
+
+      const projection = d3.geoEquirectangular()
+        .fitSize([width, height], { type: 'Sphere' });
+
+      const path = d3.geoPath(projection);
+
+      // Fetch world data
+      d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(world => {
+        // Ocean
+        svg.append('rect')
+          .attr('width', width)
+          .attr('height', height)
+          .attr('fill', '#005e5d');
+
+        // Graticule
+        const graticule = d3.geoGraticule().step([20, 20]);
+        svg.append('path')
+          .datum(graticule)
+          .attr('d', path)
+          .attr('fill', 'none')
+          .attr('stroke', 'rgba(200,255,8,0.07)')
+          .attr('stroke-width', 0.5);
+
+        // Land
+        const land = topojson.feature(world, world.objects.land);
+        svg.append('path')
+          .datum(land)
+          .attr('d', path)
+          .attr('fill', '#007a76')
+          .attr('stroke', 'rgba(200,255,8,0.35)')
+          .attr('stroke-width', 0.5);
+
+        // Country borders
+        const countries = topojson.feature(world, world.objects.countries);
+        svg.append('path')
+          .datum(topojson.mesh(world, world.objects.countries, (a, b) => a !== b))
+          .attr('d', path)
+          .attr('fill', 'none')
+          .attr('stroke', 'rgba(200,255,8,0.12)')
+          .attr('stroke-width', 0.3);
+
+        // Ireland special
+        const ireland = countries.features.find(f => f.id === 372);
+        if (ireland) {
+          svg.append('path')
+            .datum(ireland)
+            .attr('d', path)
+            .attr('fill', 'rgba(200,255,8,0.20)')
+            .attr('stroke', 'rgba(200,255,8,0.95)')
+            .attr('stroke-width', 1.8);
+        }
+
+        // Bubbles with collision avoidance
+        const bubbles = svg.selectAll('.bubble')
+          .data(slide3Data)
+          .enter()
+          .append('g')
+          .attr('class', 'bubble')
+          .attr('transform', d => {
+            const [x, y] = projection([d.lon, d.lat]);
+            return `translate(${x},${y})`;
+          });
+
+        bubbles.append('circle')
+          .attr('r', d => getBubbleSize(d.students).d / 2)
+          .attr('fill', '#c8ff08')
+          .attr('opacity', 0.9)
+          .attr('class', d => d.students >= 6 ? 'bubble-pulse' : '');
+
+        bubbles.append('text')
+          .attr('text-anchor', 'middle')
+          .attr('dy', '0.3em')
+          .attr('fill', '#003d3e')
+          .attr('font-weight', 900)
+          .attr('font-size', d => getBubbleSize(d.students).f)
+          .text(d => d.students);
+
+        bubbles.append('text')
+          .attr('text-anchor', 'middle')
+          .attr('dy', d => (getBubbleSize(d.students).d / 2) + 14)
+          .attr('fill', '#ffffff')
+          .attr('font-size', 'clamp(7px,0.58vw,10px)')
+          .text(d => d.country);
+
+        bubbles.on('mouseover', function(e, d) {
+          const tooltip = document.getElementById('tooltip4');
+          tooltip.textContent = `${d.country} — ${d.students} students`;
+          tooltip.classList.add('show');
+        }).on('mousemove', function(e) {
+          const tooltip = document.getElementById('tooltip4');
+          tooltip.style.left = (e.pageX + 10) + 'px';
+          tooltip.style.top = (e.pageY + 10) + 'px';
+        }).on('mouseout', function() {
+          const tooltip = document.getElementById('tooltip4');
+          tooltip.classList.remove('show');
+        });
       });
-
-    // Pulse rings for students >= 6
-    const rings = g.selectAll('.pulse-ring').data(nodes.filter(n => n.students >= 6)).enter()
-      .append('circle').attr('class', 'pulse-ring').attr('r', d => getBubbleSizeInternal(d.students).d / 2)
-      .attr('fill', 'none').attr('stroke', 'rgba(200,255,8,0.3)').attr('stroke-width', 1.5)
-      .style('animation', 'pulse-ring 2s infinite');
-
-    // Bubbles
-    const bubbles = g.selectAll('.bubble').data(nodes).enter()
-      .append('circle').attr('class', 'bubble').attr('r', d => getBubbleSizeInternal(d.students).d / 2)
-      .attr('fill', '#c8ff08').attr('opacity', 0.85)
-      .on('mouseover', function(e, d) {
-        const tt = document.getElementById('tooltip4');
-        tt.textContent = `${d.country} — ${d.students} students`;
-        tt.style.display = 'block';
-        tt.style.left = (e.pageX + 10) + 'px';
-        tt.style.top = (e.pageY + 10) + 'px';
-      })
-      .on('mousemove', function(e) {
-        const tt = document.getElementById('tooltip4');
-        tt.style.left = (e.pageX + 10) + 'px';
-        tt.style.top = (e.pageY + 10) + 'px';
-      })
-      .on('mouseout', function() {
-        document.getElementById('tooltip4').style.display = 'none';
-      });
-
-    // Labels
-    const labels = g.selectAll('.label').data(nodes).enter()
-      .append('text').attr('class', 'label').attr('text-anchor', 'middle')
-      .attr('font-size', d => getBubbleSizeInternal(d.students).f + 'px')
-      .attr('font-weight', 900).attr('fill', '#003d3e')
-      .text(d => d.students);
-
-    // Country names below bubbles
-    g.selectAll('.country-label').data(nodes).enter()
-      .append('text').attr('class', 'country-label').attr('text-anchor', 'middle')
-      .attr('x', d => d.x).attr('y', d => d.y + getBubbleSizeInternal(d.students).d / 2 + 24)
-      .attr('font-size', '10px').attr('fill', 'rgba(255,255,255,0.7)')
-      .text(d => d.country);
-
-    simulation.alpha(1).restart();
-  });
-   } catch(e) { console.error('Map3 init error:', e); }
-}
-
-function initMap4() {
-   try {
-  const container = document.getElementById('map4-container');
-  if (!container || !window._boardData) return;
-  container.innerHTML = '';
-  const w = container.clientWidth;
-  const h = container.clientHeight;
-  const projection = d3.geoMercator().fitSize([w, h], {type:'Sphere'});
-  const path = d3.geoPath(projection);
-  const svg = d3.select(container).append('svg').attr('width', w).attr('height', h);
-  const g = svg.append('g');
-
-  // Ocean
-  g.append('rect').attr('width', w).attr('height', h).attr('fill', '#005e5d');
-
-  // Graticule
-  const graticule = d3.geoGraticule();
-  g.append('path').datum(graticule).attr('d', path).attr('fill', 'none').attr('stroke', 'rgba(200,255,8,0.07)').attr('stroke-width', 0.5);
-
-  // Load world topology
-  d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(world => {
-    const land = topojson.feature(world, world.objects.land);
-    const countries = topojson.feature(world, world.objects.countries);
-
-    // Land
-    g.append('path').datum(land).attr('d', path).attr('fill', '#007a76').attr('stroke', 'rgba(200,255,8,0.12)').attr('stroke-width', 0.5);
-
-    // Ireland highlight
-    const ireland = countries.features.find(f => f.id === 372);
-    if (ireland) {
-      g.append('path').datum(ireland).attr('d', path).attr('fill', 'rgba(200,255,8,0.20)').attr('stroke', 'rgba(200,255,8,0.95)').attr('stroke-width', 1.8);
-      const irelandCenter = d3.geoCentroid(ireland);
-      const [px, py] = projection(irelandCenter);
-      g.append('circle').attr('cx', px).attr('cy', py).attr('r', 8).attr('fill', 'none').attr('stroke', 'rgba(200,255,8,0.5)').attr('stroke-width', 1.5).style('animation', 'pulse-ring 2s infinite');
     }
 
-    // Data nodes
-    const nodes = window._boardData.slide4.locations.map(loc => ({
-      x: projection([loc.lon, loc.lat])[0],
-      y: projection([loc.lon, loc.lat])[1],
-      ...loc
-    }));
+    function initMap4() {
+      if (map4Init) return;
+      map4Init = true;
 
-    // Force simulation
-    const simulation = d3.forceSimulation(nodes)
-      .force('collide', d3.forceCollide(d => getBubbleSizeInternal(d.stu).d / 2 + 5))
-      .on('tick', () => {
-        bubbles.attr('cx', d => d.x).attr('cy', d => d.y);
-        labels.attr('x', d => d.x).attr('y', d => d.y + getBubbleSizeInternal(d.stu).d / 2 + 14);
-        rings.attr('cx', d => d.x).attr('cy', d => d.y);
+      const container = document.getElementById('map4-container');
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+
+      const svg = d3.select('#map4-svg')
+        .attr('width', width)
+        .attr('height', height);
+
+      const projection = d3.geoEquirectangular()
+        .fitSize([width, height], { type: 'Sphere' });
+
+      const path = d3.geoPath(projection);
+
+      d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(world => {
+        svg.append('rect')
+          .attr('width', width)
+          .attr('height', height)
+          .attr('fill', '#005e5d');
+
+        const graticule = d3.geoGraticule().step([20, 20]);
+        svg.append('path')
+          .datum(graticule)
+          .attr('d', path)
+          .attr('fill', 'none')
+          .attr('stroke', 'rgba(200,255,8,0.07)')
+          .attr('stroke-width', 0.5);
+
+        const land = topojson.feature(world, world.objects.land);
+        svg.append('path')
+          .datum(land)
+          .attr('d', path)
+          .attr('fill', '#007a76')
+          .attr('stroke', 'rgba(200,255,8,0.35)')
+          .attr('stroke-width', 0.5);
+
+        svg.append('path')
+          .datum(topojson.mesh(world, world.objects.countries, (a, b) => a !== b))
+          .attr('d', path)
+          .attr('fill', 'none')
+          .attr('stroke', 'rgba(200,255,8,0.12)')
+          .attr('stroke-width', 0.3);
+
+        const countries = topojson.feature(world, world.objects.countries);
+        const ireland = countries.features.find(f => f.id === 372);
+        if (ireland) {
+          svg.append('path')
+            .datum(ireland)
+            .attr('d', path)
+            .attr('fill', 'rgba(200,255,8,0.20)')
+            .attr('stroke', 'rgba(200,255,8,0.95)')
+            .attr('stroke-width', 1.8);
+        }
+
+        const bubbles = svg.selectAll('.bubble')
+          .data(slide4Data)
+          .enter()
+          .append('g')
+          .attr('class', 'bubble')
+          .attr('transform', d => {
+            const [x, y] = projection([d.lon, d.lat]);
+            return `translate(${x},${y})`;
+          });
+
+        bubbles.append('circle')
+          .attr('r', d => getBubbleSize(d.students).d / 2)
+          .attr('fill', '#c8ff08')
+          .attr('opacity', 0.9)
+          .attr('class', d => d.students >= 6 ? 'bubble-pulse' : '');
+
+        bubbles.append('text')
+          .attr('text-anchor', 'middle')
+          .attr('dy', '0.3em')
+          .attr('fill', '#003d3e')
+          .attr('font-weight', 900)
+          .attr('font-size', d => getBubbleSize(d.students).f)
+          .text(d => d.students);
+
+        bubbles.append('text')
+          .attr('text-anchor', 'middle')
+          .attr('dy', d => (getBubbleSize(d.students).d / 2) + 14)
+          .attr('fill', '#ffffff')
+          .attr('font-size', 'clamp(7px,0.58vw,10px)')
+          .text(d => `${d.loc}, ${d.country}`);
+
+        bubbles.on('mouseover', function(e, d) {
+          const tooltip = document.getElementById('tooltip4');
+          tooltip.textContent = `${d.loc}, ${d.country} — ${d.students} students, ${d.classes} class(es)`;
+          tooltip.classList.add('show');
+        }).on('mousemove', function(e) {
+          const tooltip = document.getElementById('tooltip4');
+          tooltip.style.left = (e.pageX + 10) + 'px';
+          tooltip.style.top = (e.pageY + 10) + 'px';
+        }).on('mouseout', function() {
+          const tooltip = document.getElementById('tooltip4');
+          tooltip.classList.remove('show');
+        });
       });
+    }
 
-    // Pulse rings for students >= 6
-    const rings = g.selectAll('.pulse-ring').data(nodes.filter(n => n.stu >= 6)).enter()
-      .append('circle').attr('class', 'pulse-ring').attr('r', d => getBubbleSizeInternal(d.stu).d / 2)
-      .attr('fill', 'none').attr('stroke', 'rgba(200,255,8,0.3)').attr('stroke-width', 1.5)
-      .style('animation', 'pulse-ring 2s infinite');
-
-    // Bubbles
-    const bubbles = g.selectAll('.bubble').data(nodes).enter()
-      .append('circle').attr('class', 'bubble').attr('r', d => getBubbleSizeInternal(d.stu).d / 2)
-      .attr('fill', '#c8ff08').attr('opacity', 0.85)
-      .on('mouseover', function(e, d) {
-        const tt = document.getElementById('tooltip4');
-        tt.textContent = `${d.loc}, ${d.country} — ${d.stu} students, ${d.cls} class(es)`;
-        tt.style.display = 'block';
-        tt.style.left = (e.pageX + 10) + 'px';
-        tt.style.top = (e.pageY + 10) + 'px';
-      })
-      .on('mousemove', function(e) {
-        const tt = document.getElementById('tooltip4');
-        tt.style.left = (e.pageX + 10) + 'px';
-        tt.style.top = (e.pageY + 10) + 'px';
-      })
-      .on('mouseout', function() {
-        document.getElementById('tooltip4').style.display = 'none';
+    // MutationObserver to detect slide changes
+    const observer = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        if (mutation.attributeName === 'class') {
+          const slide = mutation.target;
+          if (slide.classList.contains('active')) {
+            if (slide.id === 'slide-2') {
+              setTimeout(initMap3, 100);
+            } else if (slide.id === 'slide-3') {
+              setTimeout(initMap4, 100);
+            }
+          }
+        }
       });
+    });
 
-    // Labels
-    const labels = g.selectAll('.label').data(nodes).enter()
-      .append('text').attr('class', 'label').attr('text-anchor', 'middle')
-      .attr('font-size', d => getBubbleSizeInternal(d.stu).f + 'px')
-      .attr('font-weight', 900).attr('fill', '#003d3e')
-      .text(d => d.stu);
+    const slides = document.querySelectorAll('.slide');
+    slides.forEach(slide => {
+      observer.observe(slide, { attributes: true, attributeFilter: ['class'] });
+    });
 
-    // Location names below bubbles
-    g.selectAll('.location-label').data(nodes).enter()
-      .append('text').attr('class', 'location-label').attr('text-anchor', 'middle')
-      .attr('x', d => d.x).attr('y', d => d.y + getBubbleSizeInternal(d.stu).d / 2 + 24)
-      .attr('font-size', '10px').attr('fill', 'rgba(255,255,255,0.7)')
-      .text(d => `${d.loc}, ${d.country}`);
-
-    simulation.alpha(1).restart();
-  });
-   } catch(e) { console.error('Map4 init error:', e); }
-}
-
-// ============================================================================
-// MAP INITIALIZATION OBSERVER — ROBUST VERSION
-// ============================================================================
-let map3Init = false, map4Init = false;
-
-function tryInitMap3() {
-  if (map3Init) return;
-  if (typeof d3 === 'undefined' || typeof topojson === 'undefined') {
-    setTimeout(tryInitMap3, 200); return;
-  }
-  const container = document.getElementById('map3-container');
-  if (!container || container.clientWidth === 0) {
-    setTimeout(tryInitMap3, 150); return;
-  }
-  map3Init = true;
-  initMap3();
-}
-
-
-function tryInitMap4() {
-  if (map4Init) return;
-  if (typeof d3 === 'undefined' || typeof topojson === 'undefined') {
-    setTimeout(tryInitMap4, 200); return;
-  }
-  const container = document.getElementById('map4-container');
-  if (!container || container.clientWidth === 0) {
-    setTimeout(tryInitMap4, 150); return;
-  }
-  map4Init = true;
-  initMap4();
-}
-
-// MutationObserver watches for slide class changes
-const observer = new MutationObserver(() => {
-  const s2 = document.getElementById('slide-2');
-  const s3 = document.getElementById('slide-3');
-  if (s2 && s2.classList.contains('active') && !map3Init) {
-    tryInitMap3();
-  }
-  if (s3 && s3.classList.contains('active') && !map4Init) {
-    tryInitMap4();
-  }
-});
-observer.observe(document.getElementById('sc'), {attributes: true, subtree: true, attributeFilter: ['class']});
-
-// Fallback: if page loads on slide 3 or 4, the observer won't fire
-window.addEventListener('load', function() {
-  const s2 = document.getElementById('slide-2');
-  const s3 = document.getElementById('slide-3');
-  if (s2 && s2.classList.contains('active') && !map3Init) tryInitMap3();
-  if (s3 && s3.classList.contains('active') && !map4Init) tryInitMap4();
-});
-
-// ============================================================================
-// INITIALIZE BOARD WITH FALLBACK DATA
-// ============================================================================
-// Fallback data embedded directly in HTML (no external JSON fetch)
-const fallbackData = {
-  "week_label": "Week 1",
-  "slide1": {
-    "metric_strip": {
-      "global_students": 219,
-      "global_classes": 15,
-      "hlc": 138,
-      "blc": 5,
-      "klc": 12,
-      "other": 40
-    },
-    "classes_pill": "15 Active Classes",
-    "outlook_pill": "Outlook: Next 30 Days",
-    "outlook_total_classes": 8,
-    "outlook_total_students": 142,
-    "plls": [
-      {"name": "Harry Hanson", "tech": "GE Vernova", "total_classes": 3, "total_students": 45, "internal": {"capacity": 50, "enrolled": 45}, "site_specific": null, "open_enrollment": null},
-      {"name": "Linda", "tech": "GE Vernova", "total_classes": 2, "total_students": 28, "internal": {"capacity": 30, "enrolled": 28}, "site_specific": null, "open_enrollment": null}
-    ],
-    "outlook_rows": [
-      {"name": "John Smith", "tech": "Advanced Systems", "classes": 2, "students": 34},
-      {"name": "Sarah Jones", "tech": "Safety Training", "classes": 1, "students": 18}
-    ]
-  },
-  "slide2": {
-    "status_bar": {
-      "safety": {"rag": "green", "sub": "All Clear"},
-      "bowler": {"rag": "green", "sub": "On Track"},
-      "action_plan": {"rag": "green", "sub": "On Schedule"},
-      "capex": {"rag": "green", "sub": "On Budget"}
-    },
-    "bowler_kpis": [
-      {"name": "Completion Rate", "actual": "94%", "plan": "90%", "rag": "green", "chip": "↑ 4%"},
-      {"name": "Student Satisfaction", "actual": "4.6/5", "plan": "4.5/5", "rag": "green", "chip": "↑ 0.1"}
-    ],
-    "bowler_note": "All KPIs tracking above plan",
-    "action_plan": {
-      "in_progress": 3,
-      "on_deck": 2,
-      "complete_60d": 5,
-      "completed": ["Task A", "Task B"],
-      "upcoming": ["Task C", "Task D"]
-    },
-    "safety": {
-      "rag": "green",
-      "minor_incidents": 0,
-      "kpi_chips": [{"label": "No Incidents", "rag": "green"}],
-      "incident_lines": [],
-      "prior_reference": []
-    },
-    "capex": {
-      "spent": 2.5,
-      "budget": 5.0,
-      "pct": 50,
-      "projected_remaining": 2.5,
-      "projects": [
-        {"name": "Project A", "amount": "$1.2M", "status": "On Track", "chip_class": "chip-green"},
-        {"name": "Project B", "amount": "$1.3M", "status": "On Track", "chip_class": "chip-green"}
-      ]
-    }
-  },
-  "slide3": {
-    "total_students": 219,
-    "total_countries": 12,
-    "total_classes": 15,
-    "countries": [
-      {"country": "USA", "students": 96, "lat": 37.0902, "lon": -95.7129},
-      {"country": "Ireland", "students": 45, "lat": 53.4129, "lon": -8.2439},
-      {"country": "India", "students": 32, "lat": 20.5937, "lon": 78.9629},
-      {"country": "Germany", "students": 18, "lat": 51.1657, "lon": 10.4515},
-      {"country": "Canada", "students": 12, "lat": 56.1304, "lon": -106.3468},
-      {"country": "Australia", "students": 8, "lat": -25.2744, "lon": 133.7751}
-    ]
-  },
-  "slide4": {
-    "total_students": 156,
-    "total_classes": 8,
-    "total_countries": 5,
-    "locations": [
-      {"loc": "Houston", "country": "USA", "stu": 78, "cls": 4, "lat": 29.7604, "lon": -95.3698},
-      {"loc": "Dublin", "country": "Ireland", "stu": 32, "cls": 2, "lat": 53.3498, "lon": -6.2603},
-      {"loc": "Singapore", "country": "Singapore", "stu": 28, "cls": 1, "lat": 1.3521, "lon": 103.8198},
-      {"loc": "London", "country": "UK", "stu": 12, "cls": 1, "lat": 51.5074, "lon": -0.1278},
-      {"loc": "Tokyo", "country": "Japan", "stu": 6, "cls": 0, "lat": 35.6762, "lon": 139.6503}
-    ]
-  }
-};
-
-// Populate board with fallback data
-populateBoard(fallbackData);
-
-// ============================================================================
-// CAROUSEL SYSTEM
-// ============================================================================
-(function(){
-  var DURATIONS=[30000,30000,35000,35000];
-  var cur=0,tot=4,timer=null,raf=null,t0=null;
-  function show(n){
-    cur=(n+tot)%tot;
-    for(var i=0;i<tot;i++){
-      var el=document.getElementById('slide-'+i);
-      if(i===cur){el.classList.add('active');}else{el.classList.remove('active');}
-    }
-    document.getElementById('sn').textContent=(cur+1)+' / '+tot;
-    startBar();
-    if(timer)clearTimeout(timer);
-    timer=setTimeout(function(){show(cur+1);},DURATIONS[cur]);
-  }
-  function startBar(){
-    if(raf){cancelAnimationFrame(raf);raf=null;}
-    t0=null;
-    var pf=document.getElementById('pf');
-    pf.style.width='0%';
-    var dur=DURATIONS[cur];
-    function tick(ts){if(!t0)t0=ts;var pct=Math.min((ts-t0)/dur*100,100);pf.style.width=pct+'%';if(pct<100){raf=requestAnimationFrame(tick);}}
-    raf=requestAnimationFrame(tick);
-  }
-  show(0);
-})();
-</script>
+    // Fallback: init maps if they start active
+    window.addEventListener('load', () => {
+      if (document.getElementById('slide-2').classList.contains('active')) {
+        setTimeout(initMap3, 100);
+      }
+      if (document.getElementById('slide-3').classList.contains('active')) {
+        setTimeout(initMap4, 100);
+      }
+    });
+  </script>
 </body>
 </html>
