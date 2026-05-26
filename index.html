@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OFS Training Delivery Command Board</title>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+  <style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100vw;height:100vh;overflow:hidden;background:#003d3e;font-family:'Segoe UI',Arial,sans-serif;}
+#sc{width:100vw;height:100vh;position:relative;}
+.slide{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;opacity:0;pointer-events:none;transform:scale(0.985);transition:opacity 0.5s ease,transform 0.5s ease;}
+.slide.active{opacity:1;pointer-events:auto;transform:scale(1.0);}
+#pt{position:fixed;bottom:0;left:0;width:100%;height:5px;background:rgba(255,255,255,0.1);z-index:9999;}
+#pf{height:100%;width:0%;background:#c8ff08;transition:none;}
+#sn{position:fixed;bottom:8px;right:14px;font-size:11px;color:rgba(255,255,255,0.4);z-index:9999;}
+.title-bar{flex:0 0 8%;min-height:50px;background:#005e60;border-bottom:3px solid #c8ff08;display:flex;align-items:center;justify-content:space-between;padding:0 16px;gap:10px;}
+.title-bar-left{color:#fff;font-weight:800;font-size:clamp(13px,1.55vw,22px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.title-bar-pill{background:#c8ff08;color:#003d3e;font-weight:800;border-radius:999px;padding:5px 16px;font-size:clamp(10px,1.1vw,14px);white-space:nowrap;flex-shrink:0;}
+.metric-strip{flex:0 0 22%;background:#004a4c;display:flex;flex-direction:row;gap:10px;padding:0 14px;align-items:center;}
+.mc{background:#003d3e;border-radius:10px;height:78%;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;box-shadow:0 2px 7px rgba(0,0,0,0.18);padding:4px 6px;}
+.mc.mc-wide{flex:1.45;}
+.mc-num{font-size:clamp(26px,3.3vw,52px);font-weight:900;line-height:1;color:#c8ff08;}
+.mc-num-white{color:#fff;}
+.mc-num-muted{color:rgba(255,255,255,0.3);}
+.mc-lbl{color:#59c3c9;font-size:clamp(8px,0.82vw,11px);font-weight:700;text-transform:uppercase;letter-spacing:0.8px;}
+.mc-sub{color:rgba(255,255,255,0.5);font-size:clamp(7px,0.7vw,10px);}
+.mc-chip{background:rgba(89,195,201,0.18);color:#59c3c9;border-radius:999px;padding:2px 8px;font-size:clamp(7px,0.68vw,9px);font-weight:700;margin-top:2px;}
+.main-body{flex:1;background:#f0f4f5;display:flex;flex-direction:row;gap:10px;padding:10px;overflow:hidden;min-height:0;}
+.pill-ev{background:#005e60;color:#c8ff08;border-radius:999px;padding:4px 14px;font-size:clamp(8px,0.88vw,11px);font-weight:800;text-transform:uppercase;letter-spacing:0.9px;display:inline-block;margin-bottom:6px;flex-shrink:0;}
+.pill-sky{background:#59c3c9;color:#003d3e;border-radius:999px;padding:4px 14px;font-size:clamp(8px,0.88vw,11px);font-weight:800;text-transform:uppercase;letter-spacing:0.9px;display:inline-block;margin-bottom:6px;flex-shrink:0;}
+.left-col{flex:0 0 55%;display:flex;flex-direction:column;min-height:0;overflow:hidden;}
+.pll-list{display:flex;flex-direction:column;gap:5px;flex:1;min-height:0;overflow:hidden;}
+.pll-row{background:#fff;border-radius:8px;box-shadow:0 2px 7px rgba(0,0,0,0.08);display:flex;flex-direction:row;padding:0 10px;gap:8px;align-items:center;flex:1;min-height:0;overflow:hidden;}
+.pll-row.muted{opacity:0.45;}
+.pll-identity{flex:0 0 25%;display:flex;flex-direction:column;justify-content:center;overflow:hidden;}
+.pll-name{font-size:clamp(9px,0.98vw,13px);font-weight:800;color:#212121;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pll-tech{font-size:clamp(8px,0.78vw,11px);color:#6a8a8b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pll-chips{display:flex;flex-direction:row;gap:5px;flex-shrink:0;}
+.chip-block{background:#1a2e2e;border-radius:7px;min-width:42px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3px 7px;}
+.chip-n{font-size:clamp(11px,1.15vw,16px);font-weight:900;color:#c8ff08;line-height:1.1;}
+.chip-n-muted{color:rgba(255,255,255,0.35);}
+.chip-l{font-size:clamp(7px,0.68vw,9px);color:rgba(255,255,255,0.55);text-transform:uppercase;letter-spacing:0.5px;}
+.pll-bar-area{flex:1;display:flex;flex-direction:column;justify-content:center;gap:3px;min-width:0;}
+.bar-track{width:100%;height:13px;background:#ddeaeb;border-radius:7px;overflow:hidden;position:relative;}
+.bar-fill{height:100%;border-radius:7px;transition:width 0.4s ease;}
+.bar-fill-green{background:#75ca64;}
+.bar-fill-lime{background:#c8ff08;}
+.bar-fill-amber{background:#f5a623;}
+.bar-fill-red{background:#e63946;}
+.bar-meta{display:flex;align-items:center;gap:5px;}
+.bar-label{font-size:clamp(7px,0.72vw,10px);color:#6a8a8b;font-weight:600;}
+.over-badge{background:#c8ff08;color:#003d3e;font-size:clamp(6px,0.62vw,8px);font-weight:800;text-transform:uppercase;border-radius:999px;padding:1px 6px;letter-spacing:0.5px;}
+.bar-dash{font-size:clamp(9px,0.9vw,13px);color:#aac5c6;font-weight:700;}
+.right-col{flex:1;display:flex;flex-direction:column;min-height:0;overflow:hidden;}
+.oc-row{display:flex;flex-direction:row;gap:10px;margin-bottom:8px;flex-shrink:0;}
+.oc-card{background:#fff;border-radius:8px;box-shadow:0 2px 7px rgba(0,0,0,0.08);flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 10px;}
+.oc-num{font-size:clamp(18px,2.1vw,32px);font-weight:900;color:#59c3c9;line-height:1.1;}
+.oc-lbl{font-size:clamp(7px,0.72vw,10px);color:#6a8a8b;text-transform:uppercase;letter-spacing:0.7px;font-weight:700;}
+.outlook-table-wrap{flex:1;background:#fff;border-radius:8px;box-shadow:0 2px 7px rgba(0,0,0,0.08);overflow:hidden;display:flex;flex-direction:column;min-height:0;}
+.ot-header{display:grid;grid-template-columns:1fr 1fr 56px 66px;background:#003d3e;padding:5px 10px;flex-shrink:0;}
+.ot-header span{color:#fff;font-size:clamp(7px,0.72vw,10px);font-weight:700;text-transform:uppercase;letter-spacing:0.6px;}
+.ot-body{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.ot-row{display:grid;grid-template-columns:1fr 1fr 56px 66px;padding:0 10px;flex:1;align-items:center;border-bottom:1px solid #f0f4f5;}
+.ot-row:nth-child(even){background:#f7fafa;}
+.ot-cell{font-size:clamp(8px,0.82vw,11px);color:#212121;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ot-cell-num{font-size:clamp(9px,0.92vw,13px);font-weight:900;color:#59c3c9;text-align:center;}
+.status-bar{flex:0 0 16%;background:#004a4c;display:flex;flex-direction:row;gap:10px;padding:0 14px;align-items:center;}
+.sbc{background:#003d3e;border-radius:10px;height:78%;flex:1;display:flex;flex-direction:row;padding:0 14px;gap:12px;align-items:center;box-shadow:0 2px 7px rgba(0,0,0,0.18);}
+.rag-dot{width:clamp(24px,2.8vw,42px);height:clamp(24px,2.8vw,42px);border-radius:50%;flex-shrink:0;}
+.rag-green{background:#75ca64;box-shadow:0 0 10px 3px rgba(117,202,100,0.65);}
+.rag-red{background:#e63946;box-shadow:0 0 10px 3px rgba(230,57,70,0.65);}
+.rag-amber{background:#f5a623;box-shadow:0 0 10px 3px rgba(245,166,35,0.65);}
+.sc-text{display:flex;flex-direction:column;gap:2px;}
+.sc-lbl{font-size:clamp(10px,1.08vw,15px);font-weight:800;color:#fff;}
+.sc-sub{font-size:clamp(8px,0.82vw,11px);color:rgba(255,255,255,0.58);}
+.grid-body{flex:1;background:#f0f4f5;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:10px;padding:10px;overflow:hidden;min-height:0;}
+.zone{background:#fff;border-radius:10px;box-shadow:0 2px 7px rgba(0,0,0,0.08);display:flex;flex-direction:column;padding:8px 10px;overflow:hidden;min-height:0;}
+.kpi-list{display:flex;flex-direction:column;gap:5px;flex:1;min-height:0;overflow:hidden;}
+.kc{background:#f6fafa;border-radius:8px;display:flex;flex-direction:row;flex:1;padding:6px 9px;gap:8px;align-items:center;min-height:0;overflow:hidden;}
+.kc-bar{width:5px;border-radius:3px;align-self:stretch;flex-shrink:0;}
+.kc-name{flex:1;font-size:clamp(8px,0.85vw,12px);font-weight:700;color:#212121;line-height:1.3;overflow:hidden;}
+.kc-vals{display:flex;flex-direction:column;align-items:flex-end;flex-shrink:0;}
+.ka{font-size:clamp(13px,1.5vw,22px);font-weight:900;color:#004745;line-height:1;}
+.kp{font-size:clamp(7px,0.7vw,9px);color:#6a8a8b;}
+.kc-chip{font-size:clamp(7px,0.7vw,9px);font-weight:700;border-radius:6px;padding:3px 7px;white-space:nowrap;flex-shrink:0;}
+.chip-green{background:#e6f9e6;color:#1a7a1a;}
+.chip-red{background:#fce8e8;color:#b02020;}
+.chip-amber{background:#fff3cd;color:#856404;}
+.chip-teal{background:#e0f4f5;color:#005e60;}
+.bowler-note{font-size:clamp(7px,0.7vw,9px);color:#6a8a8b;font-style:italic;text-align:right;margin-top:3px;flex-shrink:0;}
+.ap-badges{display:flex;flex-direction:row;gap:8px;margin-bottom:8px;flex-shrink:0;}
+.ap-badge{flex:1;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:5px 6px;}
+.ap-badge-num{font-size:clamp(14px,1.7vw,26px);font-weight:900;line-height:1;}
+.ap-badge-lbl{font-size:clamp(7px,0.68vw,9px);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-top:1px;}
+.ap-cols{display:grid;grid-template-columns:1fr 1fr;gap:8px;flex:1;min-height:0;overflow:hidden;}
+.ap-col{display:flex;flex-direction:column;gap:4px;overflow:hidden;}
+.ap-col-hdr{font-size:clamp(7px,0.72vw,10px);font-weight:800;text-transform:uppercase;letter-spacing:0.7px;margin-bottom:2px;flex-shrink:0;}
+.ap-col-hdr-green{color:#1a7a1a;}
+.ap-col-hdr-sky{color:#005e60;}
+.ap-chip{border-radius:999px;padding:3px 8px;font-size:clamp(7px,0.7vw,9px);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0;}
+.ap-chip-green{background:#e6f9e6;color:#1a7a1a;}
+.ap-chip-sky{background:#e0f4f5;color:#005e60;}
+.safety-zone{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;flex:1;overflow:hidden;}
+.safety-circle{width:clamp(48px,5.5vw,78px);height:clamp(48px,5.5vw,78px);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:clamp(20px,2.6vw,36px);color:#fff;font-weight:900;flex-shrink:0;}
+.safety-circle-green{background:#75ca64;box-shadow:0 0 18px 6px rgba(117,202,100,0.5);}
+.safety-circle-amber{background:#f5a623;box-shadow:0 0 18px 6px rgba(245,166,35,0.5);}
+.safety-circle-red{background:#e63946;box-shadow:0 0 18px 6px rgba(230,57,70,0.5);}
+.safety-label{font-size:clamp(13px,1.5vw,21px);font-weight:900;color:#004745;}
+.safety-label-amber{color:#856404;}
+.safety-label-red{color:#b02020;}
+.safety-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:5px;}
+.safety-chip{background:#e6f9e6;color:#1a7a1a;font-weight:700;border-radius:999px;padding:3px 10px;font-size:clamp(7px,0.72vw,10px);}
+.safety-chip-red{background:#fce8e8;color:#b02020;}
+.safety-note{font-size:clamp(6px,0.65vw,9px);color:#6a8a8b;text-align:center;font-style:italic;}
+.capex-budget-label{font-size:clamp(8px,0.85vw,12px);font-weight:700;color:#212121;margin-bottom:4px;flex-shrink:0;}
+.capex-track{width:100%;height:21px;background:#ddeaeb;border-radius:11px;overflow:hidden;flex-shrink:0;margin-bottom:3px;}
+.capex-fill{height:100%;border-radius:11px;background:#005e60;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;}
+.capex-fill-pct{color:#c8ff08;font-size:clamp(9px,0.9vw,12px);font-weight:900;}
+.capex-sub{font-size:clamp(7px,0.7vw,9px);color:#6a8a8b;margin-bottom:6px;flex-shrink:0;}
+.capex-rows{display:flex;flex-direction:column;gap:4px;flex:1;overflow:hidden;min-height:0;}
+.capex-row{display:flex;flex-direction:row;align-items:center;gap:6px;flex:1;min-height:0;overflow:hidden;}
+.capex-proj{flex:1;font-size:clamp(8px,0.82vw,11px);color:#212121;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.capex-amt{font-size:clamp(8px,0.82vw,11px);font-weight:700;color:#004745;flex-shrink:0;min-width:38px;text-align:right;}
+.capex-chip{font-size:clamp(6px,0.65vw,9px);font-weight:700;border-radius:6px;padding:2px 7px;white-space:nowrap;flex-shrink:0;}
+.capex-note{font-size:clamp(6px,0.65vw,9px);color:#6a8a8b;font-style:italic;text-align:right;margin-top:3px;flex-shrink:0;}
+.map-body{flex:1;display:flex;flex-direction:column;background:#f0f4f5;overflow:hidden;}
+.map-container{flex:1;background:#005e5d;position:relative;overflow:hidden;}
+.map-stat-bar{flex:0 0 42px;background:#004a4c;border-top:2px solid rgba(200,255,8,0.25);position:relative;display:flex;align-items:center;justify-content:center;gap:32px;}
+.map-stat{display:flex;flex-direction:column;align-items:center;gap:2px;}
+.map-stat-number{font-size:clamp(15px,1.5vw,22px);font-weight:900;color:#c8ff08;}
+.map-stat-label{font-size:10px;color:rgba(255,255,255,0.85);}
+.map-stat-sep{color:rgba(200,255,8,0.3);}
+.map-stat-meta{position:absolute;right:14px;color:rgba(255,255,255,0.3);font-size:9px;}
+svg{width:100%;height:100%;}
+@keyframes pulse-ring{0%{transform:scale(1);opacity:0.65;}100%{transform:scale(1.9);opacity:0;}}
+#tooltip4{position:fixed;background:#003d3e;color:#fff;padding:7px 13px;border-radius:6px;font-size:12px;z-index:999;pointer-events:none;display:none;}
+  </style>
+</head>
+<body>
+<div id="sc">
+  <!-- SLIDE 1: Delivery Operations -->
+  <div class="slide active" id="slide-0">
+    <div class="title-bar">
+      <div class="title-bar-left">OFS Training Delivery &mdash; Delivery Operations</div>
+      <div class="title-bar-pill" id="week-badge-1"></div>
+    </div>
+    <div class="metric-strip">
+      <div class="mc mc-wide">
+        <div class="mc-num" id="ms-global-stu"></div>
+        <div class="mc-lbl">Global Students</div>
+        <div class="mc-chip" id="ms-global-cls"></div>
+      </div>
+      <div class="mc">
+        <div class="mc-num mc-num-white" id="ms-hlc"></div>
+        <div class="mc-lbl">HLC</div>
+        <div class="mc-sub">Houston, TX</div>
+      </div>
+      <div class="mc">
+        <div class="mc-num mc-num-white" id="ms-blc"></div>
+        <div class="mc-lbl">BLC</div>
+        <div class="mc-sub">Birr, Switzerland</div>
+      </div>
+      <div class="mc">
+        <div class="mc-num mc-num-white" id="ms-klc"></div>
+        <div class="mc-lbl">KLC</div>
+        <div class="mc-sub">Kuwait</div>
+      </div>
+      <div class="mc">
+        <div class="mc-num mc-num-white" id="ms-other"></div>
+        <div class="mc-lbl" style="color:#59c3c9;">Other</div>
+        <div class="mc-sub">Dist. Learning</div>
+      </div>
+    </div>
+    <div class="main-body">
+      <div class="left-col">
+        <div class="pill-ev" id="s1-classes-pill"></div>
+        <div class="pll-list" id="pll-list"></div>
+      </div>
+      <div class="right-col">
+        <div class="pill-sky" id="s1-outlook-pill"></div>
+        <div class="oc-row">
+          <div class="oc-card">
+            <div class="oc-num" id="oc-classes"></div>
+            <div class="oc-lbl">Classes Starting</div>
+          </div>
+          <div class="oc-card">
+            <div class="oc-num" id="oc-students"></div>
+            <div class="oc-lbl">Students Enrolled</div>
+          </div>
+        </div>
+        <div class="outlook-table-wrap">
+          <div class="ot-header">
+            <span>Instructor</span><span>Subject</span><span>Classes</span><span>Students</span>
+          </div>
+          <div class="ot-body" id="outlook-table-body"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: Performance & Improvement -->
+  <div class="slide" id="slide-1">
+    <div class="title-bar">
+      <div class="title-bar-left">OFS Training Delivery &mdash; Performance &amp; Improvement</div>
+      <div class="title-bar-pill" id="week-badge-2"></div>
+    </div>
+    <div class="status-bar">
+      <div class="sbc">
+        <div class="rag-dot" id="rag-safety"></div>
+        <div class="sc-text">
+          <div class="sc-lbl">SAFETY</div>
+          <div class="sc-sub" id="rag-safety-sub"></div>
+        </div>
+      </div>
+      <div class="sbc">
+        <div class="rag-dot" id="rag-bowler"></div>
+        <div class="sc-text">
+          <div class="sc-lbl">BOWLER KPIs</div>
+          <div class="sc-sub" id="rag-bowler-sub"></div>
+        </div>
+      </div>
+      <div class="sbc">
+        <div class="rag-dot" id="rag-ap"></div>
+        <div class="sc-text">
+          <div class="sc-lbl">ACTION PLAN</div>
+          <div class="sc-sub" id="rag-ap-sub"></div>
+        </div>
+      </div>
+      <div class="sbc">
+        <div class="rag-dot" id="rag-capex"></div>
+        <div class="sc-text">
+          <div class="sc-lbl">CAPEX 2026</div>
+          <div class="sc-sub" id="rag-capex-sub"></div>
+        </div>
+      </div>
+    </div>
+    <div class="grid-body">
+      <div class="zone">
+        <div class="pill-ev">Bowler KPIs</div>
+        <div class="kpi-list" id="kpi-list"></div>
+        <div class="bowler-note" id="bowler-note"></div>
+      </div>
+      <div class="zone">
+        <div class="pill-sky">Action Plan Health</div>
+        <div class="ap-badges" id="ap-badges"></div>
+        <div class="ap-cols">
+          <div class="ap-col">
+            <div class="ap-col-hdr ap-col-hdr-green">✓ Recently Completed</div>
+            <div id="ap-completed"></div>
+          </div>
+          <div class="ap-col">
+            <div class="ap-col-hdr ap-col-hdr-sky">▶ On Deck</div>
+            <div id="ap-ondeck"></div>
+          </div>
+        </div>
+      </div>
+      <div class="zone">
+        <div class="pill-ev">Safety Status</div>
+        <div class="safety-zone" id="safety-zone"></div>
+      </div>
+      <div class="zone">
+        <div class="pill-sky">2026 CapEx</div>
+        <div class="capex-budget-label" id="capex-budget-label"></div>
+        <div class="capex-track"><div class="capex-fill" id="capex-fill"><span class="capex-fill-pct" id="capex-fill-pct"></span></div></div>
+        <div class="capex-sub" id="capex-sub"></div>
+        <div class="capex-rows" id="capex-rows"></div>
+        <div class="capex-note">CapEx updated quarterly</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: Student Geography -->
+  <div class="slide" id="slide-2">
+    <div class="title-bar">
+      <div class="title-bar-left">OFS Training Delivery &mdash; Where in the World are Our Students From?</div>
+      <div class="title-bar-pill" id="week-badge-3"></div>
+    </div>
+    <div class="map-body">
+      <div class="map-container" id="map3-container"></div>
+      <div class="map-stat-bar">
+        <div class="map-stat"><div class="map-stat-number" id="s3-students"></div><div class="map-stat-label">Active Students</div></div>
+        <div class="map-stat-sep">|</div>
+        <div class="map-stat"><div class="map-stat-number" id="s3-countries"></div><div class="map-stat-label">Countries</div></div>
+        <div class="map-stat-sep">|</div>
+        <div class="map-stat"><div class="map-stat-number" id="s3-classes"></div><div class="map-stat-label">Active Classes</div></div>
+        <div class="map-stat-meta">Internal Only | In-Progress</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: Customer Training Geography -->
+  <div class="slide" id="slide-3">
+    <div class="title-bar">
+      <div class="title-bar-left">OFS Training Delivery &mdash; Where in the World Are We Training Our Customers?</div>
+      <div class="title-bar-pill" id="week-badge-4"></div>
+    </div>
+    <div class="map-body">
+      <div class="map-container" id="map4-container"></div>
+      <div class="map-stat-bar">
+        <div class="map-stat"><div class="map-stat-number" id="s4-students"></div><div class="map-stat-label">Active Students</div></div>
+        <div class="map-stat-sep">|</div>
+        <div class="map-stat"><div class="map-stat-number" id="s4-classes"></div><div class="map-stat-label">Active Classes</div></div>
+        <div class="map-stat-sep">|</div>
+        <div class="map-stat"><div class="map-stat-number" id="s4-countries"></div><div class="map-stat-label">Countries</div></div>
+        <div class="map-stat-meta">OE + Site Specific | In-Progress Only</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Progress bar -->
+<div id="pt"><div id="pf"></div></div>
+<div id="sn">1 / 4</div>
+<div id="tooltip4"></div>
+
+<script>
+// ============================================================================
+// POPULATE BOARD FROM DATA
+// ============================================================================
+function populateBoard(data) {
+  // Week badges — all 4 slides
+  ['week-badge-1','week-badge-2','week-badge-3','week-badge-4'].forEach(id => {
+    document.getElementById(id).textContent = data.week_label;
+  });
+
+  // SLIDE 1 — Metric Strip
+  const ms = data.slide1.metric_strip;
+  document.getElementById('ms-global-stu').textContent = ms.global_students;
+  document.getElementById('ms-global-cls').textContent = ms.global_classes + ' Active Classes';
+  document.getElementById('ms-hlc').textContent = ms.hlc;
+  document.getElementById('ms-blc').textContent = ms.blc;
+  document.getElementById('ms-klc').textContent = ms.klc;
+  document.getElementById('ms-other').textContent = ms.other;
+  document.getElementById('s1-classes-pill').textContent = data.slide1.classes_pill;
+  document.getElementById('s1-outlook-pill').textContent = data.slide1.outlook_pill;
+  document.getElementById('oc-classes').textContent = data.slide1.outlook_total_classes;
+  document.getElementById('oc-students').textContent = data.slide1.outlook_total_students;
+
+  // SLIDE 1 — PLL Rows
+  const pllList = document.getElementById('pll-list');
+  pllList.innerHTML = '';
+  data.slide1.plls.forEach(pll => {
+    const hasCustomer = (pll.name !== 'Harry Hanson' && pll.name !== 'Linda');
+    const int = pll.internal;
+    const barPct = int.capacity > 0 ? Math.min((int.enrolled / int.capacity) * 100, 100) : 0;
+    const overEnrolled = int.capacity > 0 && int.enrolled > int.capacity;
+    let barClass = 'bar-fill-red';
+    if (overEnrolled) barClass = 'bar-fill-lime';
+    else if (barPct >= 80) barClass = 'bar-fill-green';
+    else if (barPct >= 50) barClass = 'bar-fill-amber';
+
+    // Sub-label lines for OE and CT (customer training)
+    let subLines = '';
+    if (hasCustomer) {
+      if (pll.site_specific && pll.site_specific.classes > 0) {
+        subLines += `<div style="font-size:clamp(7px,0.68vw,9px);color:#6a8a8b;margin-top:2px;">CT: ${pll.site_specific.classes} cls / ${pll.site_specific.students} stu</div>`;
+      }
+      if (pll.open_enrollment && pll.open_enrollment.classes > 0) {
+        subLines += `<div style="font-size:clamp(7px,0.68vw,9px);color:#6a8a8b;margin-top:2px;">OE: ${pll.open_enrollment.classes} cls / ${pll.open_enrollment.students} stu</div>`;
+      }
+    }
+
+    // Enrollment bar — only for internal rows with capacity
+    let barHTML = '';
+    if (int.capacity > 0) {
+      barHTML = `<div class="bar-track"><div class="bar-fill ${barClass}" style="width:${barPct}%;"></div></div>
+        <div class="bar-meta">
+          <span class="bar-label">INT ${int.enrolled}/${int.capacity}</span>
+          ${overEnrolled ? '<span class="over-badge">OVER</span>' : ''}
+        </div>`;
+    } else {
+      barHTML = `<div class="bar-meta"><span class="bar-dash">—</span></div>`;
+    }
+
+    pllList.innerHTML += `
+      <div class="pll-row">
+        <div class="pll-identity">
+          <div class="pll-name">${pll.name}</div>
+          <div class="pll-tech">${pll.tech}</div>
+        </div>
+        <div class="pll-chips">
+          <div class="chip-block"><div class="chip-n">${pll.total_classes}</div><div class="chip-l">CLS</div></div>
+          <div class="chip-block"><div class="chip-n">${pll.total_students}</div><div class="chip-l">STU</div></div>
+        </div>
+        <div class="pll-bar-area">
+          ${barHTML}
+          ${subLines}
+        </div>
+      </div>`;
+  });
+
+  // SLIDE 1 — Outlook Table
+  const otBody = document.getElementById('outlook-table-body');
+  otBody.innerHTML = '';
+  data.slide1.outlook_rows.forEach(row => {
+    otBody.innerHTML += `
+      <div class="ot-row">
+        <div class="ot-cell">${row.name}</div>
+        <div class="ot-cell">${row.tech}</div>
+        <div class="ot-cell-num">${row.classes}</div>
+        <div class="ot-cell-num">${row.students}</div>
+      </div>`;
+  });
+
+  // SLIDE 2 — Status Bar RAG
+  const sb = data.slide2.status_bar;
+  function setRag(dotId, subId, ragState, subText) {
+    const dot = document.getElementById(dotId);
+    dot.className = 'rag-dot rag-' + ragState;
+    document.getElementById(subId).textContent = subText;
+  }
+  setRag('rag-safety', 'rag-safety-sub', sb.safety.rag, sb.safety.sub);
+  setRag('rag-bowler', 'rag-bowler-sub', sb.bowler.rag, sb.bowler.sub);
+  setRag('rag-ap', 'rag-ap-sub', sb.action_plan.rag, sb.action_plan.sub);
+  setRag('rag-capex', 'rag-capex-sub', sb.capex.rag, sb.capex.sub);
+
+  // SLIDE 2 — Bowler KPIs
+  const kpiList = document.getElementById('kpi-list');
+  kpiList.innerHTML = '';
+  const RAG_COLORS = { green: '#75ca64', amber: '#f5a623', red: '#e63946' };
+  data.slide2.bowler_kpis.forEach(kpi => {
+    const barColor = RAG_COLORS[kpi.rag] || '#75ca64';
+    const chipClass = kpi.rag === 'green' ? 'chip-green' : kpi.rag === 'amber' ? 'chip-amber' : 'chip-red';
+    kpiList.innerHTML += `
+      <div class="kc">
+        <div class="kc-bar" style="background:${barColor};"></div>
+        <div class="kc-name">${kpi.name}</div>
+        <div class="kc-vals">
+          <div class="ka">${kpi.actual}</div>
+          <div class="kp">${kpi.plan}</div>
+          <div class="kc-chip ${chipClass}">${kpi.chip}</div>
+        </div>
+      </div>`;
+  });
+  document.getElementById('bowler-note').textContent = data.slide2.bowler_note;
+
+  // SLIDE 2 — Action Plan
+  const ap = data.slide2.action_plan;
+  document.getElementById('ap-badges').innerHTML = `
+    <div class="ap-badge" style="background:#005e60;">
+      <div class="ap-badge-num" style="color:#c8ff08;">${ap.in_progress}</div>
+      <div class="ap-badge-lbl" style="color:rgba(255,255,255,0.75);">In Progress</div>
+    </div>
+    <div class="ap-badge" style="background:#59c3c9;">
+      <div class="ap-badge-num" style="color:#003d3e;">${ap.on_deck}</div>
+      <div class="ap-badge-lbl" style="color:#003d3e;">On Deck</div>
+    </div>
+    <div class="ap-badge" style="background:#75ca64;">
+      <div class="ap-badge-num" style="color:#003d3e;">${ap.complete_60d}</div>
+      <div class="ap-badge-lbl" style="color:#003d3e;">Complete (60d)</div>
+    </div>`;
+  document.getElementById('ap-completed').innerHTML = ap.completed.map(t => `<div class="ap-chip ap-chip-green">${t}</div>`).join('');
+  document.getElementById('ap-ondeck').innerHTML = ap.upcoming.map(t => `<div class="ap-chip ap-chip-sky">${t}</div>`).join('');
+
+  // SLIDE 2 — Safety Block (v4.1 RAG logic)
+  const safety = data.slide2.safety;
+  const sz = document.getElementById('safety-zone');
+  let circleClass = 'safety-circle-green';
+  let circleSymbol = '✓';
+  let labelClass = 'safety-label';
+  let labelText = 'All Clear';
+  if (safety.rag === 'amber') {
+    circleClass = 'safety-circle-amber';
+    circleSymbol = '!';
+    labelClass = 'safety-label safety-label-amber';
+    labelText = safety.minor_incidents === 1 ? 'Minor Incident' : 'Minor Incidents';
+  } else if (safety.rag === 'red') {
+    circleClass = 'safety-circle-red';
+    circleSymbol = '!';
+    labelClass = 'safety-label safety-label-red';
+    labelText = safety.minor_incidents >= 3 ? 'Multiple Incidents' : 'Active Incident';
+  }
+
+  const chipColors = { green: 'safety-chip', red: 'safety-chip safety-chip-red' };
+  const chipsHTML = safety.kpi_chips.map(c => `<div class="${chipColors[c.rag] || 'safety-chip'}">${c.label}</div>`).join('');
+
+  let incidentBlockHTML = '';
+  if (safety.incident_lines && safety.incident_lines.length > 0) {
+    const borderColor = safety.rag === 'amber' ? '#f5a623' : '#e63946';
+    const bgColor = safety.rag === 'amber' ? 'rgba(245,166,35,0.12)' : 'rgba(230,57,70,0.12)';
+    incidentBlockHTML = `<div style="background:${bgColor};border-left:3px solid ${borderColor};border-radius:0 4px 4px 0;padding:5px 8px;margin-top:4px;font-size:clamp(6px,0.68vw,9px);color:#444;line-height:1.55;width:100%;">
+      ${safety.incident_lines.map((l,i) => `<div style="${i===0?'font-weight:700;':''}margin-bottom:2px;">${l}</div>`).join('')}
+    </div>`;
+  }
+
+  // Prior reference block (shown in green state for historical incidents)
+  let priorHTML = '';
+  if (safety.rag === 'green' && safety.prior_reference && safety.prior_reference.length > 0) {
+    priorHTML = `<div style="background:rgba(106,138,139,0.08);border-left:3px solid rgba(106,138,139,0.4);border-radius:0 4px 4px 0;padding:5px 8px;margin-top:4px;font-size:clamp(6px,0.68vw,9px);color:#6a8a8b;line-height:1.55;width:100%;">
+      <div style="font-style:italic;font-weight:700;margin-bottom:3px;color:#888;">Prior Incidents (Reference Only)</div>
+      ${safety.prior_reference.map(l => `<div style="margin-bottom:3px;">${l}</div>`).join('')}
+    </div>`;
+  }
+
+  sz.innerHTML = `
+    <div class="safety-circle ${circleClass}">${circleSymbol}</div>
+    <div class="${labelClass}">${labelText}</div>
+    <div class="safety-chips">${chipsHTML}</div>
+    ${incidentBlockHTML}
+    ${priorHTML}`;
+
+  // SLIDE 2 — CapEx
+  const cx = data.slide2.capex;
+  document.getElementById('capex-budget-label').textContent = `$${cx.spent.toFixed(2)}M of $${cx.budget.toFixed(2)}M Spent (${cx.pct}%)`;
+  document.getElementById('capex-fill').style.width = cx.pct + '%';
+  document.getElementById('capex-fill-pct').textContent = cx.pct + '%';
+  document.getElementById('capex-sub').textContent = `$${cx.projected_remaining.toFixed(2)}M projected remaining`;
+  const capexRows = document.getElementById('capex-rows');
+  capexRows.innerHTML = '';
+  cx.projects.forEach(p => {
+    capexRows.innerHTML += `
+      <div class="capex-row">
+        <div class="capex-proj">${p.name}</div>
+        <div class="capex-amt">${p.amount}</div>
+        <div class="capex-chip ${p.chip_class}">${p.status}</div>
+      </div>`;
+  });
+
+  // SLIDE 3 — Stat bar
+  document.getElementById('s3-students').textContent = data.slide3.total_students;
+  document.getElementById('s3-countries').textContent = data.slide3.total_countries;
+  document.getElementById('s3-classes').textContent = data.slide3.total_classes;
+
+  // SLIDE 4 — Stat bar
+  document.getElementById('s4-students').textContent = data.slide4.total_students;
+  document.getElementById('s4-classes').textContent = data.slide4.total_classes;
+  document.getElementById('s4-countries').textContent = data.slide4.total_countries;
+
+  // Store map data globally for D3 map functions
+  window._boardData = data;
+}
+
+// ============================================================================
+// D3 MAP FUNCTIONS
+// ============================================================================
+
+function getBubbleSizeInternal(stu) {
+  if (stu >= 96) return {d:72,f:19};
+  if (stu >= 15) return {d:50,f:16};
+  if (stu >= 8)  return {d:42,f:14};
+  if (stu >= 7)  return {d:38,f:13};
+  if (stu >= 6)  return {d:34,f:13};
+  if (stu >= 3)  return {d:29,f:12};
+  if (stu === 2) return {d:25,f:11};
+  return {d:21,f:10};
+}
+
+function initMap3() {
+  const container = document.getElementById('map3-container');
+  if (!container || !window._boardData) return;
+  container.innerHTML = '';
+  const w = container.clientWidth;
+  const h = container.clientHeight;
+  const projection = d3.geoMercator().fitSize([w, h], {type:'Sphere'});
+  const path = d3.geoPath(projection);
+  const svg = d3.select(container).append('svg').attr('width', w).attr('height', h);
+  const g = svg.append('g');
+
+  // Ocean
+  g.append('rect').attr('width', w).attr('height', h).attr('fill', '#005e5d');
+
+  // Graticule
+  const graticule = d3.geoGraticule();
+  g.append('path').datum(graticule).attr('d', path).attr('fill', 'none').attr('stroke', 'rgba(200,255,8,0.07)').attr('stroke-width', 0.5);
+
+  // Load world topology
+  d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/world/110m.json').then(world => {
+    const land = topojson.feature(world, world.objects.land);
+    const countries = topojson.feature(world, world.objects.countries);
+
+    // Land
+    g.append('path').datum(land).attr('d', path).attr('fill', '#007a76').attr('stroke', 'rgba(200,255,8,0.12)').attr('stroke-width', 0.5);
+
+    // Ireland highlight
+    const ireland = countries.features.find(f => f.id === 372);
+    if (ireland) {
+      g.append('path').datum(ireland).attr('d', path).attr('fill', 'rgba(200,255,8,0.20)').attr('stroke', 'rgba(200,255,8,0.95)').attr('stroke-width', 1.8);
+      const irelandCenter = d3.geoCentroid(ireland);
+      const [px, py] = projection(irelandCenter);
+      g.append('circle').attr('cx', px).attr('cy', py).attr('r', 8).attr('fill', 'none').attr('stroke', 'rgba(200,255,8,0.5)').attr('stroke-width', 1.5).style('animation', 'pulse-ring 2s infinite');
+    }
+
+    // Data nodes
+    const nodes = window._boardData.slide3.countries.map(c => ({
+      x: projection([c.lon, c.lat])[0],
+      y: projection([c.lon, c.lat])[1],
+      ...c
+    }));
+
+    // Force simulation
+    const simulation = d3.forceSimulation(nodes)
+      .force('collide', d3.forceCollide(d => getBubbleSizeInternal(d.students).d / 2 + 5))
+      .on('tick', () => {
+        bubbles.attr('cx', d => d.x).attr('cy', d => d.y);
+        labels.attr('x', d => d.x).attr('y', d => d.y + getBubbleSizeInternal(d.students).d / 2 + 14);
+        rings.attr('cx', d => d.x).attr('cy', d => d.y);
+      });
+
+    // Pulse rings for students >= 6
+    const rings = g.selectAll('.pulse-ring').data(nodes.filter(n => n.students >= 6)).enter()
+      .append('circle').attr('class', 'pulse-ring').attr('r', d => getBubbleSizeInternal(d.students).d / 2)
+      .attr('fill', 'none').attr('stroke', 'rgba(200,255,8,0.3)').attr('stroke-width', 1.5)
+      .style('animation', 'pulse-ring 2s infinite');
+
+    // Bubbles
+    const bubbles = g.selectAll('.bubble').data(nodes).enter()
+      .append('circle').attr('class', 'bubble').attr('r', d => getBubbleSizeInternal(d.students).d / 2)
+      .attr('fill', '#c8ff08').attr('opacity', 0.85)
+      .on('mouseover', function(e, d) {
+        const tt = document.getElementById('tooltip4');
+        tt.textContent = `${d.country} — ${d.students} students`;
+        tt.style.display = 'block';
+        tt.style.left = (e.pageX + 10) + 'px';
+        tt.style.top = (e.pageY + 10) + 'px';
+      })
+      .on('mousemove', function(e) {
+        const tt = document.getElementById('tooltip4');
+        tt.style.left = (e.pageX + 10) + 'px';
+        tt.style.top = (e.pageY + 10) + 'px';
+      })
+      .on('mouseout', function() {
+        document.getElementById('tooltip4').style.display = 'none';
+      });
+
+    // Labels
+    const labels = g.selectAll('.label').data(nodes).enter()
+      .append('text').attr('class', 'label').attr('text-anchor', 'middle')
+      .attr('font-size', d => getBubbleSizeInternal(d.students).f + 'px')
+      .attr('font-weight', 900).attr('fill', '#003d3e')
+      .text(d => d.students);
+
+    // Country names below bubbles
+    g.selectAll('.country-label').data(nodes).enter()
+      .append('text').attr('class', 'country-label').attr('text-anchor', 'middle')
+      .attr('x', d => d.x).attr('y', d => d.y + getBubbleSizeInternal(d.students).d / 2 + 24)
+      .attr('font-size', '10px').attr('fill', 'rgba(255,255,255,0.7)')
+      .text(d => d.country);
+
+    simulation.alpha(1).restart();
+  });
+}
+
+function initMap4() {
+  const container = document.getElementById('map4-container');
+  if (!container || !window._boardData) return;
+  container.innerHTML = '';
+  const w = container.clientWidth;
+  const h = container.clientHeight;
+  const projection = d3.geoMercator().fitSize([w, h], {type:'Sphere'});
+  const path = d3.geoPath(projection);
+  const svg = d3.select(container).append('svg').attr('width', w).attr('height', h);
+  const g = svg.append('g');
+
+  // Ocean
+  g.append('rect').attr('width', w).attr('height', h).attr('fill', '#005e5d');
+
+  // Graticule
+  const graticule = d3.geoGraticule();
+  g.append('path').datum(graticule).attr('d', path).attr('fill', 'none').attr('stroke', 'rgba(200,255,8,0.07)').attr('stroke-width', 0.5);
+
+  // Load world topology
+  d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/world/110m.json').then(world => {
+    const land = topojson.feature(world, world.objects.land);
+    const countries = topojson.feature(world, world.objects.countries);
+
+    // Land
+    g.append('path').datum(land).attr('d', path).attr('fill', '#007a76').attr('stroke', 'rgba(200,255,8,0.12)').attr('stroke-width', 0.5);
+
+    // Ireland highlight
+    const ireland = countries.features.find(f => f.id === 372);
+    if (ireland) {
+      g.append('path').datum(ireland).attr('d', path).attr('fill', 'rgba(200,255,8,0.20)').attr('stroke', 'rgba(200,255,8,0.95)').attr('stroke-width', 1.8);
+      const irelandCenter = d3.geoCentroid(ireland);
+      const [px, py] = projection(irelandCenter);
+      g.append('circle').attr('cx', px).attr('cy', py).attr('r', 8).attr('fill', 'none').attr('stroke', 'rgba(200,255,8,0.5)').attr('stroke-width', 1.5).style('animation', 'pulse-ring 2s infinite');
+    }
+
+    // Data nodes
+    const nodes = window._boardData.slide4.locations.map(loc => ({
+      x: projection([loc.lon, loc.lat])[0],
+      y: projection([loc.lon, loc.lat])[1],
+      ...loc
+    }));
+
+    // Force simulation
+    const simulation = d3.forceSimulation(nodes)
+      .force('collide', d3.forceCollide(d => getBubbleSizeInternal(d.stu).d / 2 + 5))
+      .on('tick', () => {
+        bubbles.attr('cx', d => d.x).attr('cy', d => d.y);
+        labels.attr('x', d => d.x).attr('y', d => d.y + getBubbleSizeInternal(d.stu).d / 2 + 14);
+        rings.attr('cx', d => d.x).attr('cy', d => d.y);
+      });
+
+    // Pulse rings for students >= 6
+    const rings = g.selectAll('.pulse-ring').data(nodes.filter(n => n.stu >= 6)).enter()
+      .append('circle').attr('class', 'pulse-ring').attr('r', d => getBubbleSizeInternal(d.stu).d / 2)
+      .attr('fill', 'none').attr('stroke', 'rgba(200,255,8,0.3)').attr('stroke-width', 1.5)
+      .style('animation', 'pulse-ring 2s infinite');
+
+    // Bubbles
+    const bubbles = g.selectAll('.bubble').data(nodes).enter()
+      .append('circle').attr('class', 'bubble').attr('r', d => getBubbleSizeInternal(d.stu).d / 2)
+      .attr('fill', '#c8ff08').attr('opacity', 0.85)
+      .on('mouseover', function(e, d) {
+        const tt = document.getElementById('tooltip4');
+        tt.textContent = `${d.loc}, ${d.country} — ${d.stu} students, ${d.cls} class(es)`;
+        tt.style.display = 'block';
+        tt.style.left = (e.pageX + 10) + 'px';
+        tt.style.top = (e.pageY + 10) + 'px';
+      })
+      .on('mousemove', function(e) {
+        const tt = document.getElementById('tooltip4');
+        tt.style.left = (e.pageX + 10) + 'px';
+        tt.style.top = (e.pageY + 10) + 'px';
+      })
+      .on('mouseout', function() {
+        document.getElementById('tooltip4').style.display = 'none';
+      });
+
+    // Labels
+    const labels = g.selectAll('.label').data(nodes).enter()
+      .append('text').attr('class', 'label').attr('text-anchor', 'middle')
+      .attr('font-size', d => getBubbleSizeInternal(d.stu).f + 'px')
+      .attr('font-weight', 900).attr('fill', '#003d3e')
+      .text(d => d.stu);
+
+    // Location names below bubbles
+    g.selectAll('.location-label').data(nodes).enter()
+      .append('text').attr('class', 'location-label').attr('text-anchor', 'middle')
+      .attr('x', d => d.x).attr('y', d => d.y + getBubbleSizeInternal(d.stu).d / 2 + 24)
+      .attr('font-size', '10px').attr('fill', 'rgba(255,255,255,0.7)')
+      .text(d => `${d.loc}, ${d.country}`);
+
+    simulation.alpha(1).restart();
+  });
+}
+
+// ============================================================================
+// MAP INITIALIZATION OBSERVER
+// ============================================================================
+let map3Init = false, map4Init = false;
+const observer = new MutationObserver(() => {
+  const s2 = document.getElementById('slide-2');
+  const s3 = document.getElementById('slide-3');
+  if (s2 && s2.classList.contains('active') && !map3Init) {
+    map3Init = true;
+    setTimeout(initMap3, 50);
+  }
+  if (s3 && s3.classList.contains('active') && !map4Init) {
+    map4Init = true;
+    setTimeout(initMap4, 50);
+  }
+});
+observer.observe(document.getElementById('sc'), {attributes:true, subtree:true, attributeFilter:['class']});
+
+// ============================================================================
+// FETCH DATA & POPULATE BOARD
+// ============================================================================
+fetch('board-data.json')
+  .then(function(r) {
+    if (!r.ok) throw new Error('board-data.json not found');
+    return r.json();
+  })
+  .then(function(data) {
+    populateBoard(data);
+  })
+  .catch(function() {
+    document.getElementById('sc').innerHTML =
+      '<div style="width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;background:#003d3e;">' +
+      '<div style="text-align:center;color:#c8ff08;font-family:Segoe UI,Arial,sans-serif;">' +
+      '<div style="font-size:48px;margin-bottom:16px;">⚠️</div>' +
+      '<div style="font-size:22px;font-weight:800;margin-bottom:8px;">board-data.json not found</div>' +
+      '<div style="font-size:14px;color:rgba(255,255,255,0.6);">Upload the weekly data file to display the board.</div>' +
+      '</div></div>';
+  });
+
+// ============================================================================
+// CAROUSEL SYSTEM
+// ============================================================================
+(function(){
+  var DURATIONS=[30000,30000,35000,35000];
+  var cur=0,tot=4,timer=null,raf=null,t0=null;
+  function show(n){
+    cur=(n+tot)%tot;
+    for(var i=0;i<tot;i++){
+      var el=document.getElementById('slide-'+i);
+      if(i===cur){el.classList.add('active');}else{el.classList.remove('active');}
+    }
+    document.getElementById('sn').textContent=(cur+1)+' / '+tot;
+    startBar();
+    if(timer)clearTimeout(timer);
+    timer=setTimeout(function(){show(cur+1);},DURATIONS[cur]);
+  }
+  function startBar(){
+    if(raf){cancelAnimationFrame(raf);raf=null;}
+    t0=null;
+    var pf=document.getElementById('pf');
+    pf.style.width='0%';
+    var dur=DURATIONS[cur];
+    function tick(ts){if(!t0)t0=ts;var pct=Math.min((ts-t0)/dur*100,100);pf.style.width=pct+'%';if(pct<100){raf=requestAnimationFrame(tick);}}
+    raf=requestAnimationFrame(tick);
+  }
+  show(0);
+})();
+</script>
+</body>
+</html>

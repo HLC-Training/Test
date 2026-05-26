@@ -1,0 +1,558 @@
+{
+  "week_label": "Week of May 25–29, 2026",
+  "slide1": {
+    "classes_pill": "15 Classes In Progress",
+    "outlook_pill": "May 30 – Jun 28",
+    "outlook_total_classes": 69,
+    "outlook_total_students": 642,
+    "metric_strip": {
+      "global_students": 219,
+      "global_classes": 15,
+      "hlc": {
+        "students": 138
+      },
+      "blc": {
+        "students": 5
+      },
+      "klc": {
+        "students": 12
+      },
+      "other": {
+        "students": 40
+      }
+    },
+    "plls": [
+      {
+        "name": "Sherif Khalifa",
+        "tech": "Gas Turbine",
+        "total_classes": 2,
+        "total_students": 44,
+        "internal": {
+          "classes": 2,
+          "enrolled": 44,
+          "capacity": 48,
+          "fill_pct": 92,
+          "bar_color": "green",
+          "over": false
+        },
+        "site_specific": {
+          "classes": 0,
+          "students": 0
+        },
+        "open_enrollment": {
+          "classes": 0,
+          "students": 0
+        }
+      },
+      {
+        "name": "Pablo Schibli",
+        "tech": "Steam Turbine",
+        "total_classes": 3,
+        "total_students": 36,
+        "internal": {
+          "classes": 2,
+          "enrolled": 24,
+          "capacity": 24,
+          "fill_pct": 100,
+          "bar_color": "green",
+          "over": false
+        },
+        "site_specific": {
+          "classes": 0,
+          "students": 0
+        },
+        "open_enrollment": {
+          "classes": 1,
+          "students": 12
+        }
+      },
+      {
+        "name": "Michele Alcantar",
+        "tech": "Generator + Excitation",
+        "total_classes": 2,
+        "total_students": 21,
+        "internal": {
+          "classes": 2,
+          "enrolled": 21,
+          "capacity": 28,
+          "fill_pct": 75,
+          "bar_color": "amber",
+          "over": false
+        },
+        "site_specific": {
+          "classes": 0,
+          "students": 0
+        },
+        "open_enrollment": {
+          "classes": 0,
+          "students": 0
+        }
+      },
+      {
+        "name": "Mohammed Nizami",
+        "tech": "Controls",
+        "total_classes": 1,
+        "total_students": 6,
+        "internal": {
+          "classes": 1,
+          "enrolled": 6,
+          "capacity": 17,
+          "fill_pct": 35,
+          "bar_color": "red",
+          "over": false
+        },
+        "site_specific": {
+          "classes": 0,
+          "students": 0
+        },
+        "open_enrollment": {
+          "classes": 0,
+          "students": 0
+        }
+      },
+      {
+        "name": "Harry Hanson",
+        "tech": "Craft / Repairs / ILES",
+        "total_classes": 5,
+        "total_students": 60,
+        "internal": {
+          "classes": 5,
+          "enrolled": 60,
+          "capacity": 62,
+          "fill_pct": 97,
+          "bar_color": "green",
+          "over": false
+        },
+        "site_specific": null,
+        "open_enrollment": null
+      },
+      {
+        "name": "Greg Walker",
+        "tech": "Aeroderivative",
+        "total_classes": 1,
+        "total_students": 12,
+        "internal": {
+          "classes": 0,
+          "enrolled": 0,
+          "capacity": 0,
+          "fill_pct": 0,
+          "bar_color": null,
+          "over": false
+        },
+        "site_specific": {
+          "classes": 0,
+          "students": 0
+        },
+        "open_enrollment": {
+          "classes": 1,
+          "students": 12
+        }
+      },
+      {
+        "name": "Linda",
+        "tech": "CTE / Workforce Dev",
+        "total_classes": 2,
+        "total_students": 40,
+        "internal": {
+          "classes": 2,
+          "enrolled": 40,
+          "capacity": 36,
+          "fill_pct": 111,
+          "bar_color": "lime",
+          "over": true
+        },
+        "site_specific": null,
+        "open_enrollment": null
+      }
+    ],
+    "outlook_rows": [
+      {
+        "name": "Sherif Khalifa",
+        "tech": "Gas Turbine",
+        "classes": 9,
+        "students": 85
+      },
+      {
+        "name": "Pablo Schibli",
+        "tech": "Steam Turbine",
+        "classes": 5,
+        "students": 54
+      },
+      {
+        "name": "Michele Alcantar",
+        "tech": "Generator + Excitation",
+        "classes": 8,
+        "students": 95
+      },
+      {
+        "name": "Mohammed Nizami",
+        "tech": "Controls",
+        "classes": 14,
+        "students": 144
+      },
+      {
+        "name": "Harry Hanson",
+        "tech": "Craft / Repairs / ILES",
+        "classes": 18,
+        "students": 159
+      },
+      {
+        "name": "Greg Walker",
+        "tech": "Aeroderivative",
+        "classes": 13,
+        "students": 93
+      },
+      {
+        "name": "Linda",
+        "tech": "CTE / Workforce Dev",
+        "classes": 2,
+        "students": 12
+      }
+    ]
+  },
+  "slide2": {
+    "status_bar": {
+      "safety": {
+        "rag": "green",
+        "label": "SAFETY",
+        "sub": "All Clear — 0 Incidents"
+      },
+      "bowler": {
+        "rag": "amber",
+        "label": "BOWLER KPIs",
+        "sub": "1 At Risk, 1 Amber"
+      },
+      "action_plan": {
+        "rag": "green",
+        "label": "ACTION PLAN",
+        "sub": "0 Overdue"
+      },
+      "capex": {
+        "rag": "amber",
+        "label": "CAPEX 2026",
+        "sub": "80% Spent"
+      }
+    },
+    "bowler_kpis": [
+      {
+        "name": "Post-Training Skill Improvement",
+        "actual": "83%",
+        "plan": "Plan: 70%",
+        "bar_color": "#75ca64",
+        "rag": "green",
+        "chip": "On Track"
+      },
+      {
+        "name": "Timecard OTD",
+        "actual": "85%",
+        "plan": "Plan: 92%",
+        "bar_color": "#f5a623",
+        "rag": "amber",
+        "chip": "Below Target"
+      },
+      {
+        "name": "Instructor Util >75% for 3mo",
+        "actual": "19%",
+        "plan": "Target: <15%",
+        "bar_color": "#e63946",
+        "rag": "red",
+        "chip": "Over Threshold"
+      }
+    ],
+    "bowler_note": "April data — Owner: Jim Rosen",
+    "action_plan": {
+      "in_progress": 116,
+      "on_deck": 0,
+      "complete_60d": 38,
+      "completed": [
+        "May 29 — Create Kahuna roles per OFS Lifting Workshop",
+        "Apr 30 — Standard process for communicating to instructors",
+        "Apr 30 — Finalize testing & functionality of request workflows",
+        "Apr 30 — Includes simulator readiness",
+        "Apr 30 — AP-0744 completion item"
+      ],
+      "upcoming": [
+        "May 29 — Identify best way to connect with Staff",
+        "Jun 29 — Design online resource for OFS Programs",
+        "Jun 30 — MM & Xyleme integration",
+        "Jun 30 — Complete LO Application Management training",
+        "Jun 30 — AP-0388-3"
+      ]
+    },
+    "safety": {
+      "rag": "green",
+      "minor_incidents": 0,
+      "kpi_chips": [
+        {
+          "label": "I&I: 0",
+          "status": "green"
+        },
+        {
+          "label": "I&I Rate: 0",
+          "status": "green"
+        },
+        {
+          "label": "Severe: 0",
+          "status": "green"
+        },
+        {
+          "label": "Live Save ✓",
+          "status": "green"
+        },
+        {
+          "label": "Read Across ✓",
+          "status": "green"
+        }
+      ],
+      "incident_lines": [],
+      "prior_reference": [
+        "May 13 · HLC — 7FA Bearing 2 lube oil spill. Sorbent pad left in drain. Flow stopped, permit issued, cleaned. System normal.",
+        "May 8, 10:30 AM · Trailer 101 — Student slipped on wet stairs. First aid: tailbone, heel & toe. Caution & reporting reinforced."
+      ],
+      "incident_block_label": "Prior Incidents (Reference Only)"
+    },
+    "capex": {
+      "budget": 5.49,
+      "spent": 4.37,
+      "projected_remaining": 1.11,
+      "pct": 80,
+      "projects": [
+        {
+          "name": "HA Mock-up (Intl Location)",
+          "amount": "$1.31M",
+          "status": "Active",
+          "chip_class": "chip-teal"
+        },
+        {
+          "name": "New Crane for Bay 1",
+          "amount": "$1.00M",
+          "status": "Active",
+          "chip_class": "chip-teal"
+        },
+        {
+          "name": "HA Tooling",
+          "amount": "$700K",
+          "status": "PO Opened",
+          "chip_class": "chip-green"
+        },
+        {
+          "name": "HA Improvements",
+          "amount": "$600K",
+          "status": "Active",
+          "chip_class": "chip-teal"
+        },
+        {
+          "name": "ITS Mockup",
+          "amount": "$579K",
+          "status": "Active",
+          "chip_class": "chip-teal"
+        },
+        {
+          "name": "Building 2 New Roof",
+          "amount": "$575K",
+          "status": "AR Created",
+          "chip_class": "chip-amber"
+        }
+      ],
+      "note": "CapEx updated quarterly"
+    }
+  },
+  "slide3": {
+    "total_students": 195,
+    "total_countries": 28,
+    "total_classes": 13,
+    "countries": [
+      {
+        "country": "United States",
+        "students": 97,
+        "lon": -98.58,
+        "lat": 39.83
+      },
+      {
+        "country": "Malaysia",
+        "students": 27,
+        "lon": 109.7,
+        "lat": 4.21
+      },
+      {
+        "country": "Mexico",
+        "students": 12,
+        "lon": -102.55,
+        "lat": 23.63
+      },
+      {
+        "country": "Saudi Arabia",
+        "students": 7,
+        "lon": 45.08,
+        "lat": 23.89
+      },
+      {
+        "country": "Indonesia",
+        "students": 7,
+        "lon": 117,
+        "lat": -2
+      },
+      {
+        "country": "Oman",
+        "students": 6,
+        "lon": 57.55,
+        "lat": 21.47
+      },
+      {
+        "country": "Spain",
+        "students": 6,
+        "lon": -3.71,
+        "lat": 40.42
+      },
+      {
+        "country": "Taiwan",
+        "students": 4,
+        "lon": 121,
+        "lat": 24
+      },
+      {
+        "country": "Croatia",
+        "students": 3,
+        "lon": 15.97,
+        "lat": 45.81
+      },
+      {
+        "country": "Egypt",
+        "students": 2,
+        "lon": 30.8,
+        "lat": 26.82
+      },
+      {
+        "country": "China",
+        "students": 2,
+        "lon": 104.2,
+        "lat": 35.86
+      },
+      {
+        "country": "India",
+        "students": 2,
+        "lon": 78.96,
+        "lat": 20.59
+      },
+      {
+        "country": "Italy",
+        "students": 2,
+        "lon": 12.57,
+        "lat": 41.87
+      },
+      {
+        "country": "Australia",
+        "students": 2,
+        "lon": 133.78,
+        "lat": -25.27
+      },
+      {
+        "country": "Canada",
+        "students": 2,
+        "lon": -96.8,
+        "lat": 56.13
+      },
+      {
+        "country": "Brazil",
+        "students": 2,
+        "lon": -51.93,
+        "lat": -14.24
+      },
+      {
+        "country": "United Kingdom",
+        "students": 1,
+        "lon": -2,
+        "lat": 54
+      },
+      {
+        "country": "South Korea",
+        "students": 1,
+        "lon": 128,
+        "lat": 36
+      },
+      {
+        "country": "UAE",
+        "students": 1,
+        "lon": 53.85,
+        "lat": 23.42
+      },
+      {
+        "country": "Thailand",
+        "students": 1,
+        "lon": 101,
+        "lat": 15
+      },
+      {
+        "country": "Algeria",
+        "students": 1,
+        "lon": 1.66,
+        "lat": 28.03
+      },
+      {
+        "country": "Singapore",
+        "students": 1,
+        "lon": 103.82,
+        "lat": 1.35
+      },
+      {
+        "country": "Peru",
+        "students": 1,
+        "lon": -75.02,
+        "lat": -9.19
+      },
+      {
+        "country": "Kuwait",
+        "students": 1,
+        "lon": 47.48,
+        "lat": 29.31
+      },
+      {
+        "country": "Jordan",
+        "students": 1,
+        "lon": 36.24,
+        "lat": 30.59
+      },
+      {
+        "country": "Ghana",
+        "students": 1,
+        "lon": -1.02,
+        "lat": 7.95
+      },
+      {
+        "country": "Germany",
+        "students": 1,
+        "lon": 10.45,
+        "lat": 51.17
+      },
+      {
+        "country": "Vietnam",
+        "students": 1,
+        "lon": 108.28,
+        "lat": 14.06
+      }
+    ]
+  },
+  "slide4": {
+    "total_students": 24,
+    "total_classes": 2,
+    "total_countries": 2,
+    "locations": [
+      {
+        "loc": "Cancun",
+        "country": "Mexico",
+        "stu": 12,
+        "cls": 1,
+        "lon": -86.85,
+        "lat": 21.16
+      },
+      {
+        "loc": "Taiwan",
+        "country": "Taiwan",
+        "stu": 12,
+        "cls": 1,
+        "lon": 121,
+        "lat": 24
+      }
+    ]
+  }
+}
