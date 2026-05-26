@@ -327,12 +327,12 @@ function populateBoard(data) {
 
   // SLIDE 1 — Metric Strip
   const ms = data.slide1.metric_strip;
-  document.getElementById('ms-global-stu').textContent = ms.global_students;
-  document.getElementById('ms-global-cls').textContent = ms.global_classes + ' Active Classes';
-  document.getElementById('ms-hlc').textContent = ms.hlc;
-  document.getElementById('ms-blc').textContent = ms.blc;
-  document.getElementById('ms-klc').textContent = ms.klc;
-  document.getElementById('ms-other').textContent = ms.other;
+  document.getElementById('ms-global-stu').textContent = (typeof ms.global_students === 'object' && ms.global_students !== null) ? (ms.global_students.students !== undefined ? ms.global_students.students : ms.global_students.total || JSON.stringify(ms.global_students)) : ms.global_students;
+  document.getElementById('ms-global-cls').textContent = ((typeof ms.global_classes === 'object' && ms.global_classes !== null) ? (ms.global_classes.count !== undefined ? ms.global_classes.count : ms.global_classes.total || JSON.stringify(ms.global_classes)) : ms.global_classes) + ' Active Classes';
+  document.getElementById('ms-hlc').textContent = (typeof ms.hlc === 'object' && ms.hlc !== null) ? (ms.hlc.students !== undefined ? ms.hlc.students : JSON.stringify(ms.hlc)) : ms.hlc;
+  document.getElementById('ms-blc').textContent = (typeof ms.blc === 'object' && ms.blc !== null) ? (ms.blc.students !== undefined ? ms.blc.students : JSON.stringify(ms.blc)) : ms.blc;
+  document.getElementById('ms-klc').textContent = (typeof ms.klc === 'object' && ms.klc !== null) ? (ms.klc.students !== undefined ? ms.klc.students : JSON.stringify(ms.klc)) : ms.klc;
+  document.getElementById('ms-other').textContent = (typeof ms.other === 'object' && ms.other !== null) ? (ms.other.students !== undefined ? ms.other.students : JSON.stringify(ms.other)) : ms.other;
   document.getElementById('s1-classes-pill').textContent = data.slide1.classes_pill;
   document.getElementById('s1-outlook-pill').textContent = data.slide1.outlook_pill;
   document.getElementById('oc-classes').textContent = data.slide1.outlook_total_classes;
@@ -548,6 +548,7 @@ function getBubbleSizeInternal(stu) {
 }
 
 function initMap3() {
+   try {
   const container = document.getElementById('map3-container');
   if (!container || !window._boardData) return;
   container.innerHTML = '';
@@ -566,7 +567,7 @@ function initMap3() {
   g.append('path').datum(graticule).attr('d', path).attr('fill', 'none').attr('stroke', 'rgba(200,255,8,0.07)').attr('stroke-width', 0.5);
 
   // Load world topology
-  d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/world/110m.json').then(world => {
+  d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(world => {
     const land = topojson.feature(world, world.objects.land);
     const countries = topojson.feature(world, world.objects.countries);
 
@@ -640,9 +641,11 @@ function initMap3() {
 
     simulation.alpha(1).restart();
   });
+   } catch(e) { console.error('Map3 init error:', e); }
 }
 
 function initMap4() {
+   try {
   const container = document.getElementById('map4-container');
   if (!container || !window._boardData) return;
   container.innerHTML = '';
@@ -661,7 +664,7 @@ function initMap4() {
   g.append('path').datum(graticule).attr('d', path).attr('fill', 'none').attr('stroke', 'rgba(200,255,8,0.07)').attr('stroke-width', 0.5);
 
   // Load world topology
-  d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/world/110m.json').then(world => {
+  d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(world => {
     const land = topojson.feature(world, world.objects.land);
     const countries = topojson.feature(world, world.objects.countries);
 
@@ -735,6 +738,7 @@ function initMap4() {
 
     simulation.alpha(1).restart();
   });
+   } catch(e) { console.error('Map4 init error:', e); }
 }
 
 // ============================================================================
@@ -745,33 +749,31 @@ let map3Init = false, map4Init = false;
 function tryInitMap3() {
   if (map3Init) return;
   if (typeof d3 === 'undefined' || typeof topojson === 'undefined') {
-    setTimeout(tryInitMap3, 200);
-    return;
+    setTimeout(tryInitMap3, 200); return;
   }
   const container = document.getElementById('map3-container');
   if (!container || container.clientWidth === 0) {
-    setTimeout(tryInitMap3, 100);
-    return;
+    setTimeout(tryInitMap3, 150); return;
   }
   map3Init = true;
   initMap3();
 }
 
+
 function tryInitMap4() {
   if (map4Init) return;
   if (typeof d3 === 'undefined' || typeof topojson === 'undefined') {
-    setTimeout(tryInitMap4, 200);
-    return;
+    setTimeout(tryInitMap4, 200); return;
   }
   const container = document.getElementById('map4-container');
   if (!container || container.clientWidth === 0) {
-    setTimeout(tryInitMap4, 100);
-    return;
+    setTimeout(tryInitMap4, 150); return;
   }
   map4Init = true;
   initMap4();
 }
 
+// MutationObserver watches for slide class changes
 const observer = new MutationObserver(() => {
   const s2 = document.getElementById('slide-2');
   const s3 = document.getElementById('slide-3');
@@ -784,7 +786,7 @@ const observer = new MutationObserver(() => {
 });
 observer.observe(document.getElementById('sc'), {attributes: true, subtree: true, attributeFilter: ['class']});
 
-// Also try on window load in case slide 3 or 4 is active at start
+// Fallback: if page loads on slide 3 or 4, the observer won't fire
 window.addEventListener('load', function() {
   const s2 = document.getElementById('slide-2');
   const s3 = document.getElementById('slide-3');
