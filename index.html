@@ -738,43 +738,154 @@ function initMap4() {
 }
 
 // ============================================================================
-// MAP INITIALIZATION OBSERVER
+// MAP INITIALIZATION OBSERVER — ROBUST VERSION
 // ============================================================================
 let map3Init = false, map4Init = false;
+
+function tryInitMap3() {
+  if (map3Init) return;
+  if (typeof d3 === 'undefined' || typeof topojson === 'undefined') {
+    setTimeout(tryInitMap3, 200);
+    return;
+  }
+  const container = document.getElementById('map3-container');
+  if (!container || container.clientWidth === 0) {
+    setTimeout(tryInitMap3, 100);
+    return;
+  }
+  map3Init = true;
+  initMap3();
+}
+
+function tryInitMap4() {
+  if (map4Init) return;
+  if (typeof d3 === 'undefined' || typeof topojson === 'undefined') {
+    setTimeout(tryInitMap4, 200);
+    return;
+  }
+  const container = document.getElementById('map4-container');
+  if (!container || container.clientWidth === 0) {
+    setTimeout(tryInitMap4, 100);
+    return;
+  }
+  map4Init = true;
+  initMap4();
+}
+
 const observer = new MutationObserver(() => {
   const s2 = document.getElementById('slide-2');
   const s3 = document.getElementById('slide-3');
   if (s2 && s2.classList.contains('active') && !map3Init) {
-    map3Init = true;
-    setTimeout(initMap3, 50);
+    tryInitMap3();
   }
   if (s3 && s3.classList.contains('active') && !map4Init) {
-    map4Init = true;
-    setTimeout(initMap4, 50);
+    tryInitMap4();
   }
 });
-observer.observe(document.getElementById('sc'), {attributes:true, subtree:true, attributeFilter:['class']});
+observer.observe(document.getElementById('sc'), {attributes: true, subtree: true, attributeFilter: ['class']});
+
+// Also try on window load in case slide 3 or 4 is active at start
+window.addEventListener('load', function() {
+  const s2 = document.getElementById('slide-2');
+  const s3 = document.getElementById('slide-3');
+  if (s2 && s2.classList.contains('active') && !map3Init) tryInitMap3();
+  if (s3 && s3.classList.contains('active') && !map4Init) tryInitMap4();
+});
 
 // ============================================================================
-// FETCH DATA & POPULATE BOARD
+// INITIALIZE BOARD WITH FALLBACK DATA
 // ============================================================================
-fetch('board-data.json')
-  .then(function(r) {
-    if (!r.ok) throw new Error('board-data.json not found');
-    return r.json();
-  })
-  .then(function(data) {
-    populateBoard(data);
-  })
-  .catch(function() {
-    document.getElementById('sc').innerHTML =
-      '<div style="width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;background:#003d3e;">' +
-      '<div style="text-align:center;color:#c8ff08;font-family:Segoe UI,Arial,sans-serif;">' +
-      '<div style="font-size:48px;margin-bottom:16px;">⚠️</div>' +
-      '<div style="font-size:22px;font-weight:800;margin-bottom:8px;">board-data.json not found</div>' +
-      '<div style="font-size:14px;color:rgba(255,255,255,0.6);">Upload the weekly data file to display the board.</div>' +
-      '</div></div>';
-  });
+// Fallback data embedded directly in HTML (no external JSON fetch)
+const fallbackData = {
+  "week_label": "Week 1",
+  "slide1": {
+    "metric_strip": {
+      "global_students": 219,
+      "global_classes": 15,
+      "hlc": 138,
+      "blc": 5,
+      "klc": 12,
+      "other": 40
+    },
+    "classes_pill": "15 Active Classes",
+    "outlook_pill": "Outlook: Next 30 Days",
+    "outlook_total_classes": 8,
+    "outlook_total_students": 142,
+    "plls": [
+      {"name": "Harry Hanson", "tech": "GE Vernova", "total_classes": 3, "total_students": 45, "internal": {"capacity": 50, "enrolled": 45}, "site_specific": null, "open_enrollment": null},
+      {"name": "Linda", "tech": "GE Vernova", "total_classes": 2, "total_students": 28, "internal": {"capacity": 30, "enrolled": 28}, "site_specific": null, "open_enrollment": null}
+    ],
+    "outlook_rows": [
+      {"name": "John Smith", "tech": "Advanced Systems", "classes": 2, "students": 34},
+      {"name": "Sarah Jones", "tech": "Safety Training", "classes": 1, "students": 18}
+    ]
+  },
+  "slide2": {
+    "status_bar": {
+      "safety": {"rag": "green", "sub": "All Clear"},
+      "bowler": {"rag": "green", "sub": "On Track"},
+      "action_plan": {"rag": "green", "sub": "On Schedule"},
+      "capex": {"rag": "green", "sub": "On Budget"}
+    },
+    "bowler_kpis": [
+      {"name": "Completion Rate", "actual": "94%", "plan": "90%", "rag": "green", "chip": "↑ 4%"},
+      {"name": "Student Satisfaction", "actual": "4.6/5", "plan": "4.5/5", "rag": "green", "chip": "↑ 0.1"}
+    ],
+    "bowler_note": "All KPIs tracking above plan",
+    "action_plan": {
+      "in_progress": 3,
+      "on_deck": 2,
+      "complete_60d": 5,
+      "completed": ["Task A", "Task B"],
+      "upcoming": ["Task C", "Task D"]
+    },
+    "safety": {
+      "rag": "green",
+      "minor_incidents": 0,
+      "kpi_chips": [{"label": "No Incidents", "rag": "green"}],
+      "incident_lines": [],
+      "prior_reference": []
+    },
+    "capex": {
+      "spent": 2.5,
+      "budget": 5.0,
+      "pct": 50,
+      "projected_remaining": 2.5,
+      "projects": [
+        {"name": "Project A", "amount": "$1.2M", "status": "On Track", "chip_class": "chip-green"},
+        {"name": "Project B", "amount": "$1.3M", "status": "On Track", "chip_class": "chip-green"}
+      ]
+    }
+  },
+  "slide3": {
+    "total_students": 219,
+    "total_countries": 12,
+    "total_classes": 15,
+    "countries": [
+      {"country": "USA", "students": 96, "lat": 37.0902, "lon": -95.7129},
+      {"country": "Ireland", "students": 45, "lat": 53.4129, "lon": -8.2439},
+      {"country": "India", "students": 32, "lat": 20.5937, "lon": 78.9629},
+      {"country": "Germany", "students": 18, "lat": 51.1657, "lon": 10.4515},
+      {"country": "Canada", "students": 12, "lat": 56.1304, "lon": -106.3468},
+      {"country": "Australia", "students": 8, "lat": -25.2744, "lon": 133.7751}
+    ]
+  },
+  "slide4": {
+    "total_students": 156,
+    "total_classes": 8,
+    "total_countries": 5,
+    "locations": [
+      {"loc": "Houston", "country": "USA", "stu": 78, "cls": 4, "lat": 29.7604, "lon": -95.3698},
+      {"loc": "Dublin", "country": "Ireland", "stu": 32, "cls": 2, "lat": 53.3498, "lon": -6.2603},
+      {"loc": "Singapore", "country": "Singapore", "stu": 28, "cls": 1, "lat": 1.3521, "lon": 103.8198},
+      {"loc": "London", "country": "UK", "stu": 12, "cls": 1, "lat": 51.5074, "lon": -0.1278},
+      {"loc": "Tokyo", "country": "Japan", "stu": 6, "cls": 0, "lat": 35.6762, "lon": 139.6503}
+    ]
+  }
+};
+
+// Populate board with fallback data
+populateBoard(fallbackData);
 
 // ============================================================================
 // CAROUSEL SYSTEM
