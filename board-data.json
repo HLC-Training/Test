@@ -1,558 +1,690 @@
 {
-  "week_label": "Week of May 25–29, 2026",
-  "slide1": {
-    "classes_pill": "15 Classes In Progress",
-    "outlook_pill": "May 30 – Jun 28",
-    "outlook_total_classes": 69,
-    "outlook_total_students": 642,
-    "metric_strip": {
-      "global_students": 219,
-      "global_classes": 15,
-      "hlc": {
-        "students": 138
-      },
-      "blc": {
-        "students": 5
-      },
-      "klc": {
-        "students": 12
-      },
-      "other": {
-        "students": 40
-      }
-    },
-    "plls": [
+  "meta": {
+    "buildDate": "2026-05-29",
+    "weekOf": "Jun 1 - 5, 2026",
+    "specVersion": "OFS-SW-ATLAS-004 v4.2",
+    "minorIncidents": 0,
+    "safetyRag": "red",
+    "flaggedToJim": [
       {
-        "name": "Sherif Khalifa",
-        "tech": "Gas Turbine",
-        "total_classes": 2,
-        "total_students": 44,
-        "internal": {
-          "classes": 2,
-          "enrolled": 44,
-          "capacity": 48,
-          "fill_pct": 92,
-          "bar_color": "green",
-          "over": false
-        },
-        "site_specific": {
-          "classes": 0,
-          "students": 0
-        },
-        "open_enrollment": {
-          "classes": 0,
-          "students": 0
-        }
-      },
-      {
-        "name": "Pablo Schibli",
-        "tech": "Steam Turbine",
-        "total_classes": 3,
-        "total_students": 36,
-        "internal": {
-          "classes": 2,
-          "enrolled": 24,
-          "capacity": 24,
-          "fill_pct": 100,
-          "bar_color": "green",
-          "over": false
-        },
-        "site_specific": {
-          "classes": 0,
-          "students": 0
-        },
-        "open_enrollment": {
-          "classes": 1,
-          "students": 12
-        }
-      },
-      {
-        "name": "Michele Alcantar",
-        "tech": "Generator + Excitation",
-        "total_classes": 2,
-        "total_students": 21,
-        "internal": {
-          "classes": 2,
-          "enrolled": 21,
-          "capacity": 28,
-          "fill_pct": 75,
-          "bar_color": "amber",
-          "over": false
-        },
-        "site_specific": {
-          "classes": 0,
-          "students": 0
-        },
-        "open_enrollment": {
-          "classes": 0,
-          "students": 0
-        }
-      },
-      {
-        "name": "Mohammed Nizami",
-        "tech": "Controls",
-        "total_classes": 1,
-        "total_students": 6,
-        "internal": {
-          "classes": 1,
-          "enrolled": 6,
-          "capacity": 17,
-          "fill_pct": 35,
-          "bar_color": "red",
-          "over": false
-        },
-        "site_specific": {
-          "classes": 0,
-          "students": 0
-        },
-        "open_enrollment": {
-          "classes": 0,
-          "students": 0
-        }
-      },
-      {
-        "name": "Harry Hanson",
-        "tech": "Craft / Repairs / ILES",
-        "total_classes": 5,
-        "total_students": 60,
-        "internal": {
-          "classes": 5,
-          "enrolled": 60,
-          "capacity": 62,
-          "fill_pct": 97,
-          "bar_color": "green",
-          "over": false
-        },
-        "site_specific": null,
-        "open_enrollment": null
-      },
-      {
-        "name": "Greg Walker",
-        "tech": "Aeroderivative",
-        "total_classes": 1,
-        "total_students": 12,
-        "internal": {
-          "classes": 0,
-          "enrolled": 0,
-          "capacity": 0,
-          "fill_pct": 0,
-          "bar_color": null,
-          "over": false
-        },
-        "site_specific": {
-          "classes": 0,
-          "students": 0
-        },
-        "open_enrollment": {
-          "classes": 1,
-          "students": 12
-        }
-      },
-      {
-        "name": "Linda",
-        "tech": "CTE / Workforce Dev",
-        "total_classes": 2,
-        "total_students": 40,
-        "internal": {
-          "classes": 2,
-          "enrolled": 40,
-          "capacity": 36,
-          "fill_pct": 111,
-          "bar_color": "lime",
-          "over": true
-        },
-        "site_specific": null,
-        "open_enrollment": null
-      }
-    ],
-    "outlook_rows": [
-      {
-        "name": "Sherif Khalifa",
-        "tech": "Gas Turbine",
-        "classes": 9,
-        "students": 85
-      },
-      {
-        "name": "Pablo Schibli",
-        "tech": "Steam Turbine",
-        "classes": 5,
-        "students": 54
-      },
-      {
-        "name": "Michele Alcantar",
-        "tech": "Generator + Excitation",
-        "classes": 8,
-        "students": 95
-      },
-      {
-        "name": "Mohammed Nizami",
-        "tech": "Controls",
-        "classes": 14,
-        "students": 144
-      },
-      {
-        "name": "Harry Hanson",
-        "tech": "Craft / Repairs / ILES",
-        "classes": 18,
-        "students": 159
-      },
-      {
-        "name": "Greg Walker",
-        "tech": "Aeroderivative",
-        "classes": 13,
-        "students": 93
-      },
-      {
-        "name": "Linda",
-        "tech": "CTE / Workforce Dev",
-        "classes": 2,
-        "students": 12
+        "courseName": "Field Engineer - Onboarding 26-2",
+        "program": "Non-Technical",
+        "technology": "Non-Technical",
+        "reason": "No mapping for program=Non-Technical tech=Non-Technical"
       }
     ]
+  },
+  "slide1": {
+    "globalTotal": 12043,
+    "internalStudents": 1271,
+    "oeStudents": 9517,
+    "cmStudents": 1255,
+    "locationBreakdown": {
+      "HLC": 744,
+      "BLC": 154,
+      "KLC": 150,
+      "Other": 223
+    },
+    "bowlerKPIs": {
+      "postTrainingSkillImprovement": {
+        "label": "Post-Training Skill Improvement",
+        "value": 83,
+        "plan": 70,
+        "unit": "%",
+        "rag": "green"
+      },
+      "timecardOTD": {
+        "label": "Timecard OTD",
+        "value": 72,
+        "plan": 92,
+        "unit": "%",
+        "rag": "red"
+      },
+      "instructorUtilization": {
+        "label": "Instructor Utilization (Borrowed)",
+        "value": 29,
+        "plan": 15,
+        "unit": "%",
+        "rag": "red",
+        "reverseMetric": true
+      }
+    },
+    "safetyRag": "red",
+    "minorIncidents": 0,
+    "ragReason": "Red Path A: Timecard OTD (72% vs 92% plan) and Instructor Utilization (29% vs <15% plan) out of spec"
   },
   "slide2": {
-    "status_bar": {
-      "safety": {
-        "rag": "green",
-        "label": "SAFETY",
-        "sub": "All Clear — 0 Incidents"
-      },
-      "bowler": {
-        "rag": "amber",
-        "label": "BOWLER KPIs",
-        "sub": "1 At Risk, 1 Amber"
-      },
-      "action_plan": {
-        "rag": "green",
-        "label": "ACTION PLAN",
-        "sub": "0 Overdue"
-      },
-      "capex": {
-        "rag": "amber",
-        "label": "CAPEX 2026",
-        "sub": "80% Spent"
-      }
-    },
-    "bowler_kpis": [
-      {
-        "name": "Post-Training Skill Improvement",
-        "actual": "83%",
-        "plan": "Plan: 70%",
-        "bar_color": "#75ca64",
-        "rag": "green",
-        "chip": "On Track"
-      },
-      {
-        "name": "Timecard OTD",
-        "actual": "85%",
-        "plan": "Plan: 92%",
-        "bar_color": "#f5a623",
-        "rag": "amber",
-        "chip": "Below Target"
-      },
-      {
-        "name": "Instructor Util >75% for 3mo",
-        "actual": "19%",
-        "plan": "Target: <15%",
-        "bar_color": "#e63946",
-        "rag": "red",
-        "chip": "Over Threshold"
-      }
+    "weekOf": "Jun 1 - 5, 2026",
+    "pllOrder": [
+      "Sherif Khalifa",
+      "Pablo Schibli",
+      "Michele Alcantar",
+      "Mohammed Nizami",
+      "Harry Hanson",
+      "Greg Walker",
+      "Linda"
     ],
-    "bowler_note": "April data — Owner: Jim Rosen",
-    "action_plan": {
-      "in_progress": 116,
-      "on_deck": 0,
-      "complete_60d": 38,
-      "completed": [
-        "May 29 — Create Kahuna roles per OFS Lifting Workshop",
-        "Apr 30 — Standard process for communicating to instructors",
-        "Apr 30 — Finalize testing & functionality of request workflows",
-        "Apr 30 — Includes simulator readiness",
-        "Apr 30 — AP-0744 completion item"
-      ],
-      "upcoming": [
-        "May 29 — Identify best way to connect with Staff",
-        "Jun 29 — Design online resource for OFS Programs",
-        "Jun 30 — MM & Xyleme integration",
-        "Jun 30 — Complete LO Application Management training",
-        "Jun 30 — AP-0388-3"
-      ]
-    },
-    "safety": {
-      "rag": "green",
-      "minor_incidents": 0,
-      "kpi_chips": [
-        {
-          "label": "I&I: 0",
-          "status": "green"
-        },
-        {
-          "label": "I&I Rate: 0",
-          "status": "green"
-        },
-        {
-          "label": "Severe: 0",
-          "status": "green"
-        },
-        {
-          "label": "Live Save ✓",
-          "status": "green"
-        },
-        {
-          "label": "Read Across ✓",
-          "status": "green"
-        }
-      ],
-      "incident_lines": [],
-      "prior_reference": [
-        "May 13 · HLC — 7FA Bearing 2 lube oil spill. Sorbent pad left in drain. Flow stopped, permit issued, cleaned. System normal.",
-        "May 8, 10:30 AM · Trailer 101 — Student slipped on wet stairs. First aid: tailbone, heel & toe. Caution & reporting reinforced."
-      ],
-      "incident_block_label": "Prior Incidents (Reference Only)"
-    },
-    "capex": {
-      "budget": 5.49,
-      "spent": 4.37,
-      "projected_remaining": 1.11,
-      "pct": 80,
-      "projects": [
-        {
-          "name": "HA Mock-up (Intl Location)",
-          "amount": "$1.31M",
-          "status": "Active",
-          "chip_class": "chip-teal"
-        },
-        {
-          "name": "New Crane for Bay 1",
-          "amount": "$1.00M",
-          "status": "Active",
-          "chip_class": "chip-teal"
-        },
-        {
-          "name": "HA Tooling",
-          "amount": "$700K",
-          "status": "PO Opened",
-          "chip_class": "chip-green"
-        },
-        {
-          "name": "HA Improvements",
-          "amount": "$600K",
-          "status": "Active",
-          "chip_class": "chip-teal"
-        },
-        {
-          "name": "ITS Mockup",
-          "amount": "$579K",
-          "status": "Active",
-          "chip_class": "chip-teal"
-        },
-        {
-          "name": "Building 2 New Roof",
-          "amount": "$575K",
-          "status": "AR Created",
-          "chip_class": "chip-amber"
-        }
-      ],
-      "note": "CapEx updated quarterly"
-    }
-  },
-  "slide3": {
-    "total_students": 195,
-    "total_countries": 28,
-    "total_classes": 13,
-    "countries": [
+    "totalEnrolled": 248,
+    "courses": [
       {
-        "country": "United States",
-        "students": 97,
-        "lon": -98.58,
-        "lat": 39.83
+        "courseName": "HA FE Tasks & Tools - Combustion Inspection 26-3",
+        "program": "Advanced Level",
+        "technology": "Gas Turbine",
+        "location": "Houston Learning Center",
+        "locCat": "HLC",
+        "capacity": 9,
+        "enrolled": 12,
+        "enrollPct": 133,
+        "barColor": "#c8ff08",
+        "overEnrolled": true,
+        "status": "On-Deck",
+        "pll": "Sherif Khalifa",
+        "pllLabel": "Gas Turbine"
       },
       {
-        "country": "Malaysia",
-        "students": 27,
-        "lon": 109.7,
-        "lat": 4.21
+        "courseName": "Entry Level Gas Turbine 26-1",
+        "program": "Entry Level",
+        "technology": "Gas Turbine",
+        "location": "Houston Learning Center / Birr Learning Center",
+        "locCat": "HLC",
+        "capacity": 24,
+        "enrolled": 18,
+        "enrollPct": 75,
+        "barColor": "#f5a623",
+        "overEnrolled": false,
+        "status": "In-Progress",
+        "pll": "Sherif Khalifa",
+        "pllLabel": "Gas Turbine"
       },
       {
-        "country": "Mexico",
-        "students": 12,
-        "lon": -102.55,
-        "lat": 23.63
+        "courseName": "GE Gas Turbine to Alstom GT x-over 26-1",
+        "program": "Advanced Level",
+        "technology": "Gas Turbine",
+        "location": "Birr Learning Center",
+        "locCat": "BLC",
+        "capacity": 12,
+        "enrolled": 8,
+        "enrollPct": 67,
+        "barColor": "#f5a623",
+        "overEnrolled": false,
+        "status": "On-Deck",
+        "pll": "Sherif Khalifa",
+        "pllLabel": "Gas Turbine"
       },
       {
-        "country": "Saudi Arabia",
-        "students": 7,
-        "lon": 45.08,
-        "lat": 23.89
+        "courseName": "Entry Level Steam Turbine 26-1",
+        "program": "Entry Level",
+        "technology": "Steam Turbine",
+        "location": "Houston Learning Center",
+        "locCat": "HLC",
+        "capacity": 24,
+        "enrolled": 26,
+        "enrollPct": 108,
+        "barColor": "#c8ff08",
+        "overEnrolled": true,
+        "status": "In-Progress",
+        "pll": "Pablo Schibli",
+        "pllLabel": "Steam Turbine"
       },
       {
-        "country": "Indonesia",
-        "students": 7,
-        "lon": 117,
-        "lat": -2
+        "courseName": "GE to Alstom Generator Mechanical Crossover 26-2",
+        "program": "Advanced Level",
+        "technology": "Generator Mechanical",
+        "location": "Birr Learning Center",
+        "locCat": "BLC",
+        "capacity": 12,
+        "enrolled": 15,
+        "enrollPct": 125,
+        "barColor": "#c8ff08",
+        "overEnrolled": true,
+        "status": "On-Deck",
+        "pll": "Michele Alcantar",
+        "pllLabel": "Excitation/Generator"
       },
       {
-        "country": "Oman",
-        "students": 6,
-        "lon": 57.55,
-        "lat": 21.47
+        "courseName": "Generator Specialist Training 26-1",
+        "program": "Entry Level",
+        "technology": "Generator",
+        "location": "Houston Learning Center",
+        "locCat": "HLC",
+        "capacity": 16,
+        "enrolled": 16,
+        "enrollPct": 100,
+        "barColor": "#75ca64",
+        "overEnrolled": false,
+        "status": "In-Progress",
+        "pll": "Michele Alcantar",
+        "pllLabel": "Excitation/Generator"
       },
       {
-        "country": "Spain",
-        "students": 6,
-        "lon": -3.71,
-        "lat": 40.42
+        "courseName": "Entry Level Electrical Excitation 26-1",
+        "program": "Entry Level",
+        "technology": "Excitation",
+        "location": "Houston Learning Center",
+        "locCat": "HLC",
+        "capacity": 12,
+        "enrolled": 5,
+        "enrollPct": 42,
+        "barColor": "#e63946",
+        "overEnrolled": false,
+        "status": "In-Progress",
+        "pll": "Michele Alcantar",
+        "pllLabel": "Excitation/Generator"
       },
       {
-        "country": "Taiwan",
-        "students": 4,
-        "lon": 121,
-        "lat": 24
+        "courseName": "Expert Steam Turbine WSC / HRSG / CCPP 26-1",
+        "program": "Advanced Level",
+        "technology": "Controls",
+        "location": "Birr Learning Center",
+        "locCat": "BLC",
+        "capacity": 10,
+        "enrolled": 11,
+        "enrollPct": 110,
+        "barColor": "#c8ff08",
+        "overEnrolled": true,
+        "status": "On-Deck",
+        "pll": "Mohammed Nizami",
+        "pllLabel": "Controls/GIC"
       },
       {
-        "country": "Croatia",
-        "students": 3,
-        "lon": 15.97,
-        "lat": 45.81
+        "courseName": "Entry Level GT MkVIe 26-1",
+        "program": "Entry Level",
+        "technology": "Controls",
+        "location": "Houston Learning Center",
+        "locCat": "HLC",
+        "capacity": 12,
+        "enrolled": 5,
+        "enrollPct": 42,
+        "barColor": "#e63946",
+        "overEnrolled": false,
+        "status": "In-Progress",
+        "pll": "Mohammed Nizami",
+        "pllLabel": "Controls/GIC"
       },
       {
-        "country": "Egypt",
-        "students": 2,
-        "lon": 30.8,
-        "lat": 26.82
+        "courseName": "Foundation Fieldbus Advanced 26-3",
+        "program": "Advanced Level",
+        "technology": "Controls",
+        "location": "Houston Learning Center",
+        "locCat": "HLC",
+        "capacity": 8,
+        "enrolled": 6,
+        "enrollPct": 75,
+        "barColor": "#f5a623",
+        "overEnrolled": false,
+        "status": "On-Deck",
+        "pll": "Mohammed Nizami",
+        "pllLabel": "Controls/GIC"
       },
       {
-        "country": "China",
-        "students": 2,
-        "lon": 104.2,
-        "lat": 35.86
+        "courseName": "Mk VI 26-1",
+        "program": "Advanced Level",
+        "technology": "Controls",
+        "location": "Houston Learning Center",
+        "locCat": "HLC",
+        "capacity": 12,
+        "enrolled": 16,
+        "enrollPct": 133,
+        "barColor": "#c8ff08",
+        "overEnrolled": true,
+        "status": "On-Deck",
+        "pll": "Mohammed Nizami",
+        "pllLabel": "Controls/GIC"
       },
       {
-        "country": "India",
-        "students": 2,
-        "lon": 78.96,
-        "lat": 20.59
+        "courseName": "Site Manager Level 2 26-1",
+        "program": "Advanced Level",
+        "technology": "GIC Mechanical",
+        "location": "Houston Learning Center",
+        "locCat": "HLC",
+        "capacity": 15,
+        "enrolled": 5,
+        "enrollPct": 33,
+        "barColor": "#e63946",
+        "overEnrolled": false,
+        "status": "On-Deck",
+        "pll": "Mohammed Nizami",
+        "pllLabel": "Controls/GIC"
       },
       {
-        "country": "Italy",
-        "students": 2,
-        "lon": 12.57,
-        "lat": 41.87
+        "courseName": "GE Control to Alstom Control (ADVANT x-over) 26-1",
+        "program": "Advanced Level",
+        "technology": "Controls",
+        "location": "Birr Learning Center",
+        "locCat": "BLC",
+        "capacity": 6,
+        "enrolled": 4,
+        "enrollPct": 67,
+        "barColor": "#f5a623",
+        "overEnrolled": false,
+        "status": "On-Deck",
+        "pll": "Mohammed Nizami",
+        "pllLabel": "Controls/GIC"
       },
       {
-        "country": "Australia",
-        "students": 2,
-        "lon": 133.78,
-        "lat": -25.27
+        "courseName": "Steam Turbine 101 26-1",
+        "program": "Repairs",
+        "technology": "Steam Turbine",
+        "location": "Houston Learning Center",
+        "locCat": "HLC",
+        "capacity": 8,
+        "enrolled": 10,
+        "enrollPct": 125,
+        "barColor": "#c8ff08",
+        "overEnrolled": true,
+        "status": "On-Deck",
+        "pll": "Harry Hanson",
+        "pllLabel": "Craft / Repairs / ILES",
+        "sitespecific": null,
+        "openenrollment": null
       },
       {
-        "country": "Canada",
-        "students": 2,
-        "lon": -96.8,
-        "lat": 56.13
+        "courseName": "ELT Gas Turbine OSR Boot Camp 26-2",
+        "program": "Repairs",
+        "technology": "Gas Turbine",
+        "location": "Houston Learning Center",
+        "locCat": "HLC",
+        "capacity": 12,
+        "enrolled": 13,
+        "enrollPct": 108,
+        "barColor": "#c8ff08",
+        "overEnrolled": true,
+        "status": "On-Deck",
+        "pll": "Harry Hanson",
+        "pllLabel": "Craft / Repairs / ILES",
+        "sitespecific": null,
+        "openenrollment": null
       },
       {
-        "country": "Brazil",
-        "students": 2,
-        "lon": -51.93,
-        "lat": -14.24
+        "courseName": "Craft GE to Alstom GT Crossover 26-7",
+        "program": "Craft",
+        "technology": "Gas Turbine",
+        "location": "Buenos Aires, Argentina",
+        "locCat": "Other",
+        "capacity": 15,
+        "enrolled": 20,
+        "enrollPct": 133,
+        "barColor": "#c8ff08",
+        "overEnrolled": true,
+        "status": "On-Deck",
+        "pll": "Harry Hanson",
+        "pllLabel": "Craft / Repairs / ILES",
+        "sitespecific": null,
+        "openenrollment": null
       },
       {
-        "country": "United Kingdom",
-        "students": 1,
-        "lon": -2,
-        "lat": 54
+        "courseName": "Craft Entry Level GT Accelerated 26-5",
+        "program": "Craft",
+        "technology": "Gas Turbine",
+        "location": "Houston Learning Center",
+        "locCat": "HLC",
+        "capacity": 20,
+        "enrolled": 23,
+        "enrollPct": 115,
+        "barColor": "#c8ff08",
+        "overEnrolled": true,
+        "status": "On-Deck",
+        "pll": "Harry Hanson",
+        "pllLabel": "Craft / Repairs / ILES",
+        "sitespecific": null,
+        "openenrollment": null
       },
       {
-        "country": "South Korea",
-        "students": 1,
-        "lon": 128,
-        "lat": 36
+        "courseName": "Aero Controls Fundamentals 26-1",
+        "program": "Advanced Level",
+        "technology": "Aeroderivative",
+        "location": "Houston Learning Center",
+        "locCat": "HLC",
+        "capacity": 10,
+        "enrolled": 6,
+        "enrollPct": 60,
+        "barColor": "#f5a623",
+        "overEnrolled": false,
+        "status": "On-Deck",
+        "pll": "Greg Walker",
+        "pllLabel": "Aeroderivative"
       },
       {
-        "country": "UAE",
-        "students": 1,
-        "lon": 53.85,
-        "lat": 23.42
-      },
-      {
-        "country": "Thailand",
-        "students": 1,
-        "lon": 101,
-        "lat": 15
-      },
-      {
-        "country": "Algeria",
-        "students": 1,
-        "lon": 1.66,
-        "lat": 28.03
-      },
-      {
-        "country": "Singapore",
-        "students": 1,
-        "lon": 103.82,
-        "lat": 1.35
-      },
-      {
-        "country": "Peru",
-        "students": 1,
-        "lon": -75.02,
-        "lat": -9.19
-      },
-      {
-        "country": "Kuwait",
-        "students": 1,
-        "lon": 47.48,
-        "lat": 29.31
-      },
-      {
-        "country": "Jordan",
-        "students": 1,
-        "lon": 36.24,
-        "lat": 30.59
-      },
-      {
-        "country": "Ghana",
-        "students": 1,
-        "lon": -1.02,
-        "lat": 7.95
-      },
-      {
-        "country": "Germany",
-        "students": 1,
-        "lon": 10.45,
-        "lat": 51.17
-      },
-      {
-        "country": "Vietnam",
-        "students": 1,
-        "lon": 108.28,
-        "lat": 14.06
+        "courseName": "Gas Turbine - Rotalign Touch 26-2",
+        "program": "Advanced Level",
+        "technology": "Aeroderivative",
+        "location": "Rayong, Thailand",
+        "locCat": "Other",
+        "capacity": 8,
+        "enrolled": 10,
+        "enrollPct": 125,
+        "barColor": "#c8ff08",
+        "overEnrolled": true,
+        "status": "On-Deck",
+        "pll": "Greg Walker",
+        "pllLabel": "Aeroderivative"
       }
     ]
   },
-  "slide4": {
-    "total_students": 24,
-    "total_classes": 2,
-    "total_countries": 2,
+  "slide3": {
+    "title": "Internal Training - Global Locations",
     "locations": [
       {
-        "loc": "Cancun",
-        "country": "Mexico",
-        "stu": 12,
-        "cls": 1,
-        "lon": -86.85,
-        "lat": 21.16
+        "name": "HLC - Houston",
+        "lat": 29.7604,
+        "lon": -95.3698,
+        "students": 744,
+        "type": "HLC"
       },
       {
-        "loc": "Taiwan",
-        "country": "Taiwan",
-        "stu": 12,
-        "cls": 1,
-        "lon": 121,
-        "lat": 24
+        "name": "BLC - Birr, Ireland",
+        "lat": 53,
+        "lon": -8,
+        "students": 154,
+        "type": "BLC"
+      },
+      {
+        "name": "KLC - Kuwait",
+        "lat": 29.3,
+        "lon": 47.5,
+        "students": 150,
+        "type": "KLC"
+      }
+    ],
+    "irelandLocked": {
+      "lat": 53,
+      "lon": -8,
+      "countryId": 372
+    }
+  },
+  "slide4": {
+    "title": "Customer Training - Global Reach",
+    "totalCountries": 28,
+    "pins": [
+      {
+        "country": "UNITED STATES",
+        "displayName": "United States",
+        "lat": 39.5,
+        "lon": -98.35,
+        "students": 6190,
+        "classes": 554
+      },
+      {
+        "country": "SWITZERLAND",
+        "displayName": "Switzerland",
+        "lat": 46.8,
+        "lon": 8.2,
+        "students": 530,
+        "classes": 45
+      },
+      {
+        "country": "GREECE",
+        "displayName": "Greece",
+        "lat": 39.1,
+        "lon": 21.8,
+        "students": 144,
+        "classes": 12
+      },
+      {
+        "country": "TURKEY",
+        "displayName": "Turkey",
+        "lat": 38.9,
+        "lon": 35.2,
+        "students": 96,
+        "classes": 8
+      },
+      {
+        "country": "GERMANY",
+        "displayName": "Germany",
+        "lat": 51.2,
+        "lon": 10.5,
+        "students": 48,
+        "classes": 4
+      },
+      {
+        "country": "TAIWAN REPUBLIC OF CHINA",
+        "displayName": "Taiwan",
+        "lat": 23.7,
+        "lon": 120.96,
+        "students": 240,
+        "classes": 20
+      },
+      {
+        "country": "SAUDI ARABIA",
+        "displayName": "Saudi Arabia",
+        "lat": 23.9,
+        "lon": 45.1,
+        "students": 84,
+        "classes": 7
+      },
+      {
+        "country": "KUWAIT",
+        "displayName": "Kuwait",
+        "lat": 29.3,
+        "lon": 47.5,
+        "students": 60,
+        "classes": 5
+      },
+      {
+        "country": "NIGERIA",
+        "displayName": "Nigeria",
+        "lat": 9.1,
+        "lon": 8.7,
+        "students": 36,
+        "classes": 3
+      },
+      {
+        "country": "AUSTRALIA",
+        "displayName": "Australia",
+        "lat": -25.3,
+        "lon": 133.8,
+        "students": 48,
+        "classes": 4
+      },
+      {
+        "country": "BRAZIL",
+        "displayName": "Brazil",
+        "lat": -14.2,
+        "lon": -51.9,
+        "students": 36,
+        "classes": 3
+      },
+      {
+        "country": "MEXICO",
+        "displayName": "Mexico",
+        "lat": 23.6,
+        "lon": -102.5,
+        "students": 48,
+        "classes": 4
+      },
+      {
+        "country": "CANADA",
+        "displayName": "Canada",
+        "lat": 56.1,
+        "lon": -106.3,
+        "students": 24,
+        "classes": 2
+      },
+      {
+        "country": "KOREA REPUBLIC OF",
+        "displayName": "South Korea",
+        "lat": 36,
+        "lon": 127.8,
+        "students": 20,
+        "classes": 1
+      },
+      {
+        "country": "SINGAPORE",
+        "displayName": "Singapore",
+        "lat": 1.35,
+        "lon": 103.8,
+        "students": 24,
+        "classes": 2
+      },
+      {
+        "country": "VIETNAM",
+        "displayName": "Vietnam",
+        "lat": 14.1,
+        "lon": 108.3,
+        "students": 12,
+        "classes": 1
+      },
+      {
+        "country": "HUNGARY",
+        "displayName": "Hungary",
+        "lat": 47.2,
+        "lon": 19.5,
+        "students": 12,
+        "classes": 1
+      },
+      {
+        "country": "POLAND",
+        "displayName": "Poland",
+        "lat": 51.9,
+        "lon": 19.1,
+        "students": 24,
+        "classes": 2
+      },
+      {
+        "country": "ALGERIA",
+        "displayName": "Algeria",
+        "lat": 28,
+        "lon": 1.7,
+        "students": 12,
+        "classes": 1
+      },
+      {
+        "country": "MOROCCO",
+        "displayName": "Morocco",
+        "lat": 31.8,
+        "lon": -7.1,
+        "students": 24,
+        "classes": 2
+      },
+      {
+        "country": "FRANCE",
+        "displayName": "France",
+        "lat": 46.2,
+        "lon": 2.2,
+        "students": 24,
+        "classes": 2
+      },
+      {
+        "country": "PAKISTAN",
+        "displayName": "Pakistan",
+        "lat": 30.4,
+        "lon": 69.3,
+        "students": 12,
+        "classes": 1
+      },
+      {
+        "country": "TURKMENISTAN",
+        "displayName": "Turkmenistan",
+        "lat": 40,
+        "lon": 59.6,
+        "students": 12,
+        "classes": 1
+      },
+      {
+        "country": "IRELAND",
+        "displayName": "Ireland (BLC)",
+        "lat": 53,
+        "lon": -8,
+        "students": 154,
+        "classes": 12
+      },
+      {
+        "country": "SENEGAL",
+        "displayName": "Senegal",
+        "lat": 14.5,
+        "lon": -14.5,
+        "students": 12,
+        "classes": 1
+      },
+      {
+        "country": "TUNISIA",
+        "displayName": "Tunisia",
+        "lat": 33.9,
+        "lon": 9.5,
+        "students": 12,
+        "classes": 1
+      },
+      {
+        "country": "DOMINICAN REPUBLIC",
+        "displayName": "Dominican Republic",
+        "lat": 18.7,
+        "lon": -70.2,
+        "students": 12,
+        "classes": 1
+      },
+      {
+        "country": "PUERTO RICO",
+        "displayName": "Puerto Rico",
+        "lat": 18.2,
+        "lon": -66.6,
+        "students": 12,
+        "classes": 1
+      }
+    ]
+  },
+  "actionPlans": {
+    "total": 648,
+    "inProgress": 110,
+    "notStarted": 157,
+    "completed": 326,
+    "dueThisMonth": 0,
+    "dueNextMonth": 0
+  },
+  "capex": {
+    "totalProjects": 46,
+    "highPriorityCount": 15,
+    "totalBudget": 3836520,
+    "topProjects": [
+      {
+        "project": "HA Tooling",
+        "cost": 700000,
+        "status": "Everything requested for Project"
+      },
+      {
+        "project": "Building 2 New Roof",
+        "cost": 575000,
+        "status": "PO opened"
+      },
+      {
+        "project": "FFB hardware for additional carts",
+        "cost": 300000,
+        "status": "PO opened"
+      },
+      {
+        "project": "New AC units bldg. 1 phase A",
+        "cost": 250000,
+        "status": "PO received - all done"
+      },
+      {
+        "project": "Replace HMIs",
+        "cost": 150000,
+        "status": "PO opened"
+      },
+      {
+        "project": "Hurricane Tie Down",
+        "cost": 100000,
+        "status": "with Sourcing"
+      },
+      {
+        "project": "Aero MKVIe Modernization",
+        "cost": 100000,
+        "status": "with Sourcing"
+      },
+      {
+        "project": "UCSE",
+        "cost": 53000,
+        "status": "PO received - all done"
+      },
+      {
+        "project": "TracScan Laser Replacement",
+        "cost": 25000,
+        "status": "On Hold"
+      },
+      {
+        "project": "LM2500+ Air Seal Puller",
+        "cost": 21000,
+        "status": "PO opened"
       }
     ]
   }
-}
+      }
