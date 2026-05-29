@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>OFS Training Delivery Command Board</title>
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:100vw;height:100vh;overflow:hidden;background:#0d1117;color:#fff;font-family:'Segoe UI',Arial,sans-serif}
@@ -18,7 +18,6 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:#0d1117;color:#fff
 .hdr .s{font-size:11px;color:#8b949e;margin-top:2px}
 .hdr .w{font-size:13px;color:#58a6ff;font-weight:600}
 .hdr .l{font-size:10px;color:#8b949e;text-align:right}
-/* SLIDE 1 */
 .s1b{flex:1;display:flex;flex-direction:column;padding:10px 14px;gap:8px;overflow:hidden}
 .ms{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}
 .mc{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:10px;text-align:center}
@@ -41,7 +40,6 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:#0d1117;color:#fff
 .ic .ics{display:flex;gap:10px;flex-wrap:wrap}
 .iss .n{font-size:18px;font-weight:700;color:#58a6ff}
 .iss .l{font-size:8px;color:#8b949e;text-transform:uppercase}
-/* SLIDE 2 */
 .s2b{flex:1;display:flex;flex-direction:column;padding:7px 12px;gap:5px;overflow:hidden}
 .s2g{flex:1;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr);gap:5px;min-height:0}
 .pll-card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:7px;display:flex;flex-direction:column;overflow:hidden}
@@ -54,7 +52,6 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:#0d1117;color:#fff
 .cm{font-size:8px;color:#8b949e;flex-shrink:0}
 .pll-empty{font-size:9px;color:#8b949e;font-style:italic}
 .eleg{display:flex;gap:10px;font-size:9px;color:#8b949e;align-items:center;flex-shrink:0}
-/* SLIDES 3 & 4 */
 .mb{flex:1;position:relative;overflow:hidden}
 .msvg{width:100%;height:100%}
 .mleg{position:absolute;bottom:28px;left:16px;background:rgba(22,27,34,.92);border:1px solid #30363d;border-radius:8px;padding:9px;font-size:10px}
@@ -66,13 +63,8 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:#0d1117;color:#fff
 </style>
 </head>
 <body>
-
 <div class="slide active" id="s1">
-  <div class="hdr">
-    <div><div class="t">OFS TRAINING DELIVERY COMMAND BOARD</div><div class="s">OFS-SW-ATLAS-004 v4.2 &nbsp;|&nbsp; Built 2026-05-29</div></div>
-    <div class="w">Week of Jun 1 - 5, 2026</div>
-    <div class="l">GE Vernova<br>Houston Learning Center</div>
-  </div>
+  <div class="hdr"><div><div class="t">OFS TRAINING DELIVERY COMMAND BOARD</div><div class="s">OFS-SW-ATLAS-004 v4.2 &nbsp;|&nbsp; Built 2026-05-29</div></div><div class="w">Week of Jun 1 - 5, 2026</div><div class="l">GE Vernova<br>Houston Learning Center</div></div>
   <div class="s1b">
     <div class="ms">
       <div class="mc"><div class="v">12,043</div><div class="lb">Global Students<br>(All Programs)</div></div>
@@ -86,18 +78,9 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:#0d1117;color:#fff
     <div class="lr">
       <div class="kpis">
         <div class="kt">Bowler KPI Status — YTD</div>
-        <div class="kr">
-          <div class="kb" style="color:#3fb950;background:#1a4a2e;border-color:#3fb950">83%</div>
-          <div class="kl"><div class="kn">Post-Training Skill Improvement</div><div class="kp">Plan: 70% &nbsp;|&nbsp; Green ≥70% &nbsp;|&nbsp; Red &lt;63%</div></div>
-        </div>
-        <div class="kr">
-          <div class="kb" style="color:#f85149;background:#4a1a1a;border-color:#f85149">72%</div>
-          <div class="kl"><div class="kn">Timecard OTD</div><div class="kp">Plan: 92% &nbsp;|&nbsp; Green ≥92% &nbsp;|&nbsp; Red &lt;82%</div></div>
-        </div>
-        <div class="kr" style="border:none">
-          <div class="kb" style="color:#f85149;background:#4a1a1a;border-color:#f85149">29%</div>
-          <div class="kl"><div class="kn">Instructor Utilization (Borrowed)</div><div class="kp">Plan: &lt;15% &nbsp;|&nbsp; Reverse metric — Red ≥15%</div></div>
-        </div>
+        <div class="kr"><div class="kb" style="color:#3fb950;background:#1a4a2e;border-color:#3fb950">83%</div><div class="kl"><div class="kn">Post-Training Skill Improvement</div><div class="kp">Plan: 70% &nbsp;|&nbsp; Green ≥70% &nbsp;|&nbsp; Red &lt;63%</div></div></div>
+        <div class="kr"><div class="kb" style="color:#f85149;background:#4a1a1a;border-color:#f85149">72%</div><div class="kl"><div class="kn">Timecard OTD</div><div class="kp">Plan: 92% &nbsp;|&nbsp; Green ≥92% &nbsp;|&nbsp; Red &lt;82%</div></div></div>
+        <div class="kr" style="border:none"><div class="kb" style="color:#f85149;background:#4a1a1a;border-color:#f85149">29%</div><div class="kl"><div class="kn">Instructor Utilization (Borrowed)</div><div class="kp">Plan: &lt;15% &nbsp;|&nbsp; Reverse metric — Red ≥15%</div></div></div>
       </div>
       <div class="rgt">
         <div class="safety">
@@ -111,50 +94,23 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:#0d1117;color:#fff
           </div>
         </div>
         <div class="apcx">
-          <div class="ic"><div class="ict">Action Plans</div><div class="ics">
-            <div class="iss"><div class="n">110</div><div class="l">In Progress</div></div>
-            <div class="iss"><div class="n">157</div><div class="l">Not Started</div></div>
-            <div class="iss"><div class="n">326</div><div class="l">Complete</div></div>
-            <div class="iss"><div class="n">648</div><div class="l">Total</div></div>
-          </div></div>
-          <div class="ic"><div class="ict">CapEx 2026</div><div class="ics">
-            <div class="iss"><div class="n">46</div><div class="l">Projects</div></div>
-            <div class="iss"><div class="n">15</div><div class="l">High Pri</div></div>
-            <div class="iss"><div class="n">$3.8M</div><div class="l">Budget</div></div>
-          </div></div>
+          <div class="ic"><div class="ict">Action Plans</div><div class="ics"><div class="iss"><div class="n">110</div><div class="l">In Progress</div></div><div class="iss"><div class="n">157</div><div class="l">Not Started</div></div><div class="iss"><div class="n">326</div><div class="l">Complete</div></div><div class="iss"><div class="n">648</div><div class="l">Total</div></div></div></div>
+          <div class="ic"><div class="ict">CapEx 2026</div><div class="ics"><div class="iss"><div class="n">46</div><div class="l">Projects</div></div><div class="iss"><div class="n">15</div><div class="l">High Pri</div></div><div class="iss"><div class="n">$3.8M</div><div class="l">Budget</div></div></div></div>
         </div>
       </div>
     </div>
   </div>
 </div>
-
 <div class="slide" id="s2">
-  <div class="hdr">
-    <div><div class="t">INTERNAL TRAINING ROSTER — PLL ASSIGNMENTS</div><div class="s">Week of Jun 1 - 5, 2026 &nbsp;|&nbsp; 19 Classes &nbsp;|&nbsp; Internal Programs</div></div>
-    <div class="w">229 Students Enrolled</div>
-    <div class="l">GE Vernova<br>HLC Command Board</div>
-  </div>
+  <div class="hdr"><div><div class="t">INTERNAL TRAINING ROSTER — PLL ASSIGNMENTS</div><div class="s">Week of Jun 1 - 5, 2026 &nbsp;|&nbsp; 19 Classes &nbsp;|&nbsp; Internal Programs</div></div><div class="w">229 Students Enrolled</div><div class="l">GE Vernova<br>HLC Command Board</div></div>
   <div class="s2b">
     <div style="background:#2d1a00;border:1px solid #f5a623;border-radius:6px;padding:6px 10px;font-size:10px;color:#f5a623;flex-shrink:0;margin-bottom:6px">⚠ FLAG TO JIM: Field Engineer - Onboarding 26-2 (Program: Non-Technical, Tech: Non-Technical)</div>
-    <div class="s2g">
-      <div class="pll-card"><div class="pn">SHERIF KHALIFA</div><div class="pt">Gas Turbine</div><div class="pc"><div class="cr"><div class="eb" style="width:100%;background:#c8ff08"></div><div class="cn" title="HA FE Tasks & Tools - Combustion Inspection 26-3">HA FE Tasks & Tools - Combustion Inspe…</div><div class="cm">12/9 HLC</div></div><div class="cr"><div class="eb" style="width:75%;background:#f5a623"></div><div class="cn" title="Entry Level Gas Turbine 26-1">Entry Level Gas Turbine 26-1</div><div class="cm">18/24 HLC</div></div><div class="cr"><div class="eb" style="width:67%;background:#f5a623"></div><div class="cn" title="GE Gas Turbine to Alstom GT x-over 26-1">GE Gas Turbine to Alstom GT x-over 26-1</div><div class="cm">8/12 BLC</div></div></div></div><div class="pll-card"><div class="pn">PABLO SCHIBLI</div><div class="pt">Steam Turbine</div><div class="pc"><div class="cr"><div class="eb" style="width:100%;background:#c8ff08"></div><div class="cn" title="Entry Level Steam Turbine 26-1">Entry Level Steam Turbine 26-1</div><div class="cm">26/24 HLC</div></div></div></div><div class="pll-card"><div class="pn">MICHELE ALCANTAR</div><div class="pt">Excitation/Generator</div><div class="pc"><div class="cr"><div class="eb" style="width:100%;background:#c8ff08"></div><div class="cn" title="GE to Alstom Generator Mechanical Crossover 26-2">GE to Alstom Generator Mechanical Cros…</div><div class="cm">15/12 BLC</div></div><div class="cr"><div class="eb" style="width:100%;background:#75ca64"></div><div class="cn" title="Generator Specialist Training 26-1">Generator Specialist Training 26-1</div><div class="cm">16/16 HLC</div></div><div class="cr"><div class="eb" style="width:42%;background:#e63946"></div><div class="cn" title="Entry Level Electrical Excitation 26-1">Entry Level Electrical Excitation 26-1</div><div class="cm">5/12 HLC</div></div></div></div><div class="pll-card"><div class="pn">MOHAMMED NIZAMI</div><div class="pt">Controls/GIC</div><div class="pc"><div class="cr"><div class="eb" style="width:100%;background:#c8ff08"></div><div class="cn" title="Expert Steam Turbine WSC/HRSG/CCPP 26-1">Expert Steam Turbine WSC/HRSG/CCPP 26-1</div><div class="cm">11/10 BLC</div></div><div class="cr"><div class="eb" style="width:42%;background:#e63946"></div><div class="cn" title="Entry Level GT MkVIe 26-1">Entry Level GT MkVIe 26-1</div><div class="cm">5/12 HLC</div></div><div class="cr"><div class="eb" style="width:75%;background:#f5a623"></div><div class="cn" title="Foundation Fieldbus Advanced 26-3">Foundation Fieldbus Advanced 26-3</div><div class="cm">6/8 HLC</div></div><div class="cr"><div class="eb" style="width:100%;background:#c8ff08"></div><div class="cn" title="Mk VI 26-1">Mk VI 26-1</div><div class="cm">16/12 HLC</div></div><div class="cr"><div class="eb" style="width:33%;background:#e63946"></div><div class="cn" title="Site Manager Level 2 26-1">Site Manager Level 2 26-1</div><div class="cm">5/15 HLC</div></div><div class="cr"><div class="eb" style="width:67%;background:#f5a623"></div><div class="cn" title="GE Control to Alstom Control (ADVANT x-over) 26-1">GE Control to Alstom Control (ADVANT x…</div><div class="cm">4/6 BLC</div></div></div></div><div class="pll-card"><div class="pn">HARRY HANSON</div><div class="pt">Craft / Repairs / ILES</div><div class="pc"><div class="cr"><div class="eb" style="width:100%;background:#c8ff08"></div><div class="cn" title="Steam Turbine 101 26-1">Steam Turbine 101 26-1</div><div class="cm">10/8 HLC</div></div><div class="cr"><div class="eb" style="width:100%;background:#c8ff08"></div><div class="cn" title="ELT Gas Turbine OSR Boot Camp 26-2">ELT Gas Turbine OSR Boot Camp 26-2</div><div class="cm">13/12 HLC</div></div><div class="cr"><div class="eb" style="width:100%;background:#c8ff08"></div><div class="cn" title="Craft GE to Alstom GT Crossover 26-7">Craft GE to Alstom GT Crossover 26-7</div><div class="cm">20/15 Other</div></div><div class="cr"><div class="eb" style="width:100%;background:#c8ff08"></div><div class="cn" title="Craft Entry Level GT Accelerated 26-5">Craft Entry Level GT Accelerated 26-5</div><div class="cm">23/20 HLC</div></div></div></div><div class="pll-card"><div class="pn">GREG WALKER</div><div class="pt">Aeroderivative</div><div class="pc"><div class="cr"><div class="eb" style="width:60%;background:#f5a623"></div><div class="cn" title="Aero Controls Fundamentals 26-1">Aero Controls Fundamentals 26-1</div><div class="cm">6/10 HLC</div></div><div class="cr"><div class="eb" style="width:100%;background:#c8ff08"></div><div class="cn" title="Gas Turbine - Rotalign Touch 26-2">Gas Turbine - Rotalign Touch 26-2</div><div class="cm">10/8 Other</div></div></div></div><div class="pll-card"><div class="pn">LINDA</div><div class="pt">CTE</div><div class="pc"><div class="pll-empty">No classes this week</div></div></div>
-    </div>
-    <div class="eleg">
-      <span>Enrollment:</span>
-      <span style="color:#c8ff08">■ Over-enrolled</span>
-      <span style="color:#75ca64">■ ≥80%</span>
-      <span style="color:#f5a623">■ 50–79%</span>
-      <span style="color:#e63946">■ &lt;50%</span>
-    </div>
+    <div class="s2g"><div class="pll-card"><div class="pn">SHERIF KHALIFA</div><div class="pt">Gas Turbine</div><div class="pc"><div class="cr"><div class="eb" style="width:100%;background:#c8ff08"></div><div class="cn" title="HA FE Tasks & Tools - Combustion Inspection 26-3">HA FE Tasks & Tools - Combustion Inspe…</div><div class="cm">12/9 HLC</div></div><div class="cr"><div class="eb" style="width:75%;background:#f5a623"></div><div class="cn" title="Entry Level Gas Turbine 26-1">Entry Level Gas Turbine 26-1</div><div class="cm">18/24 HLC</div></div><div class="cr"><div class="eb" style="width:67%;background:#f5a623"></div><div class="cn" title="GE Gas Turbine to Alstom GT x-over 26-1">GE Gas Turbine to Alstom GT x-over 26-1</div><div class="cm">8/12 BLC</div></div></div></div><div class="pll-card"><div class="pn">PABLO SCHIBLI</div><div class="pt">Steam Turbine</div><div class="pc"><div class="cr"><div class="eb" style="width:100%;background:#c8ff08"></div><div class="cn" title="Entry Level Steam Turbine 26-1">Entry Level Steam Turbine 26-1</div><div class="cm">26/24 HLC</div></div></div></div><div class="pll-card"><div class="pn">MICHELE ALCANTAR</div><div class="pt">Excitation/Generator</div><div class="pc"><div class="cr"><div class="eb" style="width:100%;background:#c8ff08"></div><div class="cn" title="GE to Alstom Generator Mechanical Crossover 26-2">GE to Alstom Generator Mechanical Cros…</div><div class="cm">15/12 BLC</div></div><div class="cr"><div class="eb" style="width:100%;background:#75ca64"></div><div class="cn" title="Generator Specialist Training 26-1">Generator Specialist Training 26-1</div><div class="cm">16/16 HLC</div></div><div class="cr"><div class="eb" style="width:42%;background:#e63946"></div><div class="cn" title="Entry Level Electrical Excitation 26-1">Entry Level Electrical Excitation 26-1</div><div class="cm">5/12 HLC</div></div></div></div><div class="pll-card"><div class="pn">MOHAMMED NIZAMI</div><div class="pt">Controls/GIC</div><div class="pc"><div class="cr"><div class="eb" style="width:100%;background:#c8ff08"></div><div class="cn" title="Expert Steam Turbine WSC/HRSG/CCPP 26-1">Expert Steam Turbine WSC/HRSG/CCPP 26-1</div><div class="cm">11/10 BLC</div></div><div class="cr"><div class="eb" style="width:42%;background:#e63946"></div><div class="cn" title="Entry Level GT MkVIe 26-1">Entry Level GT MkVIe 26-1</div><div class="cm">5/12 HLC</div></div><div class="cr"><div class="eb" style="width:75%;background:#f5a623"></div><div class="cn" title="Foundation Fieldbus Advanced 26-3">Foundation Fieldbus Advanced 26-3</div><div class="cm">6/8 HLC</div></div><div class="cr"><div class="eb" style="width:100%;background:#c8ff08"></div><div class="cn" title="Mk VI 26-1">Mk VI 26-1</div><div class="cm">16/12 HLC</div></div><div class="cr"><div class="eb" style="width:33%;background:#e63946"></div><div class="cn" title="Site Manager Level 2 26-1">Site Manager Level 2 26-1</div><div class="cm">5/15 HLC</div></div><div class="cr"><div class="eb" style="width:67%;background:#f5a623"></div><div class="cn" title="GE Control to Alstom Control (ADVANT x-over) 26-1">GE Control to Alstom Control (ADVANT x…</div><div class="cm">4/6 BLC</div></div></div></div><div class="pll-card"><div class="pn">HARRY HANSON</div><div class="pt">Craft / Repairs / ILES</div><div class="pc"><div class="cr"><div class="eb" style="width:100%;background:#c8ff08"></div><div class="cn" title="Steam Turbine 101 26-1">Steam Turbine 101 26-1</div><div class="cm">10/8 HLC</div></div><div class="cr"><div class="eb" style="width:100%;background:#c8ff08"></div><div class="cn" title="ELT Gas Turbine OSR Boot Camp 26-2">ELT Gas Turbine OSR Boot Camp 26-2</div><div class="cm">13/12 HLC</div></div><div class="cr"><div class="eb" style="width:100%;background:#c8ff08"></div><div class="cn" title="Craft GE to Alstom GT Crossover 26-7">Craft GE to Alstom GT Crossover 26-7</div><div class="cm">20/15 Other</div></div><div class="cr"><div class="eb" style="width:100%;background:#c8ff08"></div><div class="cn" title="Craft Entry Level GT Accelerated 26-5">Craft Entry Level GT Accelerated 26-5</div><div class="cm">23/20 HLC</div></div></div></div><div class="pll-card"><div class="pn">GREG WALKER</div><div class="pt">Aeroderivative</div><div class="pc"><div class="cr"><div class="eb" style="width:60%;background:#f5a623"></div><div class="cn" title="Aero Controls Fundamentals 26-1">Aero Controls Fundamentals 26-1</div><div class="cm">6/10 HLC</div></div><div class="cr"><div class="eb" style="width:100%;background:#c8ff08"></div><div class="cn" title="Gas Turbine - Rotalign Touch 26-2">Gas Turbine - Rotalign Touch 26-2</div><div class="cm">10/8 Other</div></div></div></div><div class="pll-card"><div class="pn">LINDA</div><div class="pt">CTE</div><div class="pc"><div class="pll-empty">No classes this week</div></div></div></div>
+    <div class="eleg"><span>Enrollment:</span><span style="color:#c8ff08">■ Over-enrolled</span><span style="color:#75ca64">■ ≥80%</span><span style="color:#f5a623">■ 50–79%</span><span style="color:#e63946">■ &lt;50%</span></div>
   </div>
 </div>
-
 <div class="slide" id="s3">
-  <div class="hdr">
-    <div><div class="t">INTERNAL TRAINING — GLOBAL FOOTPRINT</div><div class="s">Active & Upcoming Internal Students by Learning Center</div></div>
-    <div class="w">HLC 744 · BLC 154 · KLC 150</div>
-    <div class="l">GE Vernova<br>HLC Command Board</div>
-  </div>
+  <div class="hdr"><div><div class="t">INTERNAL TRAINING — GLOBAL FOOTPRINT</div><div class="s">Active & Upcoming Internal Students by Learning Center</div></div><div class="w">HLC 744 · BLC 154 · KLC 150</div><div class="l">GE Vernova<br>HLC Command Board</div></div>
   <div class="mb" id="mc3"><svg id="m3" class="msvg"></svg>
     <div class="mleg">
       <div style="font-size:9px;color:#8b949e;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px">Learning Centers</div>
@@ -164,13 +120,8 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:#0d1117;color:#fff
     </div>
   </div>
 </div>
-
 <div class="slide" id="s4">
-  <div class="hdr">
-    <div><div class="t">CUSTOMER TRAINING — GLOBAL REACH</div><div class="s">Open Enrollment & Site-Specific Customer Training Deployments</div></div>
-    <div class="w">28 Countries</div>
-    <div class="l">GE Vernova<br>HLC Command Board</div>
-  </div>
+  <div class="hdr"><div><div class="t">CUSTOMER TRAINING — GLOBAL REACH</div><div class="s">Open Enrollment & Site-Specific Customer Training Deployments</div></div><div class="w">28 Countries</div><div class="l">GE Vernova<br>HLC Command Board</div></div>
   <div class="mb" id="mc4"><svg id="m4" class="msvg"></svg>
     <div class="mleg">
       <div style="font-size:9px;color:#8b949e;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px">Student Volume</div>
@@ -185,82 +136,66 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:#0d1117;color:#fff
     </div>
   </div>
 </div>
-
 <div id="slideCounter">1/4</div>
 <div id="progressBar" style="width:0"></div>
-
 <script>
-const DATA = {"meta":{"buildDate":"2026-05-29","weekOf":"Jun 1 - 5, 2026","specVersion":"OFS-SW-ATLAS-004 v4.2","minorIncidents":0,"safetyRag":"red","flaggedToJim":[{"courseName":"Field Engineer - Onboarding 26-2","program":"Non-Technical","technology":"Non-Technical","reason":"No mapping for program=Non-Technical tech=Non-Technical"}]},"slide1":{"globalTotal":12043,"internalStudents":1271,"oeStudents":9517,"cmStudents":1255,"locationBreakdown":{"HLC":744,"BLC":154,"KLC":150,"Other":223},"bowlerKPIs":{"postTrainingSkillImprovement":{"label":"Post-Training Skill Improvement","value":83,"plan":70,"unit":"%","rag":"green"},"timecardOTD":{"label":"Timecard OTD","value":72,"plan":92,"unit":"%","rag":"red"},"instructorUtilization":{"label":"Instructor Utilization (Borrowed)","value":29,"plan":15,"unit":"%","rag":"red","reverseMetric":true}},"safetyRag":"red","minorIncidents":0,"ragReason":"Red Path A: Timecard OTD (72% vs 92% plan) and Instructor Utilization (29% vs <15% plan) out of spec"},"slide2":{"weekOf":"Jun 1 - 5, 2026","pllOrder":["Sherif Khalifa","Pablo Schibli","Michele Alcantar","Mohammed Nizami","Harry Hanson","Greg Walker","Linda"],"totalEnrolled":248,"courses":[{"courseName":"HA FE Tasks & Tools - Combustion Inspection 26-3","program":"Advanced Level","technology":"Gas Turbine","locCat":"HLC","capacity":9,"enrolled":12,"enrollPct":133,"barColor":"#c8ff08","overEnrolled":true,"status":"On-Deck","pll":"Sherif Khalifa","pllLabel":"Gas Turbine"},{"courseName":"Entry Level Gas Turbine 26-1","program":"Entry Level","technology":"Gas Turbine","locCat":"HLC","capacity":24,"enrolled":18,"enrollPct":75,"barColor":"#f5a623","overEnrolled":false,"status":"In-Progress","pll":"Sherif Khalifa","pllLabel":"Gas Turbine"},{"courseName":"GE Gas Turbine to Alstom GT x-over 26-1","program":"Advanced Level","technology":"Gas Turbine","locCat":"BLC","capacity":12,"enrolled":8,"enrollPct":67,"barColor":"#f5a623","overEnrolled":false,"status":"On-Deck","pll":"Sherif Khalifa","pllLabel":"Gas Turbine"},{"courseName":"Entry Level Steam Turbine 26-1","program":"Entry Level","technology":"Steam Turbine","locCat":"HLC","capacity":24,"enrolled":26,"enrollPct":108,"barColor":"#c8ff08","overEnrolled":true,"status":"In-Progress","pll":"Pablo Schibli","pllLabel":"Steam Turbine"},{"courseName":"GE to Alstom Generator Mechanical Crossover 26-2","program":"Advanced Level","technology":"Generator Mechanical","locCat":"BLC","capacity":12,"enrolled":15,"enrollPct":125,"barColor":"#c8ff08","overEnrolled":true,"status":"On-Deck","pll":"Michele Alcantar","pllLabel":"Excitation/Generator"},{"courseName":"Generator Specialist Training 26-1","program":"Entry Level","technology":"Generator","locCat":"HLC","capacity":16,"enrolled":16,"enrollPct":100,"barColor":"#75ca64","overEnrolled":false,"status":"In-Progress","pll":"Michele Alcantar","pllLabel":"Excitation/Generator"},{"courseName":"Entry Level Electrical Excitation 26-1","program":"Entry Level","technology":"Excitation","locCat":"HLC","capacity":12,"enrolled":5,"enrollPct":42,"barColor":"#e63946","overEnrolled":false,"status":"In-Progress","pll":"Michele Alcantar","pllLabel":"Excitation/Generator"},{"courseName":"Expert Steam Turbine WSC/HRSG/CCPP 26-1","program":"Advanced Level","technology":"Controls","locCat":"BLC","capacity":10,"enrolled":11,"enrollPct":110,"barColor":"#c8ff08","overEnrolled":true,"status":"On-Deck","pll":"Mohammed Nizami","pllLabel":"Controls/GIC"},{"courseName":"Entry Level GT MkVIe 26-1","program":"Entry Level","technology":"Controls","locCat":"HLC","capacity":12,"enrolled":5,"enrollPct":42,"barColor":"#e63946","overEnrolled":false,"status":"In-Progress","pll":"Mohammed Nizami","pllLabel":"Controls/GIC"},{"courseName":"Foundation Fieldbus Advanced 26-3","program":"Advanced Level","technology":"Controls","locCat":"HLC","capacity":8,"enrolled":6,"enrollPct":75,"barColor":"#f5a623","overEnrolled":false,"status":"On-Deck","pll":"Mohammed Nizami","pllLabel":"Controls/GIC"},{"courseName":"Mk VI 26-1","program":"Advanced Level","technology":"Controls","locCat":"HLC","capacity":12,"enrolled":16,"enrollPct":133,"barColor":"#c8ff08","overEnrolled":true,"status":"On-Deck","pll":"Mohammed Nizami","pllLabel":"Controls/GIC"},{"courseName":"Site Manager Level 2 26-1","program":"Advanced Level","technology":"GIC Mechanical","locCat":"HLC","capacity":15,"enrolled":5,"enrollPct":33,"barColor":"#e63946","overEnrolled":false,"status":"On-Deck","pll":"Mohammed Nizami","pllLabel":"Controls/GIC"},{"courseName":"GE Control to Alstom Control (ADVANT x-over) 26-1","program":"Advanced Level","technology":"Controls","locCat":"BLC","capacity":6,"enrolled":4,"enrollPct":67,"barColor":"#f5a623","overEnrolled":false,"status":"On-Deck","pll":"Mohammed Nizami","pllLabel":"Controls/GIC"},{"courseName":"Steam Turbine 101 26-1","program":"Repairs","technology":"Steam Turbine","locCat":"HLC","capacity":8,"enrolled":10,"enrollPct":125,"barColor":"#c8ff08","overEnrolled":true,"status":"On-Deck","pll":"Harry Hanson","pllLabel":"Craft / Repairs / ILES","sitespecific":null,"openenrollment":null},{"courseName":"ELT Gas Turbine OSR Boot Camp 26-2","program":"Repairs","technology":"Gas Turbine","locCat":"HLC","capacity":12,"enrolled":13,"enrollPct":108,"barColor":"#c8ff08","overEnrolled":true,"status":"On-Deck","pll":"Harry Hanson","pllLabel":"Craft / Repairs / ILES","sitespecific":null,"openenrollment":null},{"courseName":"Craft GE to Alstom GT Crossover 26-7","program":"Craft","technology":"Gas Turbine","locCat":"Other","capacity":15,"enrolled":20,"enrollPct":133,"barColor":"#c8ff08","overEnrolled":true,"status":"On-Deck","pll":"Harry Hanson","pllLabel":"Craft / Repairs / ILES","sitespecific":null,"openenrollment":null},{"courseName":"Craft Entry Level GT Accelerated 26-5","program":"Craft","technology":"Gas Turbine","locCat":"HLC","capacity":20,"enrolled":23,"enrollPct":115,"barColor":"#c8ff08","overEnrolled":true,"status":"On-Deck","pll":"Harry Hanson","pllLabel":"Craft / Repairs / ILES","sitespecific":null,"openenrollment":null},{"courseName":"Aero Controls Fundamentals 26-1","program":"Advanced Level","technology":"Aeroderivative","locCat":"HLC","capacity":10,"enrolled":6,"enrollPct":60,"barColor":"#f5a623","overEnrolled":false,"status":"On-Deck","pll":"Greg Walker","pllLabel":"Aeroderivative"},{"courseName":"Gas Turbine - Rotalign Touch 26-2","program":"Advanced Level","technology":"Aeroderivative","locCat":"Other","capacity":8,"enrolled":10,"enrollPct":125,"barColor":"#c8ff08","overEnrolled":true,"status":"On-Deck","pll":"Greg Walker","pllLabel":"Aeroderivative"}]},"slide3":{"locations":[{"name":"HLC - Houston","lat":29.7604,"lon":-95.3698,"students":744,"type":"HLC"},{"name":"BLC - Birr, Ireland","lat":53,"lon":-8,"students":154,"type":"BLC"},{"name":"KLC - Kuwait","lat":29.3,"lon":47.5,"students":150,"type":"KLC"}]},"slide4":{"totalCountries":28,"pins":[{"displayName":"United States","lat":39.5,"lon":-98.35,"students":6190,"classes":554},{"displayName":"Switzerland","lat":46.8,"lon":8.2,"students":530,"classes":45},{"displayName":"Taiwan","lat":23.7,"lon":120.96,"students":240,"classes":20},{"displayName":"Greece","lat":39.1,"lon":21.8,"students":144,"classes":12},{"displayName":"Ireland (BLC)","lat":53,"lon":-8,"students":154,"classes":12},{"displayName":"Poland","lat":51.9,"lon":19.1,"students":24,"classes":2},{"displayName":"Turkey","lat":38.9,"lon":35.2,"students":96,"classes":8},{"displayName":"Germany","lat":51.2,"lon":10.5,"students":48,"classes":4},{"displayName":"France","lat":46.2,"lon":2.2,"students":24,"classes":2},{"displayName":"Hungary","lat":47.2,"lon":19.5,"students":12,"classes":1},{"displayName":"Saudi Arabia","lat":23.9,"lon":45.1,"students":84,"classes":7},{"displayName":"Kuwait","lat":29.3,"lon":47.5,"students":60,"classes":5},{"displayName":"Nigeria","lat":9.1,"lon":8.7,"students":36,"classes":3},{"displayName":"Algeria","lat":28,"lon":1.7,"students":12,"classes":1},{"displayName":"Morocco","lat":31.8,"lon":-7.1,"students":24,"classes":2},{"displayName":"Tunisia","lat":33.9,"lon":9.5,"students":12,"classes":1},{"displayName":"Senegal","lat":14.5,"lon":-14.5,"students":12,"classes":1},{"displayName":"Australia","lat":-25.3,"lon":133.8,"students":48,"classes":4},{"displayName":"South Korea","lat":36,"lon":127.8,"students":20,"classes":1},{"displayName":"Singapore","lat":1.35,"lon":103.8,"students":24,"classes":2},{"displayName":"Vietnam","lat":14.1,"lon":108.3,"students":12,"classes":1},{"displayName":"Pakistan","lat":30.4,"lon":69.3,"students":12,"classes":1},{"displayName":"Turkmenistan","lat":40,"lon":59.6,"students":12,"classes":1},{"displayName":"Brazil","lat":-14.2,"lon":-51.9,"students":36,"classes":3},{"displayName":"Mexico","lat":23.6,"lon":-102.5,"students":48,"classes":4},{"displayName":"Canada","lat":56.1,"lon":-106.3,"students":24,"classes":2},{"displayName":"Dominican Republic","lat":18.7,"lon":-70.2,"students":12,"classes":1},{"displayName":"Puerto Rico","lat":18.2,"lon":-66.6,"students":12,"classes":1}]},"actionPlans":{"total":648,"inProgress":110,"notStarted":157,"completed":326,"dueThisMonth":0},"capex":{"totalProjects":46,"highPriorityCount":15,"totalBudget":3836520,"topProjects":[{"project":"HA Tooling","cost":700000,"status":"Everything requested for Project"},{"project":"Building 2 New Roof","cost":575000,"status":"PO opened"},{"project":"FFB hardware for additional carts","cost":300000,"status":"PO opened"},{"project":"New AC units bldg. 1 phase A","cost":250000,"status":"PO received - all done"},{"project":"Replace HMIs","cost":150000,"status":"PO opened"}]}};
-const TIMES = [30000,30000,35000,35000];
-let cur = 0, t0 = null, raf = null;
-
-function show(n) {
-  document.querySelectorAll('.slide').forEach((s,i) => s.classList.toggle('active', i===n));
-  document.getElementById('slideCounter').textContent = (n+1)+'/4';
-  t0 = performance.now();
-  cancelAnimationFrame(raf);
-  tick();
-  if(n===2) renderM3();
-  if(n===3) renderM4();
+const DATA={"meta":{"buildDate":"2026-05-29","weekOf":"Jun 1 - 5, 2026","specVersion":"OFS-SW-ATLAS-004 v4.2","minorIncidents":0,"safetyRag":"red","flaggedToJim":[{"courseName":"Field Engineer - Onboarding 26-2","program":"Non-Technical","technology":"Non-Technical"}]},"slide1":{"globalTotal":12043,"internalStudents":1271,"oeStudents":9517,"cmStudents":1255,"locationBreakdown":{"HLC":744,"BLC":154,"KLC":150,"Other":223},"bowlerKPIs":{"postTrainingSkillImprovement":{"label":"Post-Training Skill Improvement","value":83,"plan":70,"unit":"%","rag":"green"},"timecardOTD":{"label":"Timecard OTD","value":72,"plan":92,"unit":"%","rag":"red"},"instructorUtilization":{"label":"Instructor Utilization (Borrowed)","value":29,"plan":15,"unit":"%","rag":"red","reverseMetric":true}},"safetyRag":"red","minorIncidents":0,"ragReason":"Red Path A: Timecard OTD (72% vs 92% plan) and Instructor Utilization (29% vs <15% plan) out of spec"},"slide2":{"weekOf":"Jun 1 - 5, 2026","pllOrder":["Sherif Khalifa","Pablo Schibli","Michele Alcantar","Mohammed Nizami","Harry Hanson","Greg Walker","Linda"],"courses":[{"courseName":"HA FE Tasks & Tools - Combustion Inspection 26-3","locCat":"HLC","capacity":9,"enrolled":12,"enrollPct":133,"barColor":"#c8ff08","pll":"Sherif Khalifa","pllLabel":"Gas Turbine"},{"courseName":"Entry Level Gas Turbine 26-1","locCat":"HLC","capacity":24,"enrolled":18,"enrollPct":75,"barColor":"#f5a623","pll":"Sherif Khalifa","pllLabel":"Gas Turbine"},{"courseName":"GE Gas Turbine to Alstom GT x-over 26-1","locCat":"BLC","capacity":12,"enrolled":8,"enrollPct":67,"barColor":"#f5a623","pll":"Sherif Khalifa","pllLabel":"Gas Turbine"},{"courseName":"Entry Level Steam Turbine 26-1","locCat":"HLC","capacity":24,"enrolled":26,"enrollPct":108,"barColor":"#c8ff08","pll":"Pablo Schibli","pllLabel":"Steam Turbine"},{"courseName":"GE to Alstom Generator Mechanical Crossover 26-2","locCat":"BLC","capacity":12,"enrolled":15,"enrollPct":125,"barColor":"#c8ff08","pll":"Michele Alcantar","pllLabel":"Excitation/Generator"},{"courseName":"Generator Specialist Training 26-1","locCat":"HLC","capacity":16,"enrolled":16,"enrollPct":100,"barColor":"#75ca64","pll":"Michele Alcantar","pllLabel":"Excitation/Generator"},{"courseName":"Entry Level Electrical Excitation 26-1","locCat":"HLC","capacity":12,"enrolled":5,"enrollPct":42,"barColor":"#e63946","pll":"Michele Alcantar","pllLabel":"Excitation/Generator"},{"courseName":"Expert Steam Turbine WSC/HRSG/CCPP 26-1","locCat":"BLC","capacity":10,"enrolled":11,"enrollPct":110,"barColor":"#c8ff08","pll":"Mohammed Nizami","pllLabel":"Controls/GIC"},{"courseName":"Entry Level GT MkVIe 26-1","locCat":"HLC","capacity":12,"enrolled":5,"enrollPct":42,"barColor":"#e63946","pll":"Mohammed Nizami","pllLabel":"Controls/GIC"},{"courseName":"Foundation Fieldbus Advanced 26-3","locCat":"HLC","capacity":8,"enrolled":6,"enrollPct":75,"barColor":"#f5a623","pll":"Mohammed Nizami","pllLabel":"Controls/GIC"},{"courseName":"Mk VI 26-1","locCat":"HLC","capacity":12,"enrolled":16,"enrollPct":133,"barColor":"#c8ff08","pll":"Mohammed Nizami","pllLabel":"Controls/GIC"},{"courseName":"Site Manager Level 2 26-1","locCat":"HLC","capacity":15,"enrolled":5,"enrollPct":33,"barColor":"#e63946","pll":"Mohammed Nizami","pllLabel":"Controls/GIC"},{"courseName":"GE Control to Alstom Control (ADVANT x-over) 26-1","locCat":"BLC","capacity":6,"enrolled":4,"enrollPct":67,"barColor":"#f5a623","pll":"Mohammed Nizami","pllLabel":"Controls/GIC"},{"courseName":"Steam Turbine 101 26-1","locCat":"HLC","capacity":8,"enrolled":10,"enrollPct":125,"barColor":"#c8ff08","pll":"Harry Hanson","pllLabel":"Craft / Repairs / ILES","sitespecific":null,"openenrollment":null},{"courseName":"ELT Gas Turbine OSR Boot Camp 26-2","locCat":"HLC","capacity":12,"enrolled":13,"enrollPct":108,"barColor":"#c8ff08","pll":"Harry Hanson","pllLabel":"Craft / Repairs / ILES","sitespecific":null,"openenrollment":null},{"courseName":"Craft GE to Alstom GT Crossover 26-7","locCat":"Other","capacity":15,"enrolled":20,"enrollPct":133,"barColor":"#c8ff08","pll":"Harry Hanson","pllLabel":"Craft / Repairs / ILES","sitespecific":null,"openenrollment":null},{"courseName":"Craft Entry Level GT Accelerated 26-5","locCat":"HLC","capacity":20,"enrolled":23,"enrollPct":115,"barColor":"#c8ff08","pll":"Harry Hanson","pllLabel":"Craft / Repairs / ILES","sitespecific":null,"openenrollment":null},{"courseName":"Aero Controls Fundamentals 26-1","locCat":"HLC","capacity":10,"enrolled":6,"enrollPct":60,"barColor":"#f5a623","pll":"Greg Walker","pllLabel":"Aeroderivative"},{"courseName":"Gas Turbine - Rotalign Touch 26-2","locCat":"Other","capacity":8,"enrolled":10,"enrollPct":125,"barColor":"#c8ff08","pll":"Greg Walker","pllLabel":"Aeroderivative"}]},"slide3":{"locations":[{"name":"HLC - Houston","lat":29.7604,"lon":-95.3698,"students":744,"type":"HLC"},{"name":"BLC - Birr, Ireland","lat":53,"lon":-8,"students":154,"type":"BLC"},{"name":"KLC - Kuwait","lat":29.3,"lon":47.5,"students":150,"type":"KLC"}]},"slide4":{"totalCountries":28,"pins":[{"displayName":"United States","lat":39.5,"lon":-98.35,"students":6190,"classes":554},{"displayName":"Switzerland","lat":46.8,"lon":8.2,"students":530,"classes":45},{"displayName":"Taiwan","lat":23.7,"lon":120.96,"students":240,"classes":20},{"displayName":"Greece","lat":39.1,"lon":21.8,"students":144,"classes":12},{"displayName":"Ireland (BLC)","lat":53,"lon":-8,"students":154,"classes":12},{"displayName":"Poland","lat":51.9,"lon":19.1,"students":24,"classes":2},{"displayName":"Turkey","lat":38.9,"lon":35.2,"students":96,"classes":8},{"displayName":"Germany","lat":51.2,"lon":10.5,"students":48,"classes":4},{"displayName":"France","lat":46.2,"lon":2.2,"students":24,"classes":2},{"displayName":"Hungary","lat":47.2,"lon":19.5,"students":12,"classes":1},{"displayName":"Saudi Arabia","lat":23.9,"lon":45.1,"students":84,"classes":7},{"displayName":"Kuwait","lat":29.3,"lon":47.5,"students":60,"classes":5},{"displayName":"Nigeria","lat":9.1,"lon":8.7,"students":36,"classes":3},{"displayName":"Algeria","lat":28,"lon":1.7,"students":12,"classes":1},{"displayName":"Morocco","lat":31.8,"lon":-7.1,"students":24,"classes":2},{"displayName":"Tunisia","lat":33.9,"lon":9.5,"students":12,"classes":1},{"displayName":"Senegal","lat":14.5,"lon":-14.5,"students":12,"classes":1},{"displayName":"Australia","lat":-25.3,"lon":133.8,"students":48,"classes":4},{"displayName":"South Korea","lat":36,"lon":127.8,"students":20,"classes":1},{"displayName":"Singapore","lat":1.35,"lon":103.8,"students":24,"classes":2},{"displayName":"Vietnam","lat":14.1,"lon":108.3,"students":12,"classes":1},{"displayName":"Pakistan","lat":30.4,"lon":69.3,"students":12,"classes":1},{"displayName":"Turkmenistan","lat":40,"lon":59.6,"students":12,"classes":1},{"displayName":"Brazil","lat":-14.2,"lon":-51.9,"students":36,"classes":3},{"displayName":"Mexico","lat":23.6,"lon":-102.5,"students":48,"classes":4},{"displayName":"Canada","lat":56.1,"lon":-106.3,"students":24,"classes":2},{"displayName":"Dominican Republic","lat":18.7,"lon":-70.2,"students":12,"classes":1},{"displayName":"Puerto Rico","lat":18.2,"lon":-66.6,"students":12,"classes":1}]},"actionPlans":{"total":648,"inProgress":110,"notStarted":157,"completed":326,"dueThisMonth":0},"capex":{"totalProjects":46,"highPriorityCount":15,"totalBudget":3836520}};
+const TIMES=[30000,30000,35000,35000];
+let cur=0,t0=null,raf=null;
+function show(n){
+  document.querySelectorAll('.slide').forEach((s,i)=>s.classList.toggle('active',i===n));
+  document.getElementById('slideCounter').textContent=(n+1)+'/4';
+  t0=performance.now();cancelAnimationFrame(raf);tick();
+  if(n===2)renderM3();if(n===3)renderM4();
 }
-
-function tick() {
-  const el = performance.now()-t0, dur = TIMES[cur];
-  document.getElementById('progressBar').style.width = Math.min(el/dur*100,100)+'vw';
-  if(el>=dur) { cur=(cur+1)%4; show(cur); }
-  else raf = requestAnimationFrame(tick);
+function tick(){
+  const el=performance.now()-t0,dur=TIMES[cur];
+  document.getElementById('progressBar').style.width=Math.min(el/dur*100,100)+'vw';
+  if(el>=dur){cur=(cur+1)%4;show(cur);}else raf=requestAnimationFrame(tick);
 }
-
-const WORLD = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
-
-function mkMap(svgId, containerId) {
-  const c = document.getElementById(containerId);
-  const sv = d3.select('#'+svgId);
+const WORLD='https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
+function mkMap(svgId,cId){
+  const c=document.getElementById(cId),sv=d3.select('#'+svgId);
   sv.selectAll('*').remove();
-  const w=c.clientWidth, h=c.clientHeight;
-  sv.attr('width',w).attr('height',h);
-  const proj = d3.geoNaturalEarth1().scale(w/6.5).translate([w/2,h/2]);
-  return {sv, proj, path:d3.geoPath().projection(proj), w, h};
+  const w=c.clientWidth,h=c.clientHeight;sv.attr('width',w).attr('height',h);
+  const proj=d3.geoNaturalEarth1().scale(w/6.5).translate([w/2,h/2]);
+  return{sv,proj,path:d3.geoPath().projection(proj),w,h};
 }
-
-function renderM3() {
-  const {sv,proj,path,w} = mkMap('m3','mc3');
-  d3.json(WORLD).then(world => {
-    const feats = topojson.feature(world,world.objects.countries).features;
+function renderM3(){
+  const{sv,proj,path,w}=mkMap('m3','mc3');
+  d3.json(WORLD).then(world=>{
+    const feats=topojson.feature(world,world.objects.countries).features;
     sv.append('g').selectAll('path').data(feats).join('path')
-      .attr('fill', d => [840,372,414].includes(d.id) ? '#1a3a5c' : '#1c2128')
+      .attr('fill',d=>[840,372,414].includes(d.id)?'#1a3a5c':'#1c2128')
       .attr('stroke','#30363d').attr('stroke-width',.5).attr('d',path);
-    const locs = [{name:'HLC — Houston',lat:29.7604,lon:-95.3698,s:DATA.slide1.locationBreakdown.HLC,c:'#c8ff08',r:18},
-                  {name:'BLC — Birr, Ireland',lat:53,lon:-8,s:DATA.slide1.locationBreakdown.BLC,c:'#58a6ff',r:14},
-                  {name:'KLC — Kuwait',lat:29.3,lon:47.5,s:DATA.slide1.locationBreakdown.KLC,c:'#f5a623',r:11}];
-    locs.forEach(l => {
-      const [x,y]=proj([l.lon,l.lat]);
+    [{name:'HLC — Houston',lat:29.7604,lon:-95.3698,s:DATA.slide1.locationBreakdown.HLC,c:'#c8ff08',r:18},
+     {name:'BLC — Birr, Ireland',lat:53,lon:-8,s:DATA.slide1.locationBreakdown.BLC,c:'#58a6ff',r:14},
+     {name:'KLC — Kuwait',lat:29.3,lon:47.5,s:DATA.slide1.locationBreakdown.KLC,c:'#f5a623',r:11}
+    ].forEach(l=>{
+      const[x,y]=proj([l.lon,l.lat]);
       sv.append('circle').attr('cx',x).attr('cy',y).attr('r',l.r).attr('fill',l.c).attr('opacity',.85).attr('stroke','#fff').attr('stroke-width',1.5);
       sv.append('text').attr('x',x).attr('y',y-l.r-5).attr('text-anchor','middle').attr('fill',l.c).attr('font-size','11px').attr('font-weight','700').text(l.name);
       sv.append('text').attr('x',x).attr('y',y-l.r+7).attr('text-anchor','middle').attr('fill','#e6edf3').attr('font-size','10px').text(l.s+' students');
     });
   }).catch(()=>{sv.append('text').attr('x',w/2).attr('y',300).attr('text-anchor','middle').attr('fill','#8b949e').text('Map loading...');});
 }
-
-function renderM4() {
-  const {sv,proj,path,w,h} = mkMap('m4','mc4');
-  d3.json(WORLD).then(world => {
-    const feats = topojson.feature(world,world.objects.countries).features;
+function renderM4(){
+  const{sv,proj,path,w,h}=mkMap('m4','mc4');
+  d3.json(WORLD).then(world=>{
+    const feats=topojson.feature(world,world.objects.countries).features;
     sv.append('g').selectAll('path').data(feats).join('path')
       .attr('fill','#1c2128').attr('stroke','#30363d').attr('stroke-width',.5).attr('d',path);
-    DATA.slide4.pins.forEach(p => {
-      if(!p.lat||!p.lon) return;
-      const [x,y]=proj([p.lon,p.lat]);
-      const r = p.students>1000?11:p.students>100?7:4;
+    DATA.slide4.pins.forEach(p=>{
+      if(!p.lat||!p.lon)return;
+      const[x,y]=proj([p.lon,p.lat]);
+      const r=p.students>1000?11:p.students>100?7:4;
       sv.append('circle').attr('cx',x).attr('cy',y).attr('r',r).attr('fill','#58a6ff').attr('opacity',.75).attr('stroke','#1c6bc0').attr('stroke-width',1);
     });
-    // Ireland BLC special highlight
-    const [ix,iy]=proj([-8,53]);
+    const[ix,iy]=proj([-8,53]);
     sv.append('circle').attr('cx',ix).attr('cy',iy).attr('r',7).attr('fill','#58a6ff').attr('opacity',.95).attr('stroke','#fff').attr('stroke-width',1.5);
   }).catch(()=>{sv.append('text').attr('x',w/2).attr('y',h/2).attr('text-anchor','middle').attr('fill','#8b949e').text('Map loading...');});
 }
-
 document.addEventListener('DOMContentLoaded',()=>show(0));
 </script>
 </body>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  </html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </html>
