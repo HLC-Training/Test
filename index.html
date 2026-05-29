@@ -4,153 +4,191 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>OFS Training Delivery Command Board</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.js"></script>
 <style>
+:root{--ev:#005E60;--day:#FFFFFF;--night:#212121;--acc:#C8FF08;--evl:#E6F2F2;--evm:#007A7C;--grn:#2D7A45;--red:#C0392B;--amb:#E67E22;--gry:#6B7280;--bdr:#D1D5DB;--fh:'Sons Condensed Extrabold',Inter,'Segoe UI',Arial,sans-serif;--fb:Inter,'Segoe UI',Arial,sans-serif}
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{width:100vw;height:100vh;overflow:hidden;background:#0d1117;color:#fff;font-family:'Segoe UI',Arial,sans-serif}
+html,body{width:100vw;height:100vh;overflow:hidden;background:var(--day);color:var(--night);font-family:var(--fb)}
 .slide{position:absolute;top:0;left:0;width:100vw;height:100vh;display:none;overflow:hidden;flex-direction:column}
 .slide.active{display:flex}
-#slideCounter{position:fixed;bottom:10px;right:14px;font-size:11px;color:rgba(255,255,255,0.4);z-index:100}
-#progressBar{position:fixed;bottom:0;left:0;height:5px;background:#c8ff08;z-index:100}
-.hdr{background:#161b22;padding:8px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #30363d;flex-shrink:0}
-.hdr .t{font-size:16px;font-weight:700;color:#c8ff08;letter-spacing:1px}
-.hdr .s{font-size:11px;color:#8b949e;margin-top:2px}
-.hdr .w{font-size:13px;color:#58a6ff;font-weight:600}
-.hdr .l{font-size:10px;color:#8b949e;text-align:right}
-.s1b{flex:1;display:flex;flex-direction:column;padding:10px 14px;gap:8px;overflow:hidden}
-.ms{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}
-.mc{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:10px;text-align:center}
-.mc .v{font-size:26px;font-weight:700;color:#c8ff08;line-height:1}
-.mc .lb{font-size:9px;color:#8b949e;margin-top:4px;text-transform:uppercase;letter-spacing:.5px}
-.mc.loc .v{font-size:22px;color:#58a6ff}
-.lr{display:grid;grid-template-columns:1.2fr 1fr;gap:8px;flex:1;min-height:0}
-.kpis{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:4px}
-.kpis .kt{font-size:10px;color:#8b949e;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #21262d;padding-bottom:5px;margin-bottom:4px}
-.kr{display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid #0d1117}
-.kb{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;border:2px solid}
-.kl .kn{font-size:12px;color:#e6edf3;font-weight:600}
-.kl .kp{font-size:9px;color:#8b949e}
-.rgt{display:flex;flex-direction:column;gap:8px}
-.safety{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px;flex:1}
-.src{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;flex-shrink:0;border:3px solid}
-.apcx{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.ic{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:9px}
-.ic .ict{font-size:9px;color:#8b949e;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
-.ic .ics{display:flex;gap:10px;flex-wrap:wrap}
-.iss .n{font-size:18px;font-weight:700;color:#58a6ff}
-.iss .l{font-size:8px;color:#8b949e;text-transform:uppercase}
-.s2b{flex:1;display:flex;flex-direction:column;padding:7px 12px;gap:5px;overflow:hidden}
-.s2g{flex:1;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr);gap:5px;min-height:0}
-.pll-card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:7px;display:flex;flex-direction:column;overflow:hidden}
-.pn{font-size:10px;font-weight:700;color:#c8ff08;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #21262d;padding-bottom:3px;margin-bottom:3px;flex-shrink:0}
-.pt{font-size:9px;color:#8b949e;margin-bottom:3px;flex-shrink:0}
-.pc{flex:1;overflow:hidden;display:flex;flex-direction:column;gap:2px}
-.cr{display:flex;align-items:center;gap:5px;min-height:14px}
-.eb{height:11px;border-radius:2px;flex-shrink:0;min-width:2px;max-width:36px}
-.cn{font-size:9px;color:#e6edf3;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.cm{font-size:8px;color:#8b949e;flex-shrink:0}
-.pll-empty{font-size:9px;color:#8b949e;font-style:italic}
-.eleg{display:flex;gap:10px;font-size:9px;color:#8b949e;align-items:center;flex-shrink:0}
-.mb{flex:1;position:relative;overflow:hidden}
+#pb{position:fixed;bottom:0;left:0;height:4px;background:var(--acc);z-index:200}
+#sc{position:fixed;bottom:8px;right:12px;font-size:10px;color:rgba(33,33,33,.35);z-index:200;font-family:var(--fb)}
+/* HEADER */
+.gh{background:var(--ev);padding:7px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.gh .ht{font-family:var(--fh);font-size:18px;font-weight:900;color:var(--day);text-transform:uppercase;letter-spacing:1.5px}
+.gh .hs{font-size:10px;color:rgba(255,255,255,.6);margin-top:1px}
+.gh .hw{font-size:13px;font-weight:700;color:var(--acc)}
+.gh .hl{font-size:10px;color:rgba(255,255,255,.6);text-align:right}
+/* SLIDE 1 */
+.s1b{flex:1;display:flex;flex-direction:column;padding:10px 14px;gap:9px;background:var(--day);overflow:hidden}
+.ms{display:grid;grid-template-columns:1.5fr 1fr 1fr repeat(4,0.75fr);gap:7px}
+.mc{background:var(--ev);border-radius:8px;padding:10px 8px;text-align:center}
+.mc .mv{font-family:var(--fh);font-size:28px;font-weight:900;color:var(--day);line-height:1}
+.mc .ml{font-size:9px;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.7px;margin-top:3px}
+.mc.hero{background:var(--night)}
+.mc.hero .mv{color:var(--acc);font-size:34px}
+.mc.loc{background:var(--evl)}
+.mc.loc .mv{color:var(--ev);font-size:24px}
+.mc.loc .ml{color:var(--gry)}
+.lr{display:grid;grid-template-columns:1.3fr 1fr;gap:9px;flex:1;min-height:0}
+.kpip{background:var(--day);border:1px solid var(--bdr);border-radius:8px;padding:11px;display:flex;flex-direction:column}
+.kpit{font-family:var(--fh);font-size:10px;font-weight:700;color:var(--ev);text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid var(--ev);padding-bottom:5px;margin-bottom:7px}
+.kpi-row{display:flex;align-items:center;gap:9px;padding:6px 0;border-bottom:1px solid #F3F4F6}
+.kpi-row:last-child{border-bottom:none}
+.kpi-badge{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-size:12px;font-weight:900;flex-shrink:0}
+.kpi-info{flex:1}
+.kpi-name{font-size:11px;font-weight:600;color:var(--night)}
+.kpi-sub{font-size:9px;color:var(--gry);margin-top:1px}
+.kpi-icon{font-size:17px;font-weight:900;flex-shrink:0}
+.sp{background:var(--day);border:1px solid var(--bdr);border-radius:8px;padding:11px;display:flex;flex-direction:column;gap:8px}
+.sr{background:var(--night);border-radius:7px;padding:9px 12px;display:flex;align-items:center;gap:11px}
+.rd{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;flex-shrink:0;border:3px solid}
+.rl{font-family:var(--fh);font-size:16px;font-weight:900;text-transform:uppercase;letter-spacing:1px}
+.rs{font-size:9px;color:rgba(255,255,255,.55);margin-top:2px}
+.rib{display:inline-block;font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;margin-top:4px}
+.ax{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.ic{background:var(--evl);border:1px solid var(--ev);border-radius:7px;padding:8px 11px}
+.ic .ict{font-family:var(--fh);font-size:9px;font-weight:700;color:var(--ev);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+.ics{display:flex;gap:12px;flex-wrap:wrap}
+.ist .n{font-family:var(--fh);font-size:20px;font-weight:900;color:var(--ev)}
+.ist .l{font-size:8px;color:var(--gry);text-transform:uppercase}
+/* SLIDE 2 */
+.s2b{flex:1;display:flex;flex-direction:column;padding:7px 10px;gap:5px;background:var(--day);overflow:hidden}
+.pg{flex:1;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr);gap:5px;min-height:0}
+.pll-card{background:var(--day);border:1px solid var(--bdr);border-radius:7px;display:flex;flex-direction:column;overflow:hidden}
+.ph{background:var(--ev);padding:6px 9px;flex-shrink:0}
+.pn{font-family:var(--fh);font-size:11px;font-weight:900;color:var(--day);text-transform:uppercase;letter-spacing:.8px}
+.ps{display:flex;align-items:center;margin-top:4px}
+.pst{text-align:center;flex:1}
+.pnum{font-family:var(--fh);font-size:17px;font-weight:900;color:var(--acc);display:block;line-height:1}
+.plbl{font-size:7px;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.4px}
+.pdiv{width:1px;height:22px;background:rgba(255,255,255,.2)}
+.pc{flex:1;overflow:hidden;padding:5px 7px;display:flex;flex-direction:column;gap:2px}
+.cr{display:flex;align-items:center;gap:4px;min-height:15px}
+.ew{width:38px;flex-shrink:0;height:9px;background:#E5E7EB;border-radius:3px;overflow:hidden}
+.eb{height:100%;border-radius:3px}
+.eb.over{background:var(--acc)}
+.eb.full{background:var(--grn)}
+.eb.mid{background:var(--amb)}
+.eb.low{background:var(--red)}
+.eb.oe{width:100%;background:var(--evm);opacity:.7}
+.oe-r .cn{color:var(--gry)}
+.cn{font-size:8.5px;color:var(--night);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cm{font-size:7.5px;color:var(--gry);flex-shrink:0;white-space:nowrap}
+.nc{font-size:9px;color:var(--gry);font-style:italic;padding:3px 0}
+.el{display:flex;gap:8px;font-size:9px;color:var(--gry);align-items:center;flex-shrink:0}
+.el span{display:flex;align-items:center;gap:2px}
+.eldot{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+/* SLIDES 3 & 4 */
+.mb{flex:1;display:grid;grid-template-columns:1fr 240px;overflow:hidden}
+.ma{position:relative;background:var(--evl);overflow:hidden}
 .msvg{width:100%;height:100%}
-.mleg{position:absolute;bottom:28px;left:16px;background:rgba(22,27,34,.92);border:1px solid #30363d;border-radius:8px;padding:9px;font-size:10px}
-.mli{display:flex;align-items:center;gap:6px;margin-bottom:4px}
-.msb{position:absolute;top:58px;right:14px;display:flex;flex-direction:column;gap:5px}
-.mst{background:rgba(22,27,34,.92);border:1px solid #30363d;border-radius:6px;padding:7px 11px;text-align:center}
-.mst .n{font-size:18px;font-weight:700;color:#58a6ff}
-.mst .l{font-size:9px;color:#8b949e;text-transform:uppercase}
+.msb{background:var(--ev);padding:12px;display:flex;flex-direction:column;gap:8px;overflow-y:auto}
+.sbt{font-family:var(--fh);font-size:11px;font-weight:700;color:var(--day);text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,.25);padding-bottom:5px}
+.sbh{background:rgba(255,255,255,.1);border-radius:6px;padding:7px;text-align:center;flex-shrink:0}
+.sbh .n{font-family:var(--fh);font-size:30px;font-weight:900;color:var(--acc)}
+.sbh .l{font-size:9px;color:rgba(255,255,255,.7);text-transform:uppercase}
+.sbl{flex:1;display:flex;flex-direction:column;gap:3px;overflow-y:auto}
+.sbi{display:flex;align-items:center;justify-content:space-between;padding:4px 7px;background:rgba(255,255,255,.1);border-radius:4px}
+.sbi .ci{font-size:9px;color:rgba(255,255,255,.85)}
+.sbi .cn2{font-family:var(--fh);font-size:13px;font-weight:700;color:var(--acc)}
+.lcl{display:flex;flex-direction:column;gap:4px;flex-shrink:0}
+.lci{display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.12)}
+.lci .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.lci .nm{font-size:9px;color:rgba(255,255,255,.85)}
+.lci .ct{font-family:var(--fh);font-size:13px;font-weight:700;color:var(--acc);margin-left:auto}
 </style>
 </head>
 <body>
+<!-- SLIDE 1 -->
 <div class="slide active" id="s1">
-  <div class="hdr"><div><div class="t">OFS TRAINING DELIVERY COMMAND BOARD</div><div class="s">OFS-SW-ATLAS-004 v4.2 &nbsp;|&nbsp; Built 2026-05-29</div></div><div class="w">Week of Jun 1 - 5, 2026</div><div class="l">GE Vernova<br>Houston Learning Center</div></div>
+  <div class="gh"><div><div class="ht">OFS Training Delivery Command Board</div><div class="hs">OFS-SW-ATLAS-004 v4.2 | Built 2026-05-29</div></div><div class="hw">Week of Jun 1 - 5, 2026</div><div class="hl">GE Vernova<br>Houston Learning Center</div></div>
   <div class="s1b">
     <div class="ms">
-      <div class="mc"><div class="v">12,043</div><div class="lb">Global Students<br>(All Programs)</div></div>
-      <div class="mc"><div class="v" style="color:#e6edf3">1,271</div><div class="lb">Internal<br>Students</div></div>
-      <div class="mc"><div class="v" style="color:#e6edf3">9,517</div><div class="lb">Open Enrollment<br>Students</div></div>
-      <div class="mc"><div class="v" style="color:#e6edf3">1,255</div><div class="lb">Customer<br>Students</div></div>
-      <div class="mc loc"><div class="v">744</div><div class="lb">HLC<br>Houston</div></div>
-      <div class="mc loc"><div class="v">154</div><div class="lb">BLC<br>Birr</div></div>
-      <div class="mc loc"><div class="v">150</div><div class="lb">KLC<br>Kuwait</div></div>
+      <div class="mc hero"><div class="mv">364</div><div class="ml">Students This Week</div></div>
+      <div class="mc"><div class="mv">268</div><div class="ml">Internal Students</div></div>
+      <div class="mc"><div class="mv">96</div><div class="ml">OE + SS Students</div></div>
+      <div class="mc loc"><div class="mv">164</div><div class="ml">HLC Houston</div></div>
+      <div class="mc loc"><div class="mv">37</div><div class="ml">BLC Birr</div></div>
+      <div class="mc loc"><div class="mv">0</div><div class="ml">KLC Kuwait</div></div>
+      <div class="mc loc"><div class="mv">67</div><div class="ml">Distance/Other</div></div>
     </div>
     <div class="lr">
-      <div class="kpis">
-        <div class="kt">Bowler KPI Status — YTD</div>
-        <div class="kr"><div class="kb" style="color:#3fb950;background:#1a4a2e;border-color:#3fb950">83%</div><div class="kl"><div class="kn">Post-Training Skill Improvement</div><div class="kp">Plan: 70% &nbsp;|&nbsp; Green ≥70% &nbsp;|&nbsp; Red &lt;63%</div></div></div>
-        <div class="kr"><div class="kb" style="color:#f85149;background:#4a1a1a;border-color:#f85149">72%</div><div class="kl"><div class="kn">Timecard OTD</div><div class="kp">Plan: 92% &nbsp;|&nbsp; Green ≥92% &nbsp;|&nbsp; Red &lt;82%</div></div></div>
-        <div class="kr" style="border:none"><div class="kb" style="color:#f85149;background:#4a1a1a;border-color:#f85149">29%</div><div class="kl"><div class="kn">Instructor Utilization (Borrowed)</div><div class="kp">Plan: &lt;15% &nbsp;|&nbsp; Reverse metric — Red ≥15%</div></div></div>
+      <div class="kpip">
+        <div class="kpit">Bowler KPI Status — YTD</div>
+        <div class="kpi-row"><div class="kpi-badge" style="background:#EAF5EC;color:#2D7A45;border:2px solid #2D7A45">83%</div><div class="kpi-info"><div class="kpi-name">Post-Training Skill Improvement</div><div class="kpi-sub">Plan: 70% | Green ≥70% | Red <63%</div></div><div class="kpi-icon" style="color:#2D7A45">✓</div></div>
+        <div class="kpi-row"><div class="kpi-badge" style="background:#FDECEA;color:#C0392B;border:2px solid #C0392B">72%</div><div class="kpi-info"><div class="kpi-name">Timecard OTD</div><div class="kpi-sub">Plan: 92% | Green ≥92% | Red <82%</div></div><div class="kpi-icon" style="color:#C0392B">✗</div></div>
+        <div class="kpi-row"><div class="kpi-badge" style="background:#FDECEA;color:#C0392B;border:2px solid #C0392B">29%</div><div class="kpi-info"><div class="kpi-name">Instructor Utilization (Borrowed)</div><div class="kpi-sub">Plan: 15% | Reverse — Red ≥15%</div></div><div class="kpi-icon" style="color:#C0392B">✗</div></div>
       </div>
-      <div class="rgt">
-        <div class="safety">
-          <div style="display:flex;align-items:center;gap:14px;width:100%">
-            <div class="src" style="color:#f85149;background:#4a1a1a;border-color:#f85149">!</div>
-            <div style="flex:1">
-              <div style="font-size:15px;font-weight:700;color:#f85149;margin-bottom:5px">ACTION REQUIRED</div>
-              <div style="font-size:10px;padding:4px 8px;border-radius:4px;background:#4a1a1a;color:#f85149;border:1px solid #f85149;display:inline-block;margin-bottom:5px">Minor Incidents This Week: 0</div>
-              <div style="font-size:10px;color:#8b949e">Red Path A: Timecard OTD (72% vs 92% plan) and Instructor Utilization (29% vs <15% plan) out of spec</div>
-            </div>
+      <div class="sp">
+        <div class="sr">
+          <div class="rd" style="color:#C0392B;background:rgba(192,57,43,.3);border-color:#C0392B">!</div>
+          <div style="flex:1">
+            <div class="rl" style="color:var(--acc)">ACTION REQUIRED</div>
+            <div class="rs">Red Path A: Timecard OTD (72% vs 92% plan) and Instructor Utilization (29% vs <15% plan)</div>
+            <div class="rib" style="background:rgba(192,57,43,.4);color:var(--acc)">Minor Incidents This Week: 0</div>
           </div>
         </div>
-        <div class="apcx">
-          <div class="ic"><div class="ict">Action Plans</div><div class="ics"><div class="iss"><div class="n">110</div><div class="l">In Progress</div></div><div class="iss"><div class="n">157</div><div class="l">Not Started</div></div><div class="iss"><div class="n">326</div><div class="l">Complete</div></div><div class="iss"><div class="n">648</div><div class="l">Total</div></div></div></div>
-          <div class="ic"><div class="ict">CapEx 2026</div><div class="ics"><div class="iss"><div class="n">46</div><div class="l">Projects</div></div><div class="iss"><div class="n">15</div><div class="l">High Pri</div></div><div class="iss"><div class="n">$3.8M</div><div class="l">Budget</div></div></div></div>
+        <div class="ax">
+          <div class="ic"><div class="ict">Action Plans</div><div class="ics"><div class="ist"><div class="n">110</div><div class="l">In Progress</div></div><div class="ist"><div class="n">157</div><div class="l">Not Started</div></div><div class="ist"><div class="n">326</div><div class="l">Complete</div></div></div></div>
+          <div class="ic"><div class="ict">CapEx 2026</div><div class="ics"><div class="ist"><div class="n">46</div><div class="l">Projects</div></div><div class="ist"><div class="n">15</div><div class="l">High Pri</div></div><div class="ist"><div class="n">$3.8M</div><div class="l">Budget</div></div></div></div>
         </div>
       </div>
     </div>
   </div>
 </div>
+<!-- SLIDE 2 -->
 <div class="slide" id="s2">
-  <div class="hdr"><div><div class="t">INTERNAL TRAINING ROSTER — PLL ASSIGNMENTS</div><div class="s">Week of Jun 1 - 5, 2026 &nbsp;|&nbsp; 19 Classes &nbsp;|&nbsp; Internal Programs</div></div><div class="w">229 Students Enrolled</div><div class="l">GE Vernova<br>HLC Command Board</div></div>
+  <div class="gh"><div><div class="ht">Internal Training Roster — PLL Assignments</div><div class="hs">Week of Jun 1 - 5, 2026 | Internal + OE/SS</div></div><div class="hw">334 Students Total This Week</div><div class="hl">GE Vernova<br>HLC Command Board</div></div>
   <div class="s2b">
-    <div style="background:#2d1a00;border:1px solid #f5a623;border-radius:6px;padding:6px 10px;font-size:10px;color:#f5a623;flex-shrink:0;margin-bottom:6px">⚠ FLAG TO JIM: Field Engineer - Onboarding 26-2 (Program: Non-Technical, Tech: Non-Technical)</div>
-    <div class="s2g"><div class="pll-card"><div class="pn">SHERIF KHALIFA</div><div class="pt">Gas Turbine</div><div class="pc"><div class="cr"><div class="eb" style="width:100%;background:#c8ff08"></div><div class="cn" title="HA FE Tasks & Tools - Combustion Inspection 26-3">HA FE Tasks & Tools - Combustion Inspe…</div><div class="cm">12/9 HLC</div></div><div class="cr"><div class="eb" style="width:75%;background:#f5a623"></div><div class="cn" title="Entry Level Gas Turbine 26-1">Entry Level Gas Turbine 26-1</div><div class="cm">18/24 HLC</div></div><div class="cr"><div class="eb" style="width:67%;background:#f5a623"></div><div class="cn" title="GE Gas Turbine to Alstom GT x-over 26-1">GE Gas Turbine to Alstom GT x-over 26-1</div><div class="cm">8/12 BLC</div></div></div></div><div class="pll-card"><div class="pn">PABLO SCHIBLI</div><div class="pt">Steam Turbine</div><div class="pc"><div class="cr"><div class="eb" style="width:100%;background:#c8ff08"></div><div class="cn" title="Entry Level Steam Turbine 26-1">Entry Level Steam Turbine 26-1</div><div class="cm">26/24 HLC</div></div></div></div><div class="pll-card"><div class="pn">MICHELE ALCANTAR</div><div class="pt">Excitation/Generator</div><div class="pc"><div class="cr"><div class="eb" style="width:100%;background:#c8ff08"></div><div class="cn" title="GE to Alstom Generator Mechanical Crossover 26-2">GE to Alstom Generator Mechanical Cros…</div><div class="cm">15/12 BLC</div></div><div class="cr"><div class="eb" style="width:100%;background:#75ca64"></div><div class="cn" title="Generator Specialist Training 26-1">Generator Specialist Training 26-1</div><div class="cm">16/16 HLC</div></div><div class="cr"><div class="eb" style="width:42%;background:#e63946"></div><div class="cn" title="Entry Level Electrical Excitation 26-1">Entry Level Electrical Excitation 26-1</div><div class="cm">5/12 HLC</div></div></div></div><div class="pll-card"><div class="pn">MOHAMMED NIZAMI</div><div class="pt">Controls/GIC</div><div class="pc"><div class="cr"><div class="eb" style="width:100%;background:#c8ff08"></div><div class="cn" title="Expert Steam Turbine WSC/HRSG/CCPP 26-1">Expert Steam Turbine WSC/HRSG/CCPP 26-1</div><div class="cm">11/10 BLC</div></div><div class="cr"><div class="eb" style="width:42%;background:#e63946"></div><div class="cn" title="Entry Level GT MkVIe 26-1">Entry Level GT MkVIe 26-1</div><div class="cm">5/12 HLC</div></div><div class="cr"><div class="eb" style="width:75%;background:#f5a623"></div><div class="cn" title="Foundation Fieldbus Advanced 26-3">Foundation Fieldbus Advanced 26-3</div><div class="cm">6/8 HLC</div></div><div class="cr"><div class="eb" style="width:100%;background:#c8ff08"></div><div class="cn" title="Mk VI 26-1">Mk VI 26-1</div><div class="cm">16/12 HLC</div></div><div class="cr"><div class="eb" style="width:33%;background:#e63946"></div><div class="cn" title="Site Manager Level 2 26-1">Site Manager Level 2 26-1</div><div class="cm">5/15 HLC</div></div><div class="cr"><div class="eb" style="width:67%;background:#f5a623"></div><div class="cn" title="GE Control to Alstom Control (ADVANT x-over) 26-1">GE Control to Alstom Control (ADVANT x…</div><div class="cm">4/6 BLC</div></div></div></div><div class="pll-card"><div class="pn">HARRY HANSON</div><div class="pt">Craft / Repairs / ILES</div><div class="pc"><div class="cr"><div class="eb" style="width:100%;background:#c8ff08"></div><div class="cn" title="Steam Turbine 101 26-1">Steam Turbine 101 26-1</div><div class="cm">10/8 HLC</div></div><div class="cr"><div class="eb" style="width:100%;background:#c8ff08"></div><div class="cn" title="ELT Gas Turbine OSR Boot Camp 26-2">ELT Gas Turbine OSR Boot Camp 26-2</div><div class="cm">13/12 HLC</div></div><div class="cr"><div class="eb" style="width:100%;background:#c8ff08"></div><div class="cn" title="Craft GE to Alstom GT Crossover 26-7">Craft GE to Alstom GT Crossover 26-7</div><div class="cm">20/15 Other</div></div><div class="cr"><div class="eb" style="width:100%;background:#c8ff08"></div><div class="cn" title="Craft Entry Level GT Accelerated 26-5">Craft Entry Level GT Accelerated 26-5</div><div class="cm">23/20 HLC</div></div></div></div><div class="pll-card"><div class="pn">GREG WALKER</div><div class="pt">Aeroderivative</div><div class="pc"><div class="cr"><div class="eb" style="width:60%;background:#f5a623"></div><div class="cn" title="Aero Controls Fundamentals 26-1">Aero Controls Fundamentals 26-1</div><div class="cm">6/10 HLC</div></div><div class="cr"><div class="eb" style="width:100%;background:#c8ff08"></div><div class="cn" title="Gas Turbine - Rotalign Touch 26-2">Gas Turbine - Rotalign Touch 26-2</div><div class="cm">10/8 Other</div></div></div></div><div class="pll-card"><div class="pn">LINDA</div><div class="pt">CTE</div><div class="pc"><div class="pll-empty">No classes this week</div></div></div></div>
-    <div class="eleg"><span>Enrollment:</span><span style="color:#c8ff08">■ Over-enrolled</span><span style="color:#75ca64">■ ≥80%</span><span style="color:#f5a623">■ 50–79%</span><span style="color:#e63946">■ &lt;50%</span></div>
+    <div class="pg"><div class="pll-card"><div class="ph"><div class="pn">SHERIF KHALIFA</div><div class="ps"><div class="pst"><span class="pnum">4</span><span class="plbl">CLASSES</span></div><div class="pdiv"></div><div class="pst"><span class="pnum">47</span><span class="plbl">STUDENTS</span></div><div class="pdiv"></div><div class="pst"><span class="pnum">3</span><span class="plbl">INT</span></div><div class="pdiv"></div><div class="pst"><span class="pnum">1</span><span class="plbl">OE/SS</span></div></div></div><div class="pc"><div class="cr"><div class="ew"><div class="eb full" style="width:100%"></div></div><span class="cn">HA FE Tasks & Tools - Combustion I…</span><span class="cm">9/9·HLC</span></div><div class="cr"><div class="ew"><div class="eb mid" style="width:75%"></div></div><span class="cn">Entry Level Gas Turbine 26-1</span><span class="cm">18/24·HLC</span></div><div class="cr"><div class="ew"><div class="eb mid" style="width:67%"></div></div><span class="cn">GE Gas Turbine to Alstom GT x-over…</span><span class="cm">8/12·BLC</span></div><div class="cr oe-r"><div class="ew"><div class="eb oe"></div></div><span class="cn">Gas Turbine - Operation</span><span class="cm">12·United States</span></div></div></div><div class="pll-card"><div class="ph"><div class="pn">PABLO SCHIBLI</div><div class="ps"><div class="pst"><span class="pnum">5</span><span class="plbl">CLASSES</span></div><div class="pdiv"></div><div class="pst"><span class="pnum">72</span><span class="plbl">STUDENTS</span></div><div class="pdiv"></div><div class="pst"><span class="pnum">1</span><span class="plbl">INT</span></div><div class="pdiv"></div><div class="pst"><span class="pnum">4</span><span class="plbl">OE/SS</span></div></div></div><div class="pc"><div class="cr"><div class="ew"><div class="eb full" style="width:100%"></div></div><span class="cn">Entry Level Steam Turbine 26-1</span><span class="cm">24/24·HLC</span></div><div class="cr oe-r"><div class="ew"><div class="eb oe"></div></div><span class="cn">HRSG - Operation & Maintenance</span><span class="cm">12·Taiwan</span></div><div class="cr oe-r"><div class="ew"><div class="eb oe"></div></div><span class="cn">Steam Turbine Operation</span><span class="cm">12·United States</span></div><div class="cr oe-r"><div class="ew"><div class="eb oe"></div></div><span class="cn">Combined Cycle - Fundamentals</span><span class="cm">12·Taiwan</span></div><div class="cr oe-r"><div class="ew"><div class="eb oe"></div></div><span class="cn">Combined Cycle Fundamentals / exte…</span><span class="cm">12·Taiwan</span></div></div></div><div class="pll-card"><div class="ph"><div class="pn">MICHELE ALCANTAR</div><div class="ps"><div class="pst"><span class="pnum">4</span><span class="plbl">CLASSES</span></div><div class="pdiv"></div><div class="pst"><span class="pnum">44</span><span class="plbl">STUDENTS</span></div><div class="pdiv"></div><div class="pst"><span class="pnum">3</span><span class="plbl">INT</span></div><div class="pdiv"></div><div class="pst"><span class="pnum">1</span><span class="plbl">OE/SS</span></div></div></div><div class="pc"><div class="cr"><div class="ew"><div class="eb full" style="width:92%"></div></div><span class="cn">GE to Alstom Generator Mechanical …</span><span class="cm">11/12·BLC</span></div><div class="cr"><div class="ew"><div class="eb full" style="width:100%"></div></div><span class="cn">Generator Specialist Training 26-1</span><span class="cm">16/16·HLC</span></div><div class="cr"><div class="ew"><div class="eb low" style="width:42%"></div></div><span class="cn">Entry Level Electrical Excitation …</span><span class="cm">5/12·HLC</span></div><div class="cr oe-r"><div class="ew"><div class="eb oe"></div></div><span class="cn">Excitation - Generator Excitation …</span><span class="cm">12·United States</span></div></div></div><div class="pll-card"><div class="ph"><div class="pn">MOHAMMED NIZAMI</div><div class="ps"><div class="pst"><span class="pnum">6</span><span class="plbl">CLASSES</span></div><div class="pdiv"></div><div class="pst"><span class="pnum">43</span><span class="plbl">STUDENTS</span></div><div class="pdiv"></div><div class="pst"><span class="pnum">6</span><span class="plbl">INT</span></div><div class="pdiv"></div><div class="pst"><span class="pnum">0</span><span class="plbl">OE/SS</span></div></div></div><div class="pc"><div class="cr"><div class="ew"><div class="eb full" style="width:100%"></div></div><span class="cn">Expert Steam Turbine WSC/HRSG/CCPP…</span><span class="cm">10/10·BLC</span></div><div class="cr"><div class="ew"><div class="eb low" style="width:35%"></div></div><span class="cn">Entry Level GT MkVIe 26-1</span><span class="cm">6/17·HLC</span></div><div class="cr"><div class="ew"><div class="eb full" style="width:100%"></div></div><span class="cn">Foundation Fieldbus Advanced 26-3</span><span class="cm">6/6·HLC</span></div><div class="cr"><div class="ew"><div class="eb full" style="width:100%"></div></div><span class="cn">Mk VI 26-1</span><span class="cm">12/12·HLC</span></div><div class="cr"><div class="ew"><div class="eb low" style="width:33%"></div></div><span class="cn">Site Manager Level 2 26-1</span><span class="cm">5/15·HLC</span></div><div class="cr"><div class="ew"><div class="eb mid" style="width:67%"></div></div><span class="cn">GE Control to Alstom Control (ADVA…</span><span class="cm">4/6·BLC</span></div></div></div><div class="pll-card"><div class="ph"><div class="pn">HARRY HANSON</div><div class="ps"><div class="pst"><span class="pnum">5</span><span class="plbl">CLASSES</span></div><div class="pdiv"></div><div class="pst"><span class="pnum">60</span><span class="plbl">STUDENTS</span></div><div class="pdiv"></div><div class="pst"><span class="pnum">5</span><span class="plbl">INT</span></div><div class="pdiv"></div><div class="pst"><span class="pnum">0</span><span class="plbl">OE/SS</span></div></div></div><div class="pc"><div class="cr"><div class="ew"><div class="eb low" style="width:20%"></div></div><span class="cn">Craft Entry Level ST 26-3</span><span class="cm">2/10·HLC</span></div><div class="cr"><div class="ew"><div class="eb full" style="width:100%"></div></div><span class="cn">Steam Turbine 101 26-1</span><span class="cm">8/8·HLC</span></div><div class="cr"><div class="ew"><div class="eb full" style="width:100%"></div></div><span class="cn">ELT Gas Turbine OSR Boot Camp 26-2</span><span class="cm">12/12·HLC</span></div><div class="cr"><div class="ew"><div class="eb full" style="width:100%"></div></div><span class="cn">Craft GE to Alstom GT Crossover 26-7</span><span class="cm">15/15·Other</span></div><div class="cr"><div class="ew"><div class="eb over" style="width:100%"></div></div><span class="cn">Craft Entry Level GT Accelerated 2…</span><span class="cm">23/20·HLC</span></div></div></div><div class="pll-card"><div class="ph"><div class="pn">GREG WALKER</div><div class="ps"><div class="pst"><span class="pnum">4</span><span class="plbl">CLASSES</span></div><div class="pdiv"></div><div class="pst"><span class="pnum">38</span><span class="plbl">STUDENTS</span></div><div class="pdiv"></div><div class="pst"><span class="pnum">2</span><span class="plbl">INT</span></div><div class="pdiv"></div><div class="pst"><span class="pnum">2</span><span class="plbl">OE/SS</span></div></div></div><div class="pc"><div class="cr"><div class="ew"><div class="eb mid" style="width:60%"></div></div><span class="cn">Aero Controls Fundamentals 26-1</span><span class="cm">6/10·HLC</span></div><div class="cr"><div class="ew"><div class="eb full" style="width:100%"></div></div><span class="cn">Gas Turbine - Rotalign Touch 26-2</span><span class="cm">8/8·Other</span></div><div class="cr oe-r"><div class="ew"><div class="eb oe"></div></div><span class="cn">GT LM6000 Aero Package Operation</span><span class="cm">12·United States</span></div><div class="cr oe-r"><div class="ew"><div class="eb oe"></div></div><span class="cn">GT Aero Package Operation & Mainte…</span><span class="cm">12·Mexico</span></div></div></div><div class="pll-card"><div class="ph"><div class="pn">LINDA</div><div class="ps"><div class="pst"><span class="pnum">0</span><span class="plbl">CLASSES</span></div><div class="pdiv"></div><div class="pst"><span class="pnum">0</span><span class="plbl">STUDENTS</span></div><div class="pdiv"></div><div class="pst"><span class="pnum">0</span><span class="plbl">INT</span></div><div class="pdiv"></div><div class="pst"><span class="pnum">0</span><span class="plbl">OE/SS</span></div></div></div><div class="pc"><div class="nc">No classes this week</div></div></div></div>
+    <div class="el"><span>Enrollment:</span><span><div class="eldot" style="background:var(--acc)"></div>Over-enrolled</span><span><div class="eldot" style="background:var(--grn)"></div>≥80%</span><span><div class="eldot" style="background:var(--amb)"></div>50–79%</span><span><div class="eldot" style="background:var(--red)"></div>&lt;50%</span><span><div class="eldot" style="background:var(--evm);opacity:.7"></div>OE/SS Contracted</span></div>
   </div>
 </div>
+<!-- SLIDE 3 -->
 <div class="slide" id="s3">
-  <div class="hdr"><div><div class="t">INTERNAL TRAINING — GLOBAL FOOTPRINT</div><div class="s">Active & Upcoming Internal Students by Learning Center</div></div><div class="w">HLC 744 · BLC 154 · KLC 150</div><div class="l">GE Vernova<br>HLC Command Board</div></div>
-  <div class="mb" id="mc3"><svg id="m3" class="msvg"></svg>
-    <div class="mleg">
-      <div style="font-size:9px;color:#8b949e;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px">Learning Centers</div>
-      <div class="mli"><div style="width:16px;height:16px;background:#c8ff08;border-radius:50%"></div><span style="color:#c8ff08">HLC — Houston, TX (744 students)</span></div>
-      <div class="mli"><div style="width:13px;height:13px;background:#58a6ff;border-radius:50%"></div><span style="color:#58a6ff">BLC — Birr, Ireland (154 students)</span></div>
-      <div class="mli"><div style="width:11px;height:11px;background:#f5a623;border-radius:50%"></div><span style="color:#f5a623">KLC — Kuwait (150 students)</span></div>
-    </div>
-  </div>
-</div>
-<div class="slide" id="s4">
-  <div class="hdr"><div><div class="t">CUSTOMER TRAINING — GLOBAL REACH</div><div class="s">Open Enrollment & Site-Specific Customer Training Deployments</div></div><div class="w">28 Countries</div><div class="l">GE Vernova<br>HLC Command Board</div></div>
-  <div class="mb" id="mc4"><svg id="m4" class="msvg"></svg>
-    <div class="mleg">
-      <div style="font-size:9px;color:#8b949e;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px">Student Volume</div>
-      <div class="mli"><div style="width:18px;height:18px;background:#58a6ff;border-radius:50%;opacity:.75"></div><span>High (&gt;1000)</span></div>
-      <div class="mli"><div style="width:12px;height:12px;background:#58a6ff;border-radius:50%;opacity:.75"></div><span>Medium (100–1000)</span></div>
-      <div class="mli"><div style="width:7px;height:7px;background:#58a6ff;border-radius:50%;opacity:.75"></div><span>Low (&lt;100)</span></div>
-    </div>
+  <div class="gh"><div><div class="ht">Internal Training — Student Country of Origin</div><div class="hs">Where this week's students are coming from</div></div><div class="hw">23 Countries · 256 Students</div><div class="hl">GE Vernova<br>HLC Command Board</div></div>
+  <div class="mb">
+    <div class="ma" id="mc3"><svg id="m3" class="msvg"></svg></div>
     <div class="msb">
-      <div class="mst"><div class="n">28</div><div class="l">Countries</div></div>
-      <div class="mst"><div class="n">7,962</div><div class="l">Students</div></div>
-      <div class="mst"><div class="n">701</div><div class="l">Classes</div></div>
+      <div class="sbt">Learning Centers</div>
+      <div class="lcl"><div class="lci"><div class="dot" style="background:var(--acc)"></div><div class="nm">HLC — Houston</div><div class="ct">164</div></div><div class="lci"><div class="dot" style="background:var(--acc)"></div><div class="nm">BLC — Birr, Ireland</div><div class="ct">37</div></div><div class="lci"><div class="dot" style="background:var(--acc)"></div><div class="nm">KLC — Kuwait</div><div class="ct">0</div></div></div>
+      <div class="sbt">Top Origin Countries</div>
+      <div class="sbl"><div class="sbi"><span class="ci">United States</span><span class="cn2">165</span></div><div class="sbi"><span class="ci">Mexico</span><span class="cn2">19</span></div><div class="sbi"><span class="ci">Argentina</span><span class="cn2">16</span></div><div class="sbi"><span class="ci">Spain</span><span class="cn2">9</span></div><div class="sbi"><span class="ci">Saudi Arabia</span><span class="cn2">7</span></div><div class="sbi"><span class="ci">India</span><span class="cn2">6</span></div><div class="sbi"><span class="ci">Indonesia</span><span class="cn2">4</span></div><div class="sbi"><span class="ci">Egypt</span><span class="cn2">4</span></div><div class="sbi"><span class="ci">Brazil</span><span class="cn2">3</span></div><div class="sbi"><span class="ci">United Kingdom</span><span class="cn2">3</span></div><div class="sbi"><span class="ci">China</span><span class="cn2">2</span></div><div class="sbi"><span class="ci">Malaysia</span><span class="cn2">2</span></div><div class="sbi"><span class="ci">Canada</span><span class="cn2">2</span></div><div class="sbi"><span class="ci">Algeria</span><span class="cn2">2</span></div><div class="sbi"><span class="ci">Chile</span><span class="cn2">2</span></div></div>
     </div>
   </div>
 </div>
-<div id="slideCounter">1/4</div>
-<div id="progressBar" style="width:0"></div>
+<!-- SLIDE 4 -->
+<div class="slide" id="s4">
+  <div class="gh"><div><div class="ht">Customer Training — Global Delivery</div><div class="hs">OE & Site-Specific training delivery locations</div></div><div class="hw">20 Countries Active</div><div class="hl">GE Vernova<br>HLC Command Board</div></div>
+  <div class="mb">
+    <div class="ma" id="mc4"><svg id="m4" class="msvg"></svg></div>
+    <div class="msb">
+      <div class="sbt">This Week</div>
+      <div class="sbh"><div class="n">96</div><div class="l">Contracted Students</div></div>
+      <div class="sbh"><div class="n">8</div><div class="l">Classes Running</div></div>
+      <div class="sbt">All Active Delivery Countries</div>
+      <div class="sbl"><div class="sbi"><span class="ci">United States</span><span class="cn2">6150</span></div><div class="sbi"><span class="ci">Switzerland</span><span class="cn2">530</span></div><div class="sbi"><span class="ci">Taiwan</span><span class="cn2">360</span></div><div class="sbi"><span class="ci">Germany</span><span class="cn2">288</span></div><div class="sbi"><span class="ci">Mexico</span><span class="cn2">252</span></div><div class="sbi"><span class="ci">Turkey</span><span class="cn2">216</span></div><div class="sbi"><span class="ci">Saudi Arabia</span><span class="cn2">180</span></div><div class="sbi"><span class="ci">Ireland</span><span class="cn2">154</span></div><div class="sbi"><span class="ci">Australia</span><span class="cn2">144</span></div><div class="sbi"><span class="ci">Greece</span><span class="cn2">144</span></div><div class="sbi"><span class="ci">France</span><span class="cn2">120</span></div><div class="sbi"><span class="ci">Brazil</span><span class="cn2">108</span></div><div class="sbi"><span class="ci">Poland</span><span class="cn2">72</span></div><div class="sbi"><span class="ci">Singapore</span><span class="cn2">60</span></div></div>
+    </div>
+  </div>
+</div>
+<div id="sc">1/4</div>
+<div id="pb" style="width:0"></div>
 <script>
-const DATA={"meta":{"buildDate":"2026-05-29","weekOf":"Jun 1 - 5, 2026","specVersion":"OFS-SW-ATLAS-004 v4.2","minorIncidents":0,"safetyRag":"red","flaggedToJim":[{"courseName":"Field Engineer - Onboarding 26-2","program":"Non-Technical","technology":"Non-Technical"}]},"slide1":{"globalTotal":12043,"internalStudents":1271,"oeStudents":9517,"cmStudents":1255,"locationBreakdown":{"HLC":744,"BLC":154,"KLC":150,"Other":223},"bowlerKPIs":{"postTrainingSkillImprovement":{"label":"Post-Training Skill Improvement","value":83,"plan":70,"unit":"%","rag":"green"},"timecardOTD":{"label":"Timecard OTD","value":72,"plan":92,"unit":"%","rag":"red"},"instructorUtilization":{"label":"Instructor Utilization (Borrowed)","value":29,"plan":15,"unit":"%","rag":"red","reverseMetric":true}},"safetyRag":"red","minorIncidents":0,"ragReason":"Red Path A: Timecard OTD (72% vs 92% plan) and Instructor Utilization (29% vs <15% plan) out of spec"},"slide2":{"weekOf":"Jun 1 - 5, 2026","pllOrder":["Sherif Khalifa","Pablo Schibli","Michele Alcantar","Mohammed Nizami","Harry Hanson","Greg Walker","Linda"],"courses":[{"courseName":"HA FE Tasks & Tools - Combustion Inspection 26-3","locCat":"HLC","capacity":9,"enrolled":12,"enrollPct":133,"barColor":"#c8ff08","pll":"Sherif Khalifa","pllLabel":"Gas Turbine"},{"courseName":"Entry Level Gas Turbine 26-1","locCat":"HLC","capacity":24,"enrolled":18,"enrollPct":75,"barColor":"#f5a623","pll":"Sherif Khalifa","pllLabel":"Gas Turbine"},{"courseName":"GE Gas Turbine to Alstom GT x-over 26-1","locCat":"BLC","capacity":12,"enrolled":8,"enrollPct":67,"barColor":"#f5a623","pll":"Sherif Khalifa","pllLabel":"Gas Turbine"},{"courseName":"Entry Level Steam Turbine 26-1","locCat":"HLC","capacity":24,"enrolled":26,"enrollPct":108,"barColor":"#c8ff08","pll":"Pablo Schibli","pllLabel":"Steam Turbine"},{"courseName":"GE to Alstom Generator Mechanical Crossover 26-2","locCat":"BLC","capacity":12,"enrolled":15,"enrollPct":125,"barColor":"#c8ff08","pll":"Michele Alcantar","pllLabel":"Excitation/Generator"},{"courseName":"Generator Specialist Training 26-1","locCat":"HLC","capacity":16,"enrolled":16,"enrollPct":100,"barColor":"#75ca64","pll":"Michele Alcantar","pllLabel":"Excitation/Generator"},{"courseName":"Entry Level Electrical Excitation 26-1","locCat":"HLC","capacity":12,"enrolled":5,"enrollPct":42,"barColor":"#e63946","pll":"Michele Alcantar","pllLabel":"Excitation/Generator"},{"courseName":"Expert Steam Turbine WSC/HRSG/CCPP 26-1","locCat":"BLC","capacity":10,"enrolled":11,"enrollPct":110,"barColor":"#c8ff08","pll":"Mohammed Nizami","pllLabel":"Controls/GIC"},{"courseName":"Entry Level GT MkVIe 26-1","locCat":"HLC","capacity":12,"enrolled":5,"enrollPct":42,"barColor":"#e63946","pll":"Mohammed Nizami","pllLabel":"Controls/GIC"},{"courseName":"Foundation Fieldbus Advanced 26-3","locCat":"HLC","capacity":8,"enrolled":6,"enrollPct":75,"barColor":"#f5a623","pll":"Mohammed Nizami","pllLabel":"Controls/GIC"},{"courseName":"Mk VI 26-1","locCat":"HLC","capacity":12,"enrolled":16,"enrollPct":133,"barColor":"#c8ff08","pll":"Mohammed Nizami","pllLabel":"Controls/GIC"},{"courseName":"Site Manager Level 2 26-1","locCat":"HLC","capacity":15,"enrolled":5,"enrollPct":33,"barColor":"#e63946","pll":"Mohammed Nizami","pllLabel":"Controls/GIC"},{"courseName":"GE Control to Alstom Control (ADVANT x-over) 26-1","locCat":"BLC","capacity":6,"enrolled":4,"enrollPct":67,"barColor":"#f5a623","pll":"Mohammed Nizami","pllLabel":"Controls/GIC"},{"courseName":"Steam Turbine 101 26-1","locCat":"HLC","capacity":8,"enrolled":10,"enrollPct":125,"barColor":"#c8ff08","pll":"Harry Hanson","pllLabel":"Craft / Repairs / ILES","sitespecific":null,"openenrollment":null},{"courseName":"ELT Gas Turbine OSR Boot Camp 26-2","locCat":"HLC","capacity":12,"enrolled":13,"enrollPct":108,"barColor":"#c8ff08","pll":"Harry Hanson","pllLabel":"Craft / Repairs / ILES","sitespecific":null,"openenrollment":null},{"courseName":"Craft GE to Alstom GT Crossover 26-7","locCat":"Other","capacity":15,"enrolled":20,"enrollPct":133,"barColor":"#c8ff08","pll":"Harry Hanson","pllLabel":"Craft / Repairs / ILES","sitespecific":null,"openenrollment":null},{"courseName":"Craft Entry Level GT Accelerated 26-5","locCat":"HLC","capacity":20,"enrolled":23,"enrollPct":115,"barColor":"#c8ff08","pll":"Harry Hanson","pllLabel":"Craft / Repairs / ILES","sitespecific":null,"openenrollment":null},{"courseName":"Aero Controls Fundamentals 26-1","locCat":"HLC","capacity":10,"enrolled":6,"enrollPct":60,"barColor":"#f5a623","pll":"Greg Walker","pllLabel":"Aeroderivative"},{"courseName":"Gas Turbine - Rotalign Touch 26-2","locCat":"Other","capacity":8,"enrolled":10,"enrollPct":125,"barColor":"#c8ff08","pll":"Greg Walker","pllLabel":"Aeroderivative"}]},"slide3":{"locations":[{"name":"HLC - Houston","lat":29.7604,"lon":-95.3698,"students":744,"type":"HLC"},{"name":"BLC - Birr, Ireland","lat":53,"lon":-8,"students":154,"type":"BLC"},{"name":"KLC - Kuwait","lat":29.3,"lon":47.5,"students":150,"type":"KLC"}]},"slide4":{"totalCountries":28,"pins":[{"displayName":"United States","lat":39.5,"lon":-98.35,"students":6190,"classes":554},{"displayName":"Switzerland","lat":46.8,"lon":8.2,"students":530,"classes":45},{"displayName":"Taiwan","lat":23.7,"lon":120.96,"students":240,"classes":20},{"displayName":"Greece","lat":39.1,"lon":21.8,"students":144,"classes":12},{"displayName":"Ireland (BLC)","lat":53,"lon":-8,"students":154,"classes":12},{"displayName":"Poland","lat":51.9,"lon":19.1,"students":24,"classes":2},{"displayName":"Turkey","lat":38.9,"lon":35.2,"students":96,"classes":8},{"displayName":"Germany","lat":51.2,"lon":10.5,"students":48,"classes":4},{"displayName":"France","lat":46.2,"lon":2.2,"students":24,"classes":2},{"displayName":"Hungary","lat":47.2,"lon":19.5,"students":12,"classes":1},{"displayName":"Saudi Arabia","lat":23.9,"lon":45.1,"students":84,"classes":7},{"displayName":"Kuwait","lat":29.3,"lon":47.5,"students":60,"classes":5},{"displayName":"Nigeria","lat":9.1,"lon":8.7,"students":36,"classes":3},{"displayName":"Algeria","lat":28,"lon":1.7,"students":12,"classes":1},{"displayName":"Morocco","lat":31.8,"lon":-7.1,"students":24,"classes":2},{"displayName":"Tunisia","lat":33.9,"lon":9.5,"students":12,"classes":1},{"displayName":"Senegal","lat":14.5,"lon":-14.5,"students":12,"classes":1},{"displayName":"Australia","lat":-25.3,"lon":133.8,"students":48,"classes":4},{"displayName":"South Korea","lat":36,"lon":127.8,"students":20,"classes":1},{"displayName":"Singapore","lat":1.35,"lon":103.8,"students":24,"classes":2},{"displayName":"Vietnam","lat":14.1,"lon":108.3,"students":12,"classes":1},{"displayName":"Pakistan","lat":30.4,"lon":69.3,"students":12,"classes":1},{"displayName":"Turkmenistan","lat":40,"lon":59.6,"students":12,"classes":1},{"displayName":"Brazil","lat":-14.2,"lon":-51.9,"students":36,"classes":3},{"displayName":"Mexico","lat":23.6,"lon":-102.5,"students":48,"classes":4},{"displayName":"Canada","lat":56.1,"lon":-106.3,"students":24,"classes":2},{"displayName":"Dominican Republic","lat":18.7,"lon":-70.2,"students":12,"classes":1},{"displayName":"Puerto Rico","lat":18.2,"lon":-66.6,"students":12,"classes":1}]},"actionPlans":{"total":648,"inProgress":110,"notStarted":157,"completed":326,"dueThisMonth":0},"capex":{"totalProjects":46,"highPriorityCount":15,"totalBudget":3836520}};
+const DATA={"meta":{"buildDate":"2026-05-29","weekOf":"Jun 1 - 5, 2026","specVersion":"OFS-SW-ATLAS-004 v4.2","minorIncidents":0,"safetyRag":"red"},"slide1":{"weekOf":"Jun 1 - 5, 2026","internalStudents":268,"oeStudents":96,"weeklyTotal":364,"internalCourses":21,"oeCourses":8,"safetyRag":"red","minorIncidents":0,"ragReason":"Red Path A: Timecard OTD (72% vs 92% plan) and Instructor Utilization (29% vs <15% plan)","kpis":{"ptsi":{"label":"Post-Training Skill Improvement","value":83,"plan":70,"rag":"green"},"timecard":{"label":"Timecard OTD","value":72,"plan":92,"rag":"red"},"instUtil":{"label":"Instructor Utilization (Borrowed)","value":29,"plan":15,"rag":"red"}},"locationBreakdown":{"HLC":164,"BLC":37,"KLC":0,"Other":67}},"slide2":{"weekOf":"Jun 1 - 5, 2026","unmatchedStudents":30,"plls":[{"name":"Sherif Khalifa","totalClasses":4,"totalStudents":47,"internalClasses":3,"internalStudents":35,"oeClasses":1,"oeStudents":12,"courses":[{"name":"HA FE Tasks & Tools - Combustion Inspection 26-3","program":"Advanced Level","technology":"Gas Turbine","locCat":"HLC","capacity":9,"enrolled":9,"enrollPct":100,"barColor":"#3AAA35","overEnrolled":false},{"name":"Entry Level Gas Turbine 26-1","program":"Entry Level","technology":"Gas Turbine","locCat":"HLC","capacity":24,"enrolled":18,"enrollPct":75,"barColor":"#F5A623","overEnrolled":false},{"name":"GE Gas Turbine to Alstom GT x-over 26-1","program":"Advanced Level","technology":"Gas Turbine","locCat":"BLC","capacity":12,"enrolled":8,"enrollPct":67,"barColor":"#F5A623","overEnrolled":false}],"oeCourses":[{"title":"Gas Turbine - Operation","tech":"Gas Turbine","country":"United States","city":"Louisville","students":12,"location":"Customer Site"}]},{"name":"Pablo Schibli","totalClasses":5,"totalStudents":72,"internalClasses":1,"internalStudents":24,"oeClasses":4,"oeStudents":48,"courses":[{"name":"Entry Level Steam Turbine 26-1","program":"Entry Level","technology":"Steam Turbine","locCat":"HLC","capacity":24,"enrolled":24,"enrollPct":100,"barColor":"#3AAA35","overEnrolled":false}],"oeCourses":[{"title":"HRSG - Operation & Maintenance","tech":"HRSG","country":"Taiwan","city":"Hsinta","students":12,"location":"Distance Learning"},{"title":"Steam Turbine Operation","tech":"Steam Turbine","country":"United States","city":"Houston","students":12,"location":"HLC"},{"title":"Combined Cycle - Fundamentals","tech":"Combined Cycle","country":"Taiwan","city":"-","students":12,"location":"Distance Learning"},{"title":"Combined Cycle Fundamentals / extended","tech":"Combined Cycle","country":"Taiwan","city":"-","students":12,"location":"Distance Learning"}]},{"name":"Michele Alcantar","totalClasses":4,"totalStudents":44,"internalClasses":3,"internalStudents":32,"oeClasses":1,"oeStudents":12,"courses":[{"name":"GE to Alstom Generator Mechanical Crossover 26-2","program":"Advanced Level","technology":"Generator Mechanical","locCat":"BLC","capacity":12,"enrolled":11,"enrollPct":92,"barColor":"#3AAA35","overEnrolled":false},{"name":"Generator Specialist Training 26-1","program":"Entry Level","technology":"Generator","locCat":"HLC","capacity":16,"enrolled":16,"enrollPct":100,"barColor":"#3AAA35","overEnrolled":false},{"name":"Entry Level Electrical Excitation 26-1","program":"Entry Level","technology":"Excitation","locCat":"HLC","capacity":12,"enrolled":5,"enrollPct":42,"barColor":"#D0021B","overEnrolled":false}],"oeCourses":[{"title":"Excitation - Generator Excitation Intro","tech":"Excitation","country":"United States","city":"Houston","students":12,"location":"HLC"}]},{"name":"Mohammed Nizami","totalClasses":6,"totalStudents":43,"internalClasses":6,"internalStudents":43,"oeClasses":0,"oeStudents":0,"courses":[{"name":"Expert Steam Turbine WSC/HRSG/CCPP 26-1","program":"Advanced Level","technology":"Controls","locCat":"BLC","capacity":10,"enrolled":10,"enrollPct":100,"barColor":"#3AAA35","overEnrolled":false},{"name":"Entry Level GT MkVIe 26-1","program":"Entry Level","technology":"Controls","locCat":"HLC","capacity":17,"enrolled":6,"enrollPct":35,"barColor":"#D0021B","overEnrolled":false},{"name":"Foundation Fieldbus Advanced 26-3","program":"Advanced Level","technology":"Controls","locCat":"HLC","capacity":6,"enrolled":6,"enrollPct":100,"barColor":"#3AAA35","overEnrolled":false},{"name":"Mk VI 26-1","program":"Advanced Level","technology":"Controls","locCat":"HLC","capacity":12,"enrolled":12,"enrollPct":100,"barColor":"#3AAA35","overEnrolled":false},{"name":"Site Manager Level 2 26-1","program":"Advanced Level","technology":"GIC Mechanical","locCat":"HLC","capacity":15,"enrolled":5,"enrollPct":33,"barColor":"#D0021B","overEnrolled":false},{"name":"GE Control to Alstom Control (ADVANT x-over) 26-1","program":"Advanced Level","technology":"Controls","locCat":"BLC","capacity":6,"enrolled":4,"enrollPct":67,"barColor":"#F5A623","overEnrolled":false}],"oeCourses":[]},{"name":"Harry Hanson","totalClasses":5,"totalStudents":60,"internalClasses":5,"internalStudents":60,"oeClasses":0,"oeStudents":0,"courses":[{"name":"Craft Entry Level ST 26-3","program":"Craft","technology":"Steam Turbine","locCat":"HLC","capacity":10,"enrolled":2,"enrollPct":20,"barColor":"#D0021B","overEnrolled":false,"sitespecific":null,"openenrollment":null},{"name":"Steam Turbine 101 26-1","program":"Repairs","technology":"Steam Turbine","locCat":"HLC","capacity":8,"enrolled":8,"enrollPct":100,"barColor":"#3AAA35","overEnrolled":false,"sitespecific":null,"openenrollment":null},{"name":"ELT Gas Turbine OSR Boot Camp 26-2","program":"Repairs","technology":"Gas Turbine","locCat":"HLC","capacity":12,"enrolled":12,"enrollPct":100,"barColor":"#3AAA35","overEnrolled":false,"sitespecific":null,"openenrollment":null},{"name":"Craft GE to Alstom GT Crossover 26-7","program":"Craft","technology":"Gas Turbine","locCat":"Other","capacity":15,"enrolled":15,"enrollPct":100,"barColor":"#3AAA35","overEnrolled":false,"sitespecific":null,"openenrollment":null},{"name":"Craft Entry Level GT Accelerated 26-5","program":"Craft","technology":"Gas Turbine","locCat":"HLC","capacity":20,"enrolled":23,"enrollPct":115,"barColor":"#C8FF08","overEnrolled":true,"sitespecific":null,"openenrollment":null}],"oeCourses":[]},{"name":"Greg Walker","totalClasses":4,"totalStudents":38,"internalClasses":2,"internalStudents":14,"oeClasses":2,"oeStudents":24,"courses":[{"name":"Aero Controls Fundamentals 26-1","program":"Advanced Level","technology":"Aeroderivative","locCat":"HLC","capacity":10,"enrolled":6,"enrollPct":60,"barColor":"#F5A623","overEnrolled":false},{"name":"Gas Turbine - Rotalign Touch 26-2","program":"Advanced Level","technology":"Aeroderivative","locCat":"Other","capacity":8,"enrolled":8,"enrollPct":100,"barColor":"#3AAA35","overEnrolled":false}],"oeCourses":[{"title":"GT LM6000 Aero Package Operation","tech":"Aeroderivative","country":"United States","city":"NYC","students":12,"location":"Customer Site"},{"title":"GT Aero Package Operation & Maintenance (OJT)","tech":"Aeroderivative","country":"Mexico","city":"Cancun","students":12,"location":"Customer Site"}]},{"name":"Linda","totalClasses":0,"totalStudents":0,"internalClasses":0,"internalStudents":0,"oeClasses":0,"oeStudents":0,"courses":[],"oeCourses":[]}]},"slide3":{"title":"Internal Training — Student Country of Origin","totalCountries":23,"totalStudents":256,"pins":[{"country":"United States","count":165,"lat":39.5,"lon":-98.35},{"country":"Mexico","count":19,"lat":23.6,"lon":-102.5},{"country":"Argentina","count":16,"lat":-34.6,"lon":-58.4},{"country":"Spain","count":9,"lat":40.4,"lon":-3.7},{"country":"Saudi Arabia","count":7,"lat":23.9,"lon":45.1},{"country":"India","count":6,"lat":20.6,"lon":78.9},{"country":"Indonesia","count":4,"lat":-0.8,"lon":113.9},{"country":"Egypt","count":4,"lat":26.8,"lon":30.8},{"country":"Brazil","count":3,"lat":-14.2,"lon":-51.9},{"country":"United Kingdom","count":3,"lat":55.4,"lon":-3.4},{"country":"China","count":2,"lat":35.9,"lon":104.2},{"country":"Malaysia","count":2,"lat":4.2,"lon":108},{"country":"Canada","count":2,"lat":56.1,"lon":-106.3},{"country":"Algeria","count":2,"lat":28,"lon":1.7},{"country":"Chile","count":2,"lat":-35.7,"lon":-71.5},{"country":"Colombia","count":1,"lat":4.6,"lon":-74.1},{"country":"Kazakhstan","count":1,"lat":48,"lon":66.9},{"country":"Peru","count":1,"lat":-9.2,"lon":-75},{"country":"Philippines","count":1,"lat":12.9,"lon":121.8},{"country":"South Africa","count":1,"lat":-28.5,"lon":24.7},{"country":"Thailand","count":1,"lat":15.9,"lon":100.9},{"country":"Vietnam","count":1,"lat":14.1,"lon":108.3},{"country":"Italy","count":1,"lat":41.9,"lon":12.6}],"learningCenters":[{"name":"HLC — Houston","lat":29.7604,"lon":-95.3698,"students":164,"type":"HLC","color":"#C8FF08"},{"name":"BLC — Birr, Ireland","lat":53,"lon":-8,"students":37,"type":"BLC","color":"#C8FF08"},{"name":"KLC — Kuwait","lat":29.3,"lon":47.5,"students":0,"type":"KLC","color":"#C8FF08"}]},"slide4":{"title":"Customer Training — Global Delivery","weekDelivery":[{"country":"Taiwan","lat":23.7,"lon":120.96,"classes":3,"students":36},{"country":"United States","lat":39.5,"lon":-98.35,"classes":4,"students":48},{"country":"Mexico","lat":23.6,"lon":-102.5,"classes":1,"students":12}],"allDelivery":[{"country":"United States","lat":39.5,"lon":-98.35,"classes":543,"students":6150},{"country":"Switzerland","lat":46.8,"lon":8.2,"classes":45,"students":530},{"country":"Germany","lat":51.2,"lon":10.5,"classes":27,"students":288},{"country":"Taiwan","lat":23.7,"lon":120.96,"classes":31,"students":360},{"country":"Mexico","lat":23.6,"lon":-102.5,"classes":21,"students":252},{"country":"Turkey","lat":38.9,"lon":35.2,"classes":18,"students":216},{"country":"Saudi Arabia","lat":23.9,"lon":45.1,"classes":15,"students":180},{"country":"Australia","lat":-25.3,"lon":133.8,"classes":12,"students":144},{"country":"France","lat":46.2,"lon":2.2,"classes":10,"students":120},{"country":"Brazil","lat":-14.2,"lon":-51.9,"classes":9,"students":108},{"country":"Greece","lat":39.1,"lon":21.8,"classes":12,"students":144},{"country":"South Korea","lat":36,"lon":127.8,"classes":4,"students":48},{"country":"Singapore","lat":1.35,"lon":103.8,"classes":5,"students":60},{"country":"Poland","lat":51.9,"lon":19.1,"classes":6,"students":72},{"country":"Nigeria","lat":9.1,"lon":8.7,"classes":5,"students":60},{"country":"Hungary","lat":47.2,"lon":19.5,"classes":3,"students":36},{"country":"Kuwait","lat":29.3,"lon":47.5,"classes":4,"students":48},{"country":"Algeria","lat":28,"lon":1.7,"classes":3,"students":36},{"country":"Ireland","lat":53,"lon":-8,"classes":12,"students":154},{"country":"Canada","lat":56.1,"lon":-106.3,"classes":4,"students":48}],"totalCountries":20,"weekStudents":96,"weekClasses":8}};
 const TIMES=[30000,30000,35000,35000];
 let cur=0,t0=null,raf=null;
 function show(n){
   document.querySelectorAll('.slide').forEach((s,i)=>s.classList.toggle('active',i===n));
-  document.getElementById('slideCounter').textContent=(n+1)+'/4';
+  document.getElementById('sc').textContent=(n+1)+'/4';
   t0=performance.now();cancelAnimationFrame(raf);tick();
   if(n===2)renderM3();if(n===3)renderM4();
 }
 function tick(){
   const el=performance.now()-t0,dur=TIMES[cur];
-  document.getElementById('progressBar').style.width=Math.min(el/dur*100,100)+'vw';
+  document.getElementById('pb').style.width=Math.min(el/dur*100,100)+'vw';
   if(el>=dur){cur=(cur+1)%4;show(cur);}else raf=requestAnimationFrame(tick);
 }
 const WORLD='https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
@@ -158,44 +196,66 @@ function mkMap(svgId,cId){
   const c=document.getElementById(cId),sv=d3.select('#'+svgId);
   sv.selectAll('*').remove();
   const w=c.clientWidth,h=c.clientHeight;sv.attr('width',w).attr('height',h);
-  const proj=d3.geoNaturalEarth1().scale(w/6.5).translate([w/2,h/2]);
+  const proj=d3.geoNaturalEarth1().scale(w/6.2).translate([w/2,h/2]);
   return{sv,proj,path:d3.geoPath().projection(proj),w,h};
 }
 function renderM3(){
-  const{sv,proj,path,w}=mkMap('m3','mc3');
+  const{sv,proj,path,w,h}=mkMap('m3','mc3');
   d3.json(WORLD).then(world=>{
     const feats=topojson.feature(world,world.objects.countries).features;
+    sv.append('rect').attr('width',w).attr('height',h).attr('fill','#E6F2F2');
     sv.append('g').selectAll('path').data(feats).join('path')
-      .attr('fill',d=>[840,372,414].includes(d.id)?'#1a3a5c':'#1c2128')
-      .attr('stroke','#30363d').attr('stroke-width',.5).attr('d',path);
-    [{name:'HLC — Houston',lat:29.7604,lon:-95.3698,s:DATA.slide1.locationBreakdown.HLC,c:'#c8ff08',r:18},
-     {name:'BLC — Birr, Ireland',lat:53,lon:-8,s:DATA.slide1.locationBreakdown.BLC,c:'#58a6ff',r:14},
-     {name:'KLC — Kuwait',lat:29.3,lon:47.5,s:DATA.slide1.locationBreakdown.KLC,c:'#f5a623',r:11}
-    ].forEach(l=>{
-      const[x,y]=proj([l.lon,l.lat]);
-      sv.append('circle').attr('cx',x).attr('cy',y).attr('r',l.r).attr('fill',l.c).attr('opacity',.85).attr('stroke','#fff').attr('stroke-width',1.5);
-      sv.append('text').attr('x',x).attr('y',y-l.r-5).attr('text-anchor','middle').attr('fill',l.c).attr('font-size','11px').attr('font-weight','700').text(l.name);
-      sv.append('text').attr('x',x).attr('y',y-l.r+7).attr('text-anchor','middle').attr('fill','#e6edf3').attr('font-size','10px').text(l.s+' students');
+      .attr('fill','#005E60').attr('opacity',.18).attr('stroke','#005E60').attr('stroke-width',.4).attr('d',path);
+    const maxC=Math.max(...DATA.slide3.pins.map(p=>p.count));
+    const rSc=d3.scaleSqrt().domain([0,maxC]).range([3,22]);
+    DATA.slide3.pins.forEach(p=>{
+      if(!p.lat||!p.lon)return;
+      const[x,y]=proj([p.lon,p.lat]);
+      if(x<0||x>w||y<0||y>h)return;
+      sv.append('circle').attr('cx',x).attr('cy',y).attr('r',rSc(p.count))
+        .attr('fill','#005E60').attr('opacity',.8).attr('stroke','#fff').attr('stroke-width',1);
+      if(p.count>=8){
+        sv.append('text').attr('x',x).attr('y',y+4).attr('text-anchor','middle')
+          .attr('fill','#fff').attr('font-size','9px').attr('font-weight','700').text(p.count);
+      }
     });
-  }).catch(()=>{sv.append('text').attr('x',w/2).attr('y',300).attr('text-anchor','middle').attr('fill','#8b949e').text('Map loading...');});
+    [{lat:29.7604,lon:-95.3698,n:'HLC',s:DATA.slide3.learningCenters[0].students},
+     {lat:53,lon:-8,n:'BLC',s:DATA.slide3.learningCenters[1].students},
+     {lat:29.3,lon:47.5,n:'KLC',s:DATA.slide3.learningCenters[2].students}
+    ].filter(lc=>lc.s>0).forEach(lc=>{
+      const[x,y]=proj([lc.lon,lc.lat]);
+      sv.append('rect').attr('x',x-20).attr('y',y-11).attr('width',40).attr('height',19).attr('rx',4).attr('fill','#212121').attr('opacity',.9);
+      sv.append('text').attr('x',x).attr('y',y+4).attr('text-anchor','middle').attr('fill','#C8FF08').attr('font-size','9px').attr('font-weight','700').text(lc.n+' '+lc.s);
+    });
+  }).catch(()=>{sv.append('text').attr('x',w/2).attr('y',h/2).attr('text-anchor','middle').attr('fill','#005E60').attr('font-size','16px').text('Loading map...');});
 }
 function renderM4(){
   const{sv,proj,path,w,h}=mkMap('m4','mc4');
   d3.json(WORLD).then(world=>{
     const feats=topojson.feature(world,world.objects.countries).features;
+    sv.append('rect').attr('width',w).attr('height',h).attr('fill','#E6F2F2');
     sv.append('g').selectAll('path').data(feats).join('path')
-      .attr('fill','#1c2128').attr('stroke','#30363d').attr('stroke-width',.5).attr('d',path);
-    DATA.slide4.pins.forEach(p=>{
+      .attr('fill','#005E60').attr('opacity',.18).attr('stroke','#005E60').attr('stroke-width',.4).attr('d',path);
+    const maxS=Math.max(...DATA.slide4.allDelivery.map(p=>p.students));
+    const rSc=d3.scaleSqrt().domain([0,maxS]).range([4,20]);
+    DATA.slide4.allDelivery.forEach(p=>{
       if(!p.lat||!p.lon)return;
       const[x,y]=proj([p.lon,p.lat]);
-      const r=p.students>1000?11:p.students>100?7:4;
-      sv.append('circle').attr('cx',x).attr('cy',y).attr('r',r).attr('fill','#58a6ff').attr('opacity',.75).attr('stroke','#1c6bc0').attr('stroke-width',1);
+      if(x<0||x>w||y<0||y>h)return;
+      sv.append('circle').attr('cx',x).attr('cy',y).attr('r',rSc(p.students))
+        .attr('fill','#005E60').attr('opacity',.75).attr('stroke','#fff').attr('stroke-width',1);
+    });
+    DATA.slide4.weekDelivery.forEach(p=>{
+      if(!p.lat||!p.lon)return;
+      const[x,y]=proj([p.lon,p.lat]);
+      sv.append('circle').attr('cx',x).attr('cy',y).attr('r',7)
+        .attr('fill','#C8FF08').attr('opacity',1).attr('stroke','#212121').attr('stroke-width',1.5);
     });
     const[ix,iy]=proj([-8,53]);
-    sv.append('circle').attr('cx',ix).attr('cy',iy).attr('r',7).attr('fill','#58a6ff').attr('opacity',.95).attr('stroke','#fff').attr('stroke-width',1.5);
-  }).catch(()=>{sv.append('text').attr('x',w/2).attr('y',h/2).attr('text-anchor','middle').attr('fill','#8b949e').text('Map loading...');});
+    sv.append('circle').attr('cx',ix).attr('cy',iy).attr('r',7).attr('fill','#C8FF08').attr('opacity',1).attr('stroke','#212121').attr('stroke-width',2);
+  }).catch(()=>{sv.append('text').attr('x',w/2).attr('y',h/2).attr('text-anchor','middle').attr('fill','#005E60').attr('font-size','16px').text('Loading map...');});
 }
 document.addEventListener('DOMContentLoaded',()=>show(0));
 </script>
 </body>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </html>
+                                                                                                                                                                                                                                                                                                                                        </html>
