@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>OFS Training Delivery Command Board</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.js"></script>
+<style>
+:root{--ev:#005E60;--day:#FFFFFF;--night:#212121;--acc:#C8FF08;--evl:#E6F2F2;--evm:#007A7C;--grn:#2D7A45;--red:#C0392B;--amb:#E67E22;--gry:#6B7280;--bdr:#D1D5DB;--fh:'Sons Condensed Extrabold',Inter,'Segoe UI',Arial,sans-serif;--fb:Inter,'Segoe UI',Arial,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100vw;height:100vh;overflow:hidden;background:var(--day);color:var(--night);font-family:var(--fb)}
+.slide{position:absolute;top:0;left:0;width:100vw;height:100vh;display:none;overflow:hidden;flex-direction:column}
+.slide.active{display:flex}
+#pb{position:fixed;bottom:0;left:0;height:4px;background:var(--acc);z-index:200}
+#sc{position:fixed;bottom:8px;right:12px;font-size:10px;color:rgba(33,33,33,.35);z-index:200;font-family:var(--fb)}
+.gh{background:var(--ev);padding:6px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.gh .ht{font-family:var(--fh);font-size:17px;font-weight:900;color:var(--day);text-transform:uppercase;letter-spacing:1.5px}
+.gh .hs{font-size:9px;color:rgba(255,255,255,.6);margin-top:1px}
+.gh .hw{font-size:13px;font-weight:700;color:var(--acc)}
+.gh .hl{font-size:10px;color:rgba(255,255,255,.6);text-align:right}
+.s1b{flex:1;display:flex;flex-direction:column;padding:7px 12px;gap:5px;background:var(--day);overflow:hidden}
+.ms{display:grid;grid-template-columns:1.4fr 1fr 1fr repeat(4,0.72fr);gap:5px;flex-shrink:0}
+.mc{background:var(--ev);border-radius:8px;padding:8px;text-align:center}
+.mc .mv{font-family:var(--fh);font-size:24px;font-weight:900;color:var(--day);line-height:1}
+.mc .ml{font-size:8px;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.7px;margin-top:2px}
+.mc.hero{background:var(--night)}.mc.hero .mv{color:var(--acc);font-size:30px}
+.mc.loc{background:var(--evl)}.mc.loc .mv{color:var(--ev);font-size:20px}.mc.loc .ml{color:var(--gry)}
+.rag-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;flex-shrink:0}
+.rag-tile{border-radius:8px;padding:6px 9px;display:flex;align-items:center;gap:7px;border:2px solid transparent}
+.rag-tile.green{background:#F0FDF4;border-color:#2D7A45}
+.rag-tile.amber{background:#FFF7ED;border-color:#E67E22}
+.rag-tile.red{background:#FEF2F2;border-color:#C0392B}
+.rag-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;flex-shrink:0}
+.rag-tile.green .rag-icon{background:#2D7A45;color:white}
+.rag-tile.amber .rag-icon{background:#E67E22;color:white}
+.rag-tile.red .rag-icon{background:#C0392B;color:white}
+.rag-label{font-family:var(--fh);font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;line-height:1}
+.rag-tile.green .rag-label{color:#2D7A45}
+.rag-tile.amber .rag-label{color:#E67E22}
+.rag-tile.red .rag-label{color:#C0392B}
+.rag-reason{font-size:7.5px;color:var(--gry);margin-top:2px;line-height:1.2}
+.s1-main{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;flex:1;min-height:0}
+.kpip{background:var(--day);border:1px solid var(--bdr);border-radius:8px;padding:8px;display:flex;flex-direction:column;overflow:hidden}
+.kpit{font-family:var(--fh);font-size:9px;font-weight:700;color:var(--ev);text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid var(--ev);padding-bottom:4px;margin-bottom:5px;flex-shrink:0}
+.kpi-row{display:flex;align-items:center;gap:7px;padding:4px 0;border-bottom:1px solid #F3F4F6;flex-shrink:0}
+.kpi-row:last-child{border-bottom:none}
+.kpi-badge{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-size:10px;font-weight:900;flex-shrink:0}
+.kpi-info{flex:1}
+.kpi-name{font-size:10px;font-weight:600;color:var(--night)}
+.kpi-dual{display:flex;gap:3px;margin-top:3px;align-items:center;flex-wrap:wrap}
+.kpi-tag{font-size:7px;padding:1px 5px;border-radius:3px;font-weight:700;white-space:nowrap}
+.kpi-tag.green{background:#D1FAE5;color:#065F46}
+.kpi-tag.amber{background:#FEF3C7;color:#92400E}
+.kpi-tag.red{background:#FEE2E2;color:#991B1B}
+.kpi-tag.gry{background:#F3F4F6;color:var(--gry)}
+.safety-hero{background:var(--night);border-radius:8px;padding:8px;display:flex;flex-direction:column;overflow:hidden;border:3px solid #C0392B}
+.safety-hero.green{border-color:#2D7A45}
+.safety-hero.amber{border-color:#E67E22}
+.safety-hero.red{border-color:#C0392B}
+.sh-top{display:flex;align-items:center;gap:9px;margin-bottom:7px;flex-shrink:0}
+.sh-circle{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;flex-shrink:0;border:4px solid}
+.sh-circle.green{background:#2D7A45;border-color:#4ADE80;color:white}
+.sh-circle.amber{background:#E67E22;border-color:#FCD34D;color:white}
+.sh-circle.red{background:#C0392B;border-color:#F87171;color:white}
+.sh-title{font-family:var(--fh);font-size:17px;font-weight:900;text-transform:uppercase;letter-spacing:1px}
+.sh-title.green{color:#4ADE80}
+.sh-title.amber{color:#FCD34D}
+.sh-title.red{color:#F87171}
+.sh-reason{font-size:8px;color:rgba(255,255,255,.55);margin-top:2px}
+.sh-incident{display:inline-block;font-size:8px;font-weight:700;padding:2px 8px;border-radius:3px;margin-top:3px}
+.sh-incident.green{background:#2D7A45;color:white}
+.sh-incident.amber{background:#E67E22;color:white}
+.sh-incident.red{background:#C0392B;color:white}
+.sh-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;flex-shrink:0}
+.sh-kpi{background:rgba(255,255,255,.08);border-radius:5px;padding:5px;text-align:center}
+.sh-kpi .sv{font-family:var(--fh);font-size:15px;font-weight:900;color:var(--acc);line-height:1}
+.sh-kpi .sl{font-size:7px;color:rgba(255,255,255,.55);text-transform:uppercase;margin-top:1px}
+.sh-kpi.kpi-red .sv{color:#F87171}
+.ap-panel{background:var(--day);border:1px solid var(--bdr);border-radius:8px;padding:8px;display:flex;flex-direction:column;overflow:hidden}
+.cx-panel{background:var(--day);border:1px solid var(--bdr);border-radius:8px;padding:8px;display:flex;flex-direction:column;overflow:hidden}
+.panel-title{font-family:var(--fh);font-size:9px;font-weight:700;color:var(--ev);text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid var(--ev);padding-bottom:3px;margin-bottom:5px;flex-shrink:0}
+.ap-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-bottom:5px;flex-shrink:0}
+.ap-stat{border-radius:5px;padding:4px;text-align:center;background:var(--evl)}
+.ap-stat .asn{font-family:var(--fh);font-size:16px;font-weight:900;color:var(--ev);line-height:1}
+.ap-stat .asl{font-size:6.5px;color:var(--gry);text-transform:uppercase}
+.ap-stat.amber{background:#FFF7ED}.ap-stat.amber .asn{color:#E67E22}
+.ap-stat.red{background:#FEF2F2}.ap-stat.red .asn{color:#C0392B}
+.ap-list{flex:1;overflow:hidden;display:flex;flex-direction:column;gap:1px}
+.ap-item{display:flex;align-items:center;gap:4px;padding:2px 0;border-bottom:1px solid #F9FAFB;min-height:14px}
+.ap-item:last-child{border-bottom:none}
+.ap-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.ap-text{font-size:8px;color:var(--night);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ap-badge{font-size:6.5px;padding:1px 4px;border-radius:2px;flex-shrink:0;font-weight:700;white-space:nowrap}
+.ap-badge.delayed{background:#FEE2E2;color:#991B1B}
+.ap-badge.in-prog{background:#DBEAFE;color:#1E40AF}
+.ap-badge.not-started{background:#F3F4F6;color:var(--gry)}
+.cx-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-bottom:5px;flex-shrink:0}
+.cx-stat{border-radius:5px;padding:4px;text-align:center;background:var(--evl)}
+.cx-stat .csn{font-family:var(--fh);font-size:16px;font-weight:900;color:var(--ev);line-height:1}
+.cx-stat .csl{font-size:6.5px;color:var(--gry);text-transform:uppercase}
+.cx-stat.hi{background:var(--night)}.cx-stat.hi .csn{color:var(--acc)}
+.cx-bars{display:flex;flex-direction:column;gap:3px;margin-bottom:4px;flex-shrink:0}
+.cx-bar-row{display:flex;align-items:center;gap:4px}
+.cx-bar-label{font-size:7.5px;color:var(--night);width:70px;flex-shrink:0}
+.cx-bar-track{flex:1;height:13px;background:#E5E7EB;border-radius:3px;overflow:hidden;position:relative}
+.cx-bar-fill{height:100%;border-radius:3px;position:relative}
+.cx-bar-val{position:absolute;right:3px;top:50%;transform:translateY(-50%);font-size:6.5px;font-weight:700;color:white;white-space:nowrap}
+.cx-bar-count{font-size:7px;color:var(--gry);width:18px;text-align:right;flex-shrink:0}
+.cx-item-list{flex:1;overflow:hidden;display:flex;flex-direction:column;gap:1px}
+.cx-item{display:flex;align-items:center;gap:4px;padding:2px 0;border-bottom:1px solid #F9FAFB;min-height:14px}
+.cx-item:last-child{border-bottom:none}
+.cx-cat-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0}
+.cx-item-text{font-size:8px;color:var(--night);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cx-item-cost{font-size:7px;color:var(--gry);flex-shrink:0;white-space:nowrap}
+.cx-item-badge{font-size:6.5px;padding:1px 4px;border-radius:2px;flex-shrink:0;font-weight:700;white-space:nowrap;background:#FEF3C7;color:#92400E}
+.s2b{flex:1;display:flex;flex-direction:column;padding:6px 8px;gap:4px;background:var(--day);overflow:hidden}
+.pg{flex:1;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr);gap:4px;min-height:0}
+.pll-card{background:var(--day);border:1px solid var(--bdr);border-radius:7px;display:flex;flex-direction:column;overflow:hidden}
+.ph{background:var(--ev);padding:5px 7px;flex-shrink:0}
+.pn{font-family:var(--fh);font-size:12px;font-weight:900;color:var(--day);text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px}
+.ph-hero{display:flex;align-items:center;gap:5px;margin-bottom:2px}
+.ph-big{text-align:center;flex:1}
+.ph-big .pnum{font-family:var(--fh);font-size:21px;font-weight:900;color:var(--acc);line-height:1;display:block}
+.ph-big .plbl{font-size:7.5px;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.4px}
+.ph-hdiv{width:1px;height:28px;background:rgba(255,255,255,.2)}
+.ph-breakdown{display:flex;gap:3px;margin-top:2px}
+.ph-type{flex:1;text-align:center;border-radius:3px;padding:2px 0}
+.ph-type .tn{font-family:var(--fh);font-size:13px;font-weight:900;line-height:1;display:block}
+.ph-type .tl{font-size:6.5px;text-transform:uppercase;letter-spacing:.3px}
+.ph-type.int-t{background:rgba(200,255,8,.12)}.ph-type.int-t .tn{color:var(--acc)}.ph-type.int-t .tl{color:rgba(200,255,8,.65)}
+.ph-type.oe-t{background:rgba(255,255,255,.1)}.ph-type.oe-t .tn{color:#7DD3FC}.ph-type.oe-t .tl{color:rgba(125,211,252,.65)}
+.la-section{background:rgba(0,94,96,.05);border-top:1px solid rgba(0,94,96,.15);padding:3px 6px;flex-shrink:0}
+.la-title{font-family:var(--fh);font-size:7px;font-weight:700;color:var(--ev);text-transform:uppercase;letter-spacing:.7px;margin-bottom:2px}
+.la-row{display:flex;gap:3px}
+.la-item{flex:1;text-align:center;background:var(--evl);border-radius:3px;padding:2px 0}
+.la-item .ln{font-family:var(--fh);font-size:13px;font-weight:900;color:var(--ev);line-height:1;display:block}
+.la-item .ll{font-size:6.5px;color:var(--gry);text-transform:uppercase}
+.pc{flex:1;overflow:hidden;padding:4px 6px;display:flex;flex-direction:column;gap:2px;min-height:0}
+.cr{display:flex;align-items:center;gap:4px;min-height:15px}
+.ew{width:36px;flex-shrink:0;height:8px;background:#E5E7EB;border-radius:3px;overflow:hidden}
+.eb{height:100%;border-radius:3px}.eb.over{background:var(--acc)}.eb.full{background:var(--grn)}.eb.mid{background:var(--amb)}.eb.low{background:var(--red)}.eb.oe{width:100%;background:var(--evm);opacity:.7}
+.oe-r .cn{color:var(--gry)}
+.cn{font-size:9px;color:var(--night);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cm{font-size:8px;color:var(--gry);flex-shrink:0;white-space:nowrap}
+.nc{font-size:9px;color:var(--gry);font-style:italic;padding:3px 0}
+.el{display:flex;gap:8px;font-size:9px;color:var(--gry);align-items:center;flex-shrink:0}
+.el span{display:flex;align-items:center;gap:2px}
+.eldot{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+.mb{flex:1;position:relative;overflow:hidden;background:var(--evl)}
+.sh-title-big{font-family:var(--fh);font-size:24px;font-weight:900;text-transform:uppercase;letter-spacing:2px;line-height:1;display:flex;align-items:center}
+.sh-title-big.green{color:#4ADE80}
+.sh-title-big.amber{color:#FCD34D}
+.sh-title-big.red{color:#F87171}
+.sv.green-val{color:#4ADE80}
+.sh-log{margin-top:6px;border-top:1px solid rgba(255,255,255,0.15);padding-top:5px;flex-shrink:0}
+.sh-log-title{font-size:8px;color:#9CA3AF;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
+.sh-log-item{display:flex;align-items:flex-start;gap:5px;margin-bottom:3px}
+.sh-log-dot{width:6px;height:6px;border-radius:50%;background:#6B7280;flex-shrink:0;margin-top:3px}
+.sh-log-date{font-size:8px;color:#9CA3AF;font-weight:600;white-space:nowrap;min-width:72px;margin-right:4px}
+.sh-log-desc{font-size:8px;color:#D1D5DB;line-height:1.3}
+.ap-stat.on-deck{background:#EEF2FF;border:1px solid #818CF8}
+.ap-stat.on-deck .asn{color:#4F46E5}
+.kpi-filler{background:var(--ev);border-radius:6px;padding:7px 9px;margin-top:auto;flex-shrink:0}
+.kfi-title{font-family:var(--fh);font-size:9px;font-weight:900;color:var(--lim);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+.kfi-grid{display:flex;gap:5px}
+.kfi-item{flex:1;background:rgba(0,0,0,0.2);border-radius:5px;padding:5px 4px;text-align:center}
+.kfi-item.ev{background:rgba(200,255,8,0.12);border:1px solid rgba(200,255,8,0.3)}
+.kfi-val{font-size:18px;font-weight:900;color:#fff;line-height:1}
+.kfi-lbl{font-size:7px;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:.4px;margin-top:1px}
+.wag-card{background:var(--night);overflow:hidden}
+.wag-card .pn{font-family:var(--fh);font-size:12px;font-weight:900;color:var(--day);text-transform:uppercase;letter-spacing:1px;background:var(--ev);display:flex;align-items:center;gap:7px}
+.wag-body{padding:10px;display:flex;flex-direction:column;gap:9px;height:calc(100% - 38px);box-sizing:border-box}
+.wag-stats{display:flex;gap:8px;justify-content:center}
+.wag-stat-big{flex:1;text-align:center;background:rgba(255,255,255,0.06);border-radius:8px;padding:8px 5px}
+.wag-val{font-family:var(--fh);font-size:32px;font-weight:900;color:var(--day);line-height:1}
+.wag-lbl{font-size:9px;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:.8px;margin-top:3px}
+.wag-locs{background:rgba(255,255,255,0.05);border-radius:8px;padding:8px}
+.wag-loc-title{font-size:8px;color:rgba(255,255,255,0.5);font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
+.wag-loc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.wag-loc-item{border-radius:6px;padding:5px 3px;text-align:center}
+.wag-loc-item.hlc{background:rgba(0,94,96,0.4);border:1px solid rgba(0,94,96,0.6)}
+.wag-loc-item.blc{background:rgba(0,78,152,0.3);border:1px solid rgba(0,78,152,0.5)}
+.wag-loc-item.klc{background:rgba(100,100,100,0.2);border:1px solid rgba(150,150,150,0.3)}
+.wag-loc-item.oth{background:rgba(200,255,8,0.08);border:1px solid rgba(200,255,8,0.2)}
+.wag-loc-num{font-size:18px;font-weight:900;color:var(--day);line-height:1}
+.wag-loc-name{font-size:7px;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:.4px;margin-top:2px;line-height:1.3}
+.wag-safety{display:flex;align-items:center;gap:10px;background:rgba(45,122,69,0.2);border:1px solid rgba(45,122,69,0.5);border-radius:8px;padding:9px 11px}
+.wag-safety-text{flex:1}
+.wag-safety-status{font-family:var(--fh);font-size:18px;font-weight:900;color:#4ADE80;text-transform:uppercase;letter-spacing:2px;line-height:1}
+.wag-safety-sub{font-size:9px;color:rgba(255,255,255,0.7);margin-top:3px;font-weight:600}
+.wag-safety-incidents{font-size:7.5px;color:rgba(255,255,255,0.45);margin-top:3px}
+#loading{position:fixed;top:0;left:0;width:100vw;height:100vh;background:var(--ev);display:flex;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:16px}
+#loading .lt{font-family:var(--fh);font-size:24px;font-weight:900;color:var(--acc);text-transform:uppercase;letter-spacing:2px}
+#loading .ls{font-size:12px;color:rgba(255,255,255,0.6)}
+</style>
+</head>
+<body>
+<div id="loading">
+  <div class="lt">OFS Training Command Board</div>
+  <div class="ls">Loading board data...</div>
+</div>
+<!-- SLIDE 1 -->
+<div class="slide" id="s1"></div>
+<!-- SLIDE 2 -->
+<div class="slide" id="s2"></div>
+<!-- SLIDE 3 -->
+<div class="slide" id="s3">
+  <div class="gh">
+    <div><div class="ht">Internal Training — Student Country of Origin</div><div class="hs">Where this week's students are coming from</div></div>
+    <div class="hw" id="s3-hw"></div>
+    <div class="hl">GE Vernova<br>HLC Command Board</div>
+  </div>
+  <div class="mb" id="map3-container"></div>
+</div>
+<!-- SLIDE 4 -->
+<div class="slide" id="s4">
+  <div class="gh">
+    <div><div class="ht">Customer Training — Global Delivery</div><div class="hs">Site-Specific &amp; Open Enrollment delivery locations</div></div>
+    <div class="hw" id="s4-hw"></div>
+    <div class="hl">GE Vernova<br>HLC Command Board</div>
+  </div>
+  <div class="mb" id="map4-container"></div>
+</div>
+<div id="pb"></div><div id="sc">1/4</div>
+
+<script>
+// ── RENDER FUNCTIONS ─────────────────────────────────────────────────────────
+
+function ragIcon(rag){return rag==='green'?'✓':rag==='red'?'✗':'!';}
+
+function renderSlide1(D){
+  const s1=D.slide1,ap=D.actionPlans,cx=D.capex;
+  const safetyClass=s1.safetyRag||'green';
+  const rags=s1.overallRAGs;
+
+  // build KPI rows
+  const kpiKeys=['ptsi','timecard','instUtil'];
+  let kpiRows='';
+  for(const k of kpiKeys){
+    const kpi=s1.kpis[k];
+    const badgeBg=kpi.ytdRag==='green'?'#2D7A45':kpi.ytdRag==='red'?'#C0392B':'#E67E22';
+    const mTag=`<span class="kpi-tag ${kpi.monthRag}">${kpi.monthLabel}: ${kpi.monthValue}%</span>`;
+    const reverse=kpi.reverse?`<span class="kpi-tag gry">Reverse ≤${kpi.plan}%</span>`:`<span class="kpi-tag gry">Plan: ${kpi.plan}%</span>`;
+    kpiRows+=`<div class="kpi-row">
+      <div class="kpi-badge" style="background:${badgeBg};color:white">${kpi.ytdValue}%</div>
+      <div class="kpi-info">
+        <div class="kpi-name">${kpi.label}</div>
+        <div class="kpi-dual"><span class="kpi-tag gry">YTD: ${kpi.ytdValue}%</span>${mTag}${reverse}</div>
+      </div></div>`;
+  }
+
+  // safety log
+  let logHtml='';
+  if(D.safetyLog&&D.safetyLog.length){
+    logHtml=`<div class="sh-log"><div class="sh-log-title">📅 Historical Incident Log</div>`;
+    for(const ev of D.safetyLog){
+      logHtml+=`<div class="sh-log-item"><span class="sh-log-dot"></span><div><span class="sh-log-date">${ev.date}</span><span class="sh-log-desc">${ev.desc}</span></div></div>`;
+    }
+    logHtml+='</div>';
+  }
+
+  // rag strip
+  let ragHtml='';
+  for(const[,r] of Object.entries(rags)){
+    ragHtml+=`<div class="rag-tile ${r.rag}"><div class="rag-icon">${ragIcon(r.rag)}</div><div><div class="rag-label">${r.label}</div><div class="rag-reason">${r.reason}</div></div></div>`;
+  }
+
+  // AP items
+  let apItems='';
+  for(const item of (ap.inProgressItems||[]).slice(0,8)){
+    const st=item.currentStatus==='Delayed'?'delayed':'in-prog';
+    const lb=item.currentStatus==='Delayed'?'Delayed':'In Progress';
+    apItems+=`<div class="ap-item"><div class="ap-dot" style="background:${st==='delayed'?'#C0392B':'#1D4ED8'}"></div><div class="ap-text">${item.title}</div><div class="ap-badge ${st}">${lb}</div></div>`;
+  }
+
+  // CapEx bars
+  const cats=cx.byCategory||{};
+  const maxCost=Math.max(...Object.values(cats).map(c=>c.cost||0),1);
+  let cxBars='',cxItems='';
+  const catColors={Equipment:'#0891B2',Modernization:'#7C3AED',Safety:'#DC2626',Capability:'#059669'};
+  for(const[name,cat] of Object.entries(cats)){
+    const pct=Math.round((cat.cost/maxCost)*100);
+    const cost=cat.cost>=1000000?`$${(cat.cost/1000000).toFixed(1)}M`:cat.cost>=1000?`$${Math.round(cat.cost/1000)}K`:`$${cat.cost}`;
+    cxBars+=`<div class="cx-bar-row"><div class="cx-bar-label">${name}</div><div class="cx-bar-track"><div class="cx-bar-fill" style="width:${pct}%;background:${catColors[name]||'#6B7280'}"><span class="cx-bar-val">${cost}</span></div></div><div class="cx-bar-count">${cat.count}</div></div>`;
+  }
+  for(const item of (cx.inProgressItems||[]).slice(0,5)){
+    const cost=item.cost>=1000000?`$${(item.cost/1000000).toFixed(1)}M`:item.cost>=1000?`$${Math.round(item.cost/1000)}K`:`$${item.cost}`;
+    cxItems+=`<div class="cx-item"><div class="cx-cat-dot" style="background:${catColors[item.category]||'#6B7280'}"></div><div class="cx-item-text">${item.project}</div><div class="cx-item-cost">${cost}</div>${item.priority==='High'?'<div class="cx-item-badge">HIGH</div>':''}</div>`;
+  }
+
+  const totalBudget=cx.totalBudget>=1000000?`$${(cx.totalBudget/1000000).toFixed(1)}M`:cx.totalBudget>=1000?`$${Math.round(cx.totalBudget/1000)}K`:`$${cx.totalBudget}`;
+
+  document.getElementById('s1').innerHTML=`
+  <div class="gh">
+    <div><div class="ht">OFS Training Delivery Command Board</div><div class="hs">${D.meta.specVersion} Build ${D.meta.buildDate}</div></div>
+    <div class="hw">${s1.weekOf}</div>
+    <div class="hl">GE Vernova<br>Houston Learning Center</div>
+  </div>
+  <div class="s1b">
+    <div class="ms">
+      <div class="mc hero"><div class="mv">${s1.weeklyTotal}</div><div class="ml">Students This Week</div></div>
+      <div class="mc"><div class="mv">${s1.internalStudents}</div><div class="ml">Internal Students</div></div>
+      <div class="mc"><div class="mv">${s1.oeStudents}</div><div class="ml">OE + SS Students</div></div>
+      <div class="mc loc"><div class="mv">${s1.locationBreakdown.HLC}</div><div class="ml">HLC Houston</div></div>
+      <div class="mc loc"><div class="mv">${s1.locationBreakdown.BLC}</div><div class="ml">BLC Birr</div></div>
+      <div class="mc loc"><div class="mv">${s1.locationBreakdown.KLC}</div><div class="ml">KLC Kuwait</div></div>
+      <div class="mc loc"><div class="mv">${s1.locationBreakdown.Other}</div><div class="ml">Distance/Other</div></div>
+    </div>
+    <div class="rag-strip">${ragHtml}</div>
+    <div class="s1-main">
+      <div class="kpip">
+        <div class="kpit">📈 Bowler KPI — YTD &amp; Latest Month</div>
+        ${kpiRows}
+        <div class="kpi-filler">
+          <div class="kfi-title">⚡ WEEK HIGHLIGHT</div>
+          <div class="kfi-grid">
+            <div class="kfi-item"><div class="kfi-val">${s1.weeklyTotal}</div><div class="kfi-lbl">Students</div></div>
+            <div class="kfi-item"><div class="kfi-val">${s1.internalCourses+s1.oeCourses}</div><div class="kfi-lbl">Classes</div></div>
+            <div class="kfi-item ev"><div class="kfi-val">${s1.kpis.ptsi.ytdValue}%</div><div class="kfi-lbl">PTSI</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="safety-hero ${safetyClass}">
+        <div class="sh-top">
+          <div class="sh-circle ${safetyClass}" style="font-size:26px">🛡</div>
+          <div style="flex:1">
+            <div class="sh-title-big ${safetyClass}">SAFETY</div>
+            <div class="sh-reason" style="color:${safetyClass==='green'?'#4ADE80':safetyClass==='amber'?'#FCD34D':'#F87171'};font-size:9px;margin:2px 0">
+              ${s1.minorIncidents===0?'All KPIs on plan — 0 incidents this week':s1.ragReason||''}
+            </div>
+            <span class="sh-incident ${safetyClass}">● ${s1.minorIncidents} Minor Incidents This Week</span>
+          </div>
+        </div>
+        <div class="sh-kpis">
+          <div class="sh-kpi"><div class="sv green-val">${s1.minorIncidents}</div><div class="sl">Incidents &amp; Injuries</div></div>
+          <div class="sh-kpi"><div class="sv green-val">${s1.safetyKPIs?.liveStop?.value||'—'}%</div><div class="sl">Live Save Compliance</div></div>
+          <div class="sh-kpi"><div class="sv green-val">${s1.safetyKPIs?.readAcross?.value||'—'}%</div><div class="sl">Read Across Rate</div></div>
+        </div>
+        ${logHtml}
+      </div>
+      <div style="display:flex;flex-direction:column;gap:5px;overflow:hidden;min-height:0">
+        <div class="ap-panel" style="flex:1;min-height:0">
+          <div class="panel-title">✅ Action Plans — Delivery Team (${ap.deliveryTotal} items)</div>
+          <div class="ap-stats">
+            <div class="ap-stat amber"><div class="asn">${ap.inProgress}</div><div class="asl">In Progress</div></div>
+            <div class="ap-stat red"><div class="asn">${ap.delayed}</div><div class="asl">Delayed</div></div>
+            <div class="ap-stat on-deck"><div class="asn">${ap.notStarted}</div><div class="asl">On Deck</div></div>
+          </div>
+          <div class="ap-list">${apItems}</div>
+        </div>
+        <div class="cx-panel" style="flex:1;min-height:0">
+          <div class="panel-title">💰 CapEx 2026 — ${cx.activeProjects} Active Projects</div>
+          <div class="cx-stats">
+            <div class="cx-stat hi"><div class="csn">${cx.highPriorityCount}</div><div class="csl">High Pri</div></div>
+            <div class="cx-stat"><div class="csn">${totalBudget}</div><div class="csl">Budget</div></div>
+            <div class="cx-stat"><div class="csn">${cx.activeProjects}</div><div class="csl">Active</div></div>
+          </div>
+          <div class="cx-bars">${cxBars}</div>
+          <div class="cx-item-list">${cxItems}</div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function getBarClass(pct,over){
+  if(over)return'over';
+  if(pct>=80)return'full';
+  if(pct>=50)return'mid';
+  return'low';
+}
+
+function renderSlide2(D){
+  const s2=D.slide2;
+  let cards='';
+  for(const pll of s2.plls){
+    let courseRows='';
+    for(const c of (pll.courses||[])){
+      const bc=getBarClass(c.enrollPct,c.overEnrolled);
+      const w=Math.min(c.enrollPct,115);
+      courseRows+=`<div class="cr"><div class="ew"><div class="eb ${bc}" style="width:${w}%"></div></div><div class="cn">${c.name}</div><div class="cm">${c.enrolled}/${c.capacity}-${c.locCat}</div></div>`;
+    }
+    for(const oe of (pll.oeCourses||[])){
+      courseRows+=`<div class="cr oe-r"><div class="ew"><div class="eb oe"></div></div><div class="cn">${oe.title}</div><div class="cm">${oe.students}-${oe.country}</div></div>`;
+    }
+    if(!courseRows)courseRows='<div class="nc">No classes this week</div>';
+
+    const la=pll.lookAhead30||{};
+    const intOe=`${la.intClasses||0}I/${la.oeClasses||0}O`;
+    const oeBlock=pll.oeClasses>0?`<div class="ph-type oe-t"><span class="tn">${pll.oeStudents}</span><span class="tl">OE/SS</span></div>`:'';
+    const isWag=pll.name==='__WAG__';
+
+    if(!isWag){
+      cards+=`<div class="pll-card">
+        <div class="ph">
+          <div class="pn">${pll.name}</div>
+          <div class="ph-hero">
+            <div class="ph-big"><span class="pnum">${pll.totalClasses}</span><span class="plbl">Total Classes</span></div>
+            <div class="ph-hdiv"></div>
+            <div class="ph-big"><span class="pnum">${pll.totalStudents}</span><span class="plbl">Total Students</span></div>
+          </div>
+          <div class="ph-breakdown">
+            <div class="ph-type int-t"><span class="tn">${pll.internalStudents}</span><span class="tl">INT</span></div>
+            ${oeBlock}
+          </div>
+        </div>
+        <div class="la-section">
+          <div class="la-title">30-Day Look Ahead — ${la.label||'Next 30 Days'}</div>
+          <div class="la-row">
+            <div class="la-item"><span class="ln">${la.totalClasses||0}</span><span class="ll">Classes</span></div>
+            <div class="la-item"><span class="ln">${la.totalStudents||0}</span><span class="ll">Students</span></div>
+            <div class="la-item" style="background:rgba(0,94,96,.12)"><span class="ln" style="color:var(--ev);font-size:11px">${intOe}</span><span class="ll">INT/OE</span></div>
+          </div>
+        </div>
+        <div class="pc">${courseRows}</div>
+      </div>`;
+    }
+  }
+
+  // Week at a Glance card (always last)
+  const s1=D.slide1;
+  const sl=D.safetyLog||[];
+  const histStr=sl.map(e=>`📅 ${e.date}: ${e.shortDesc||e.desc}`).join(' • ');
+  cards+=`<div class="pll-card wag-card">
+    <div class="pn" style="border-bottom:1px solid rgba(0,94,96,0.15);padding:8px 10px;display:flex;align-items:center;gap:7px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" fill="#005E60"/><path d="M8 2v4M16 2v4M3 10h18" stroke="#C8FF08" stroke-width="2" stroke-linecap="round"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+      WEEK AT A GLANCE<span style="margin-left:auto;font-size:9px;font-weight:500;color:var(--gry);text-transform:none">${s1.weekOf}</span>
+    </div>
+    <div class="wag-body">
+      <div class="wag-stats">
+        <div class="wag-stat-big"><div class="wag-val">${s1.weeklyTotal}</div><div class="wag-lbl">Total Students</div></div>
+        <div class="wag-stat-big"><div class="wag-val" style="color:var(--lim)">${s1.internalCourses+s1.oeCourses}</div><div class="wag-lbl">Active Classes</div></div>
+      </div>
+      <div class="wag-locs">
+        <div class="wag-loc-title">📍 LOCATIONS THIS WEEK</div>
+        <div class="wag-loc-grid">
+          <div class="wag-loc-item hlc"><div class="wag-loc-num">${s1.locationBreakdown.HLC}</div><div class="wag-loc-name">HLC<br>Houston</div></div>
+          <div class="wag-loc-item blc"><div class="wag-loc-num">${s1.locationBreakdown.BLC}</div><div class="wag-loc-name">BLC<br>Birr</div></div>
+          <div class="wag-loc-item klc"><div class="wag-loc-num">${s1.locationBreakdown.KLC}</div><div class="wag-loc-name">KLC<br>Kuwait</div></div>
+          <div class="wag-loc-item oth"><div class="wag-loc-num">${s1.locationBreakdown.Other}</div><div class="wag-loc-name">OE/SS<br>Remote</div></div>
+        </div>
+      </div>
+      <div class="wag-safety">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V6L12 2z" fill="#2D7A45"/><path d="M9 12l2 2 4-4" stroke="#C8FF08" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="wag-safety-text">
+          <div class="wag-safety-status">${s1.minorIncidents===0?'ALL CLEAR':'ATTENTION'}</div>
+          <div class="wag-safety-sub">${s1.minorIncidents} incidents • ${s1.minorIncidents===0?'All KPIs on plan':'Review safety section'}</div>
+          ${histStr?`<div class="wag-safety-incidents">${histStr}</div>`:''}
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+  document.getElementById('s2').innerHTML=`
+  <div class="gh">
+    <div><div class="ht">Internal Training Roster — PLL Assignments</div><div class="hs">Week of ${s1.weekOf} | Internal + OE/SS</div></div>
+    <div class="hw">${s1.weeklyTotal} Students Total This Week</div>
+    <div class="hl">GE Vernova<br>HLC Command Board</div>
+  </div>
+  <div class="s2b">
+    <div class="pg">${cards}</div>
+    <div class="el">
+      <span><div class="eldot" style="background:var(--acc)"></div>Over-enrolled</span>
+      <span><div class="eldot" style="background:var(--grn)"></div>≥80%</span>
+      <span><div class="eldot" style="background:var(--amb)"></div>50–79%</span>
+      <span><div class="eldot" style="background:var(--red)"></div>&lt;50%</span>
+      <span><div class="eldot" style="background:var(--evm);opacity:.7"></div>OE/SS Contracted</span>
+    </div>
+  </div>`;
+}
+
+// ── SLIDE CONTROLLER ─────────────────────────────────────────────────────────
+const SLIDES=[{id:"s1",dur:30000},{id:"s2",dur:30000},{id:"s3",dur:35000},{id:"s4",dur:35000}];
+let cur=0,timer=null;
+const pb=document.getElementById("pb");
+const sc=document.getElementById("sc");
+
+function showSlide(i){
+  SLIDES.forEach((s,j)=>{
+    const el=document.getElementById(s.id);
+    if(el)el.classList.toggle("active",j===i);
+  });
+  cur=i;sc.textContent=(i+1)+"/"+SLIDES.length;
+  startProgress(SLIDES[i].dur);
+}
+
+function startProgress(ms){
+  clearInterval(timer);
+  pb.style.transition="none";pb.style.width="0%";
+  requestAnimationFrame(()=>{requestAnimationFrame(()=>{
+    pb.style.transition="width "+ms+"ms linear";pb.style.width="100%";
+  });});
+  timer=setInterval(()=>{showSlide((cur+1)%SLIDES.length);},ms);
+}
+
+// ── MAP FUNCTIONS (unchanged) ─────────────────────────────────────────────────
+async function loadWorld(){
+  if(window._wld)return window._wld;
+  const r=await fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json");
+  window._wld=await r.json();return window._wld;
+}
+
+function buildMap(cid,pins,opts){
+  const ct=document.getElementById(cid);if(!ct)return;
+  const W=ct.clientWidth||1400,H=ct.clientHeight||520;
+  d3.select(ct).selectAll("*").remove();
+  const svg=d3.select(ct).append("svg").attr("width",W).attr("height",H);
+  svg.append("rect").attr("width",W).attr("height",H).attr("fill","#E6F2F2");
+  const proj=d3.geoNaturalEarth1().scale(W/6.1).translate([W/2,H/2]);
+  const path=d3.geoPath().projection(proj);
+  svg.append("path").datum(d3.geoGraticule()()).attr("d",path).attr("fill","none").attr("stroke","rgba(0,94,96,.1)").attr("stroke-width",.5);
+  const cntrs=topojson.feature(window._wld,window._wld.objects.countries);
+  svg.selectAll(".c").data(cntrs.features).enter().append("path").attr("class","c").attr("d",path).attr("fill","#C5DFE0").attr("stroke","white").attr("stroke-width",.5);
+  const allC=(pins.week||pins.origin||[]).map(p=>p.count||p.students||0).filter(n=>n>0);
+  const rS=d3.scaleSqrt().domain([0,Math.max(...allC,1)]).range([0,opts.maxR||45]);
+  const pArr=pins.week||pins.origin||[];
+  const pG=svg.append("g");
+  for(const p of pArr){
+    const c=proj([p.lon,p.lat]);if(!c)continue;
+    const cnt=p.count||p.students||0;
+    const r=Math.max(18,rS(cnt));
+    const wk=!!pins.week;
+    pG.append("circle").attr("cx",c[0]).attr("cy",c[1]).attr("r",r).attr("fill",wk?"rgba(200,255,8,.88)":"rgba(0,94,96,.78)").attr("stroke","white").attr("stroke-width",2);
+    pG.append("text").attr("x",c[0]).attr("y",c[1]).attr("text-anchor","middle").attr("dominant-baseline","central").attr("font-family","'Sons Condensed Extrabold',Inter,'Segoe UI',Arial,sans-serif").attr("font-weight","900").attr("font-size",r>26?14:r>19?11:9).attr("fill",wk?"#005E60":"#C8FF08").text(cnt);
+    pG.append("text").attr("x",c[0]).attr("y",c[1]+r+9).attr("text-anchor","middle").attr("font-family","Inter,'Segoe UI',Arial,sans-serif").attr("font-size",8).attr("fill","#212121").attr("font-weight","600").text(p.country);
+  }
+  if(pins.lcs){
+    const lG=svg.append("g");
+    for(const lc of pins.lcs){
+      const c=proj([lc.lon,lc.lat]);if(!c)continue;
+      const r2=lc.students>0?Math.max(10,rS(lc.students)*.4):7;
+      lG.append("circle").attr("cx",c[0]).attr("cy",c[1]).attr("r",r2+4).attr("fill","none").attr("stroke","#C8FF08").attr("stroke-width",2.5).attr("stroke-dasharray","4,2");
+      lG.append("text").attr("x",c[0]).attr("y",c[1]-r2-10).attr("text-anchor","middle").attr("font-family","'Sons Condensed Extrabold',Inter,'Segoe UI',Arial,sans-serif").attr("font-weight","900").attr("font-size",10).attr("fill","#005E60").text(lc.name.split("—")[0].trim());
+    }
+  }
+  const leg=d3.select(ct).append("div").style("position","absolute").style("bottom","18px").style("left","14px").style("display","flex").style("gap","14px").style("background","rgba(0,94,96,.88)").style("padding","6px 14px").style("border-radius","6px");
+  if(opts.li){
+    for(const li of opts.li){
+      const it=leg.append("div").style("display","flex").style("align-items","center").style("gap","5px");
+      it.append("div").style("width","10px").style("height","10px").style("border-radius","50%").style("background",li.c);
+      it.append("div").style("font-size","9px").style("color","rgba(255,255,255,.85)").text(li.l);
+    }
+  }
+}
+
+async function initMaps(DATA){
+  await loadWorld();
+  document.getElementById('s3-hw').textContent=`${DATA.slide3.totalCountries} Countries · ${DATA.slide3.totalStudents} Students`;
+  document.getElementById('s4-hw').textContent=`${DATA.slide4.weekStudents} Students · ${DATA.slide4.weekClasses} Classes This Week`;
+  const s3=document.getElementById("map3-container");
+  if(s3)buildMap("map3-container",{origin:DATA.slide3.pins,lcs:DATA.slide3.learningCenters},{maxR:50,li:[{c:"rgba(0,94,96,.78)",l:"Student Origin — bubble = student count"},{c:"#C8FF08",l:"Learning Center"}]});
+  const s4=document.getElementById("map4-container");
+  if(s4)buildMap("map4-container",{week:DATA.slide4.weekDelivery},{maxR:55,li:[{c:"rgba(200,255,8,.88)",l:"This Week — customer training delivery locations"}]});
+}
+
+// ── BOOT ──────────────────────────────────────────────────────────────────────
+window.addEventListener('load', async () => {
+  try {
+    const resp = await fetch('board-data.json?v=' + Date.now());
+    if (!resp.ok) throw new Error('board-data.json not found');
+    const DATA = await resp.json();
+    renderSlide1(DATA);
+    renderSlide2(DATA);
+    document.getElementById('loading').style.display = 'none';
+    showSlide(0);
+    await initMaps(DATA);
+    [["s3","map3-container"],["s4","map4-container"]].forEach(([sid])=>{
+      const obs=new MutationObserver(()=>{
+        if(document.getElementById(sid).classList.contains("active"))initMaps(DATA);
+      });
+      obs.observe(document.getElementById(sid),{attributes:true,attributeFilter:["class"]});
+    });
+  } catch(err) {
+    document.getElementById('loading').innerHTML =
+      '<div class="lt" style="color:#F87171">Board Data Error</div>' +
+      '<div class="ls">' + err.message + '</div>' +
+      '<div class="ls" style="margin-top:8px;opacity:.6">Upload board-data.json to the repository</div>';
+  }
+});
+</script>
+</body>
+</html>
