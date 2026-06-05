@@ -63,36 +63,47 @@
       }
     },
     "overallRAGs": {
+      "bowler": {
+        "rag": "amber",
+        "label": "Bowler KPIs",
+        "reason": "Timecard YTD 72% vs 92% plan"
+      },
       "safety": {
         "rag": "green",
         "label": "Safety",
         "reason": "0 incidents · All KPIs on plan"
       },
-      "quality": {
-        "rag": "green",
-        "label": "Quality / PTSI",
-        "reason": "83% vs 70% plan — Above target"
-      },
-      "delivery": {
+      "actionPlans": {
         "rag": "red",
-        "label": "Timecard OTD",
-        "reason": "YTD 72% vs 92% plan — Behind"
+        "label": "Action Plans",
+        "reason": "32 delayed of 91 total items"
       },
-      "workforce": {
+      "capex": {
         "rag": "amber",
-        "label": "Workforce",
-        "reason": "Kahuna 80% vs 81% plan"
+        "label": "CapEx",
+        "reason": "$5.1M active · 5 high-priority projects"
       }
     }
   },
-  "safetyLog": [],
+  "safetyLog": [
+    {
+      "date": "Mar 14, 2026",
+      "shortDesc": "Slip — wet floor near lab",
+      "desc": "Slip on wet floor near lab entrance — no injury, area secured"
+    },
+    {
+      "date": "Apr 3, 2026",
+      "shortDesc": "Lube oil spill — contained",
+      "desc": "Lube oil spill during maintenance exercise — contained, cleaned, no injury"
+    }
+  ],
   "slide2": {
     "plls": [
       {
-        "name": "Entry Level",
-        "totalClasses": 5,
-        "totalStudents": 68,
-        "internalStudents": 68,
+        "name": "Sherif Khalifa",
+        "totalClasses": 2,
+        "totalStudents": 27,
+        "internalStudents": 27,
         "oeStudents": 0,
         "oeClasses": 0,
         "courses": [
@@ -105,13 +116,57 @@
             "locCat": "HLC"
           },
           {
-            "name": "Entry Level GT MkVIe 26-1",
-            "capacity": 17,
-            "enrolled": 5,
-            "enrollPct": 29,
+            "name": "HA FE Tasks & Tools - Combustion Inspection / ITS Rollout & TRACC Scan Alignment 26-3",
+            "capacity": 12,
+            "enrolled": 9,
+            "enrollPct": 75,
             "overEnrolled": false,
             "locCat": "HLC"
-          },
+          }
+        ],
+        "oeCourses": [],
+        "lookAhead30": {
+          "label": "Jun 13 – Jul 12",
+          "totalClasses": 3,
+          "totalStudents": 45,
+          "intClasses": 3,
+          "oeClasses": 0
+        }
+      },
+      {
+        "name": "Pablo Schibli",
+        "totalClasses": 1,
+        "totalStudents": 8,
+        "internalStudents": 8,
+        "oeStudents": 0,
+        "oeClasses": 0,
+        "courses": [
+          {
+            "name": "Steam Turbine 101 26-1",
+            "capacity": 12,
+            "enrolled": 8,
+            "enrollPct": 67,
+            "overEnrolled": false,
+            "locCat": "HLC"
+          }
+        ],
+        "oeCourses": [],
+        "lookAhead30": {
+          "label": "Jun 13 – Jul 12",
+          "totalClasses": 4,
+          "totalStudents": 28,
+          "intClasses": 4,
+          "oeClasses": 0
+        }
+      },
+      {
+        "name": "XXX XXXXX",
+        "totalClasses": 2,
+        "totalStudents": 21,
+        "internalStudents": 21,
+        "oeStudents": 0,
+        "oeClasses": 0,
+        "courses": [
           {
             "name": "Entry Level Electrical Excitation 26-1",
             "capacity": 12,
@@ -127,46 +182,38 @@
             "enrollPct": 100,
             "overEnrolled": false,
             "locCat": "HLC"
-          },
-          {
-            "name": "Entry Level Steam Turbine 26-1",
-            "capacity": 24,
-            "enrolled": 24,
-            "enrollPct": 100,
-            "overEnrolled": false,
-            "locCat": "HLC"
           }
         ],
         "oeCourses": [],
         "lookAhead30": {
           "label": "Jun 13 – Jul 12",
           "totalClasses": 2,
-          "totalStudents": 28,
+          "totalStudents": 18,
           "intClasses": 2,
           "oeClasses": 0
         }
       },
       {
-        "name": "Advanced Level",
+        "name": "Mohammed Nizami",
         "totalClasses": 4,
-        "totalStudents": 33,
-        "internalStudents": 33,
+        "totalStudents": 28,
+        "internalStudents": 28,
         "oeStudents": 0,
         "oeClasses": 0,
         "courses": [
           {
-            "name": "MKVIe Controls - Operations, Maintenance, & Troubleshooting 26-2",
-            "capacity": 12,
-            "enrolled": 6,
-            "enrollPct": 50,
+            "name": "Entry Level GT MkVIe 26-1",
+            "capacity": 17,
+            "enrolled": 5,
+            "enrollPct": 29,
             "overEnrolled": false,
             "locCat": "HLC"
           },
           {
             "name": "Foundation Fieldbus Advanced 26-3",
             "capacity": 12,
-            "enrolled": 8,
-            "enrollPct": 67,
+            "enrolled": 6,
+            "enrollPct": 50,
             "overEnrolled": false,
             "locCat": "HLC"
           },
@@ -179,10 +226,10 @@
             "locCat": "HLC"
           },
           {
-            "name": "HA FE Tasks & Tools - Combustion Inspection 26-3",
-            "capacity": 12,
-            "enrolled": 9,
-            "enrollPct": 75,
+            "name": "Site Manager Level 2 26-1",
+            "capacity": 8,
+            "enrolled": 5,
+            "enrollPct": 63,
             "overEnrolled": false,
             "locCat": "HLC"
           }
@@ -190,17 +237,17 @@
         "oeCourses": [],
         "lookAhead30": {
           "label": "Jun 13 – Jul 12",
-          "totalClasses": 28,
-          "totalStudents": 192,
-          "intClasses": 28,
+          "totalClasses": 8,
+          "totalStudents": 64,
+          "intClasses": 8,
           "oeClasses": 0
         }
       },
       {
-        "name": "Craft",
-        "totalClasses": 5,
-        "totalStudents": 53,
-        "internalStudents": 53,
+        "name": "Harry Hanson",
+        "totalClasses": 11,
+        "totalStudents": 109,
+        "internalStudents": 109,
         "oeStudents": 0,
         "oeClasses": 0,
         "courses": [
@@ -220,48 +267,6 @@
             "overEnrolled": false,
             "locCat": "HLC"
           },
-          {
-            "name": "NCCCO Rigger II 26-2",
-            "capacity": 12,
-            "enrolled": 8,
-            "enrollPct": 67,
-            "overEnrolled": false,
-            "locCat": "HLC"
-          },
-          {
-            "name": "Craft Entry Level GT Accelerated 26-5",
-            "capacity": 20,
-            "enrolled": 20,
-            "enrollPct": 100,
-            "overEnrolled": false,
-            "locCat": "HLC"
-          },
-          {
-            "name": "NCCCO Signal Person & Rigger I 26-2",
-            "capacity": 12,
-            "enrolled": 8,
-            "enrollPct": 67,
-            "overEnrolled": false,
-            "locCat": "HLC"
-          }
-        ],
-        "oeCourses": [],
-        "lookAhead30": {
-          "label": "Jun 13 – Jul 12",
-          "totalClasses": 10,
-          "totalStudents": 96,
-          "intClasses": 10,
-          "oeClasses": 0
-        }
-      },
-      {
-        "name": "Repairs",
-        "totalClasses": 7,
-        "totalStudents": 45,
-        "internalStudents": 45,
-        "oeStudents": 0,
-        "oeClasses": 0,
-        "courses": [
           {
             "name": "Field Basics: Retaining Rings, Wedging, Coil Winding 26-1",
             "capacity": 12,
@@ -295,18 +300,26 @@
             "locCat": "HLC"
           },
           {
-            "name": "Site Manager Level 2 26-1",
-            "capacity": 8,
-            "enrolled": 5,
-            "enrollPct": 63,
+            "name": "NCCCO Rigger II 26-2",
+            "capacity": 12,
+            "enrolled": 8,
+            "enrollPct": 67,
             "overEnrolled": false,
             "locCat": "HLC"
           },
           {
-            "name": "Steam Turbine 101 26-1",
-            "capacity": 12,
-            "enrolled": 8,
-            "enrollPct": 67,
+            "name": "Entry Level Steam Turbine 26-1",
+            "capacity": 24,
+            "enrolled": 24,
+            "enrollPct": 100,
+            "overEnrolled": false,
+            "locCat": "HLC"
+          },
+          {
+            "name": "Craft Entry Level GT Accelerated 26-5",
+            "capacity": 20,
+            "enrolled": 20,
+            "enrollPct": 100,
             "overEnrolled": false,
             "locCat": "HLC"
           },
@@ -317,19 +330,53 @@
             "enrollPct": 92,
             "overEnrolled": false,
             "locCat": "HLC"
+          },
+          {
+            "name": "NCCCO Signal Person & Rigger I 26-2",
+            "capacity": 12,
+            "enrolled": 8,
+            "enrollPct": 67,
+            "overEnrolled": false,
+            "locCat": "HLC"
           }
         ],
         "oeCourses": [],
         "lookAhead30": {
           "label": "Jun 13 – Jul 12",
-          "totalClasses": 6,
-          "totalStudents": 33,
-          "intClasses": 6,
+          "totalClasses": 10,
+          "totalStudents": 108,
+          "intClasses": 10,
           "oeClasses": 0
         }
       },
       {
-        "name": "GESPS",
+        "name": "Greg Walker",
+        "totalClasses": 1,
+        "totalStudents": 6,
+        "internalStudents": 6,
+        "oeStudents": 0,
+        "oeClasses": 0,
+        "courses": [
+          {
+            "name": "MKVIe Controls - Operations, Maintenance, & Troubleshooting 26-2",
+            "capacity": 12,
+            "enrolled": 6,
+            "enrollPct": 50,
+            "overEnrolled": false,
+            "locCat": "HLC"
+          }
+        ],
+        "oeCourses": [],
+        "lookAhead30": {
+          "label": "Jun 13 – Jul 12",
+          "totalClasses": 3,
+          "totalStudents": 24,
+          "intClasses": 3,
+          "oeClasses": 0
+        }
+      },
+      {
+        "name": "Linda Nelson",
         "totalClasses": 1,
         "totalStudents": 11,
         "internalStudents": 11,
@@ -348,9 +395,9 @@
         "oeCourses": [],
         "lookAhead30": {
           "label": "Jun 13 – Jul 12",
-          "totalClasses": 0,
-          "totalStudents": 0,
-          "intClasses": 0,
+          "totalClasses": 1,
+          "totalStudents": 8,
+          "intClasses": 1,
           "oeClasses": 0
         }
       },
@@ -409,8 +456,8 @@
       },
       {
         "name": "BLC — Birr",
-        "lat": 53.0878,
-        "lon": -7.9173,
+        "lat": 47.36,
+        "lon": 8.04,
         "students": 0
       },
       {
